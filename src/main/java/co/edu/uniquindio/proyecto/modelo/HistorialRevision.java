@@ -1,29 +1,28 @@
 package co.edu.uniquindio.proyecto.modelo;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import co.edu.uniquindio.proyecto.enums.EstadoNegocio;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
-@Document(collection = "transacciones")
+@Document(collection = "historial_revisiones")
 @Data
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Transacciones implements Serializable {
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class HistorialRevision implements Serializable {
 
     @Id
     @EqualsAndHashCode.Include
     private String codigo;
-
-    private List<DetalleProducto> detalleProductos;
-    private String cliente;
+    private String descripcion;
+    private EstadoNegocio estadoNegocio;
     private LocalDateTime fecha;
-    private Pago pago;
+    private String codigoModerador;
+
 }
-
-
