@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 
-@Document("productos")
+@Document(collection = "productos")
 @Data
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
