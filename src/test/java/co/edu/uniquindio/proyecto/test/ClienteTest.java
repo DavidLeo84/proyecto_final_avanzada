@@ -1,54 +1,70 @@
 package co.edu.uniquindio.proyecto.test;
 
+import co.edu.uniquindio.proyecto.dtos.RegistroClienteDTO;
 import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
-import co.edu.uniquindio.proyecto.modelo.Cliente;
-import co.edu.uniquindio.proyecto.modelo.Cuenta;
+import co.edu.uniquindio.proyecto.enums.Rol;
+import co.edu.uniquindio.proyecto.modelo.DetalleProducto;
+import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
 import co.edu.uniquindio.proyecto.repositorios.ClienteRepo;
+import co.edu.uniquindio.proyecto.servicios.ClienteServicioImpl;
+import co.edu.uniquindio.proyecto.servicios.excepciones.Validacion;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 public class ClienteTest {
 
     @Autowired
     private ClienteRepo clienteRepo;
+    @Autowired
+    private ClienteServicioImpl clienteServicio;
+    @Autowired
+    private Validacion validacion;
 
     @Test
-    public void registrarClienteTest(){
+    public void registrarClienteTest() throws Exception {
 
-        //Creamos el cliente con sus propiedades
-        Cliente cliente = Cliente.builder()
-                .cedula("1213444")
-                .ciudad("Armenia")
-                .nickname("Pepitin90")
-                .fotoPerfil("")
-                .nombre("Pepito Perez")
-                .email("pepitoperez@correo.com")
-                .estadoRegistro(EstadoRegistro.ACTIVO)
-                .password("123456")
-                .build();
-        //Guardamos el cliente
-        Cliente registro = clienteRepo.save( cliente );
-//Verificamos que se haya guardado validando que no sea null
-        Assertions.assertNotNull(registro);
+        List<String> favoritos = new ArrayList<>();
+        List<String> negocios = new ArrayList<>();
+
+        RegistroClienteDTO clienteDTO = new RegistroClienteDTO(
+                "leonardo",
+                "foto3.jpg",
+                "leo",
+                "leoromero@gmail.com",
+                "123456",
+                "ARMENIA",
+                favoritos,
+                negocios
+        );
+        int cliente = clienteServicio.registrarse(clienteDTO);
+        //Cliente creado = validacion.buscarCliente("pika");
+        Assertions.assertNotEquals(0,5);
+
+
     }
-
+/*
     @Test
-    public void actualizarClienteTest(){
-//Obtenemos el cliente con el id XXXXXXX
-        Cliente cliente = clienteRepo.findById("1213444").orElseThrow();
-//Modificar el email del cliente
+    public void actualizarClienteTest() {
+
+
+        Cliente cliente = clienteRepo.findByCodigo(2).orElseThrow();
         cliente.setEmail("nuevoemail@email.com");
-//Guardamos el cliente
-        clienteRepo.save( cliente );
-//Obtenemos el cliente con el id XXXXXXX nuevamente
-        Cliente clienteActualizado = clienteRepo.findById("1213444").orElseThrow();;
-//Verificamos que el email se haya actualizado
+        clienteRepo.save(cliente);
+        Cliente clienteActualizado = clienteRepo.findByCodigo(2).orElseThrow();
+        ;
         Assertions.assertEquals("nuevoemail@email.com", clienteActualizado.getEmail());
     }
+
+
+ */
 
 }

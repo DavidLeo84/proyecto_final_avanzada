@@ -1,4 +1,4 @@
-package co.edu.uniquindio.proyecto.modelo;
+package co.edu.uniquindio.proyecto.modelo.documentos;
 
 import co.edu.uniquindio.proyecto.enums.EstadoNegocio;
 import lombok.*;
@@ -11,18 +11,15 @@ import java.time.LocalDateTime;
 @Document(collection = "historial_revisiones")
 @Data
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class HistorialRevision implements Serializable {
 
-    @Id
-    @EqualsAndHashCode.Include
-    private String codigo;
     private String descripcion;
     private EstadoNegocio estadoNegocio;
     private LocalDateTime fecha;
     private String codigoModerador;
+    private String codigoNegocio;
 
 }
