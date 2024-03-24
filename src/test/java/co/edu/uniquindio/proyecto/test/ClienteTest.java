@@ -1,23 +1,23 @@
 package co.edu.uniquindio.proyecto.test;
 
+import co.edu.uniquindio.proyecto.dtos.DetalleClienteDTO;
 import co.edu.uniquindio.proyecto.dtos.RegistroClienteDTO;
-import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
-import co.edu.uniquindio.proyecto.enums.Rol;
-import co.edu.uniquindio.proyecto.modelo.DetalleProducto;
 import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
 import co.edu.uniquindio.proyecto.repositorios.ClienteRepo;
+import co.edu.uniquindio.proyecto.repositorios.ModeradorRepo;
 import co.edu.uniquindio.proyecto.servicios.ClienteServicioImpl;
-import co.edu.uniquindio.proyecto.servicios.excepciones.Validacion;
-import org.junit.jupiter.api.Assertions;
+import co.edu.uniquindio.proyecto.servicios.excepciones.ResourceNotFoundException;
+import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionCliente;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-import java.time.LocalDateTime;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @SpringBootTest
 public class ClienteTest {
@@ -25,46 +25,78 @@ public class ClienteTest {
     @Autowired
     private ClienteRepo clienteRepo;
     @Autowired
+    private ModeradorRepo moderadorRepo;
+    @Autowired
     private ClienteServicioImpl clienteServicio;
     @Autowired
-    private Validacion validacion;
+    private ValidacionCliente validacion;
 
     @Test
+    @DisplayName("Test para guardar o registrar un cliente")
     public void registrarClienteTest() throws Exception {
 
+        // Given - Dado o condicion previa o configuración
         List<String> favoritos = new ArrayList<>();
         List<String> negocios = new ArrayList<>();
 
         RegistroClienteDTO clienteDTO = new RegistroClienteDTO(
-                "leonardo",
+                "Pika Romero",
                 "foto3.jpg",
-                "leo",
-                "leoromero@gmail.com",
+                "pikiña",
+                "pikaluz@gmail.com",
                 "123456",
                 "ARMENIA",
                 favoritos,
                 negocios
         );
-        int cliente = clienteServicio.registrarse(clienteDTO);
-        //Cliente creado = validacion.buscarCliente("pika");
-        Assertions.assertNotEquals(0,5);
+        // When - Acción o el comportamiento que se va a probar
+        Cliente cliente = clienteServicio.registrarse(clienteDTO);
 
-
+        //Then - Verificar la salida
+        assertThat(cliente).isNotNull();
+        assertThat(cliente.getCodigo()).isGreaterThan(0);
     }
-/*
+
     @Test
-    public void actualizarClienteTest() {
+    public void actualizarClienteTest() throws Exception {
 
+        // Given - Dado o condicion previa o configuración
+        DetalleClienteDTO clienteDTO = new DetalleClienteDTO(
+                "Fiona Lucrecia",
+                "FILANDIA",
+                "foto3.jpg"
+        );
+        // When - Acción o el comportamiento que se va a probar
+        Cliente actualizado = clienteServicio.editarPerfil(clienteDTO, 1);
 
-        Cliente cliente = clienteRepo.findByCodigo(2).orElseThrow();
-        cliente.setEmail("nuevoemail@email.com");
-        clienteRepo.save(cliente);
-        Cliente clienteActualizado = clienteRepo.findByCodigo(2).orElseThrow();
-        ;
-        Assertions.assertEquals("nuevoemail@email.com", clienteActualizado.getEmail());
+        //Then - Verificar la salida
+        assertThat(actualizado.getCiudad()).isEqualTo("FILANDIA");
     }
 
+    @Test
+    public void eliminarCliente() throws Exception {
 
- */
+        // Given - Dado o condicion previa o configuración
+        Cliente cliente = validacion.buscarCliente(1);
 
+        // When - Acción o el comportamiento que se va a probar
+        clienteServicio.eliminarPerfil(cliente.getCodigo());
+
+        //Then - Verificar la salida
+        assertThrows(ResourceNotFoundException.class, () -> validacion.buscarCliente(1));
+
+    }
+
+    @Test
+    public void obtenerClienteTest() throws Exception {
+
+        // Given - Dado o condicion previa o configuración
+
+        // When - Acción o el comportamiento que se va a probar
+        DetalleClienteDTO detalleClienteDTO = clienteServicio.obtenerUsuario(3);
+
+        //Then - Verificar la salida
+        assertThat(detalleClienteDTO).isNotNull();
+        System.out.println("detalleClienteDTO.toString() = " + detalleClienteDTO.toString());
+    }
 }

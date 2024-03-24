@@ -1,19 +1,27 @@
 package co.edu.uniquindio.proyecto.modelo.documentos;
 
+import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
+import co.edu.uniquindio.proyecto.enums.Rol;
 import co.edu.uniquindio.proyecto.modelo.Cuenta;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
 @ToString
+@NoArgsConstructor
 @Document(collection = "moderadores")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+//@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Moderador extends Cuenta {
 
     @Id
     @EqualsAndHashCode.Include
     private int codigo;
+
+    @Builder
+    public Moderador(String email, String password, EstadoRegistro estadoRegistro, Rol rol, int codigo) {
+        super(email, password, EstadoRegistro.ACTIVO, Rol.ADMINISTRADOR);
+        this.codigo = codigo;
+    }
 }

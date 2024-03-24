@@ -7,6 +7,7 @@ import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
 import co.edu.uniquindio.proyecto.enums.Rol;
 import co.edu.uniquindio.proyecto.modelo.Cuenta;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -18,8 +19,7 @@ import java.util.List;
 @Data
 @ToString
 @Document(collection = "clientes")
-//@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 public class Cliente extends Cuenta implements Serializable {
 
@@ -33,9 +33,6 @@ public class Cliente extends Cuenta implements Serializable {
     private List<String> favoritos;
     private List<String> negocios;
 
-
-
-    @Builder
     public Cliente(RegistroClienteDTO clienteDTO, String password, int codigo) {
         super(clienteDTO.email(), password, EstadoRegistro.ACTIVO, Rol.USUARIO);
         this.codigo = codigo;
@@ -47,11 +44,10 @@ public class Cliente extends Cuenta implements Serializable {
         this.negocios = clienteDTO.negocios();
     }
 
-    public void actualizar(DetalleClienteDTO clienteDTO){
-
+    public void actualizar(DetalleClienteDTO clienteDTO) {
         this.setNombre(clienteDTO.nombre());
-        this.setEmail(clienteDTO.email());
         this.setCiudad(clienteDTO.ciudad());
         this.setFotoPerfil(clienteDTO.fotoPerfil());
     }
+
 }

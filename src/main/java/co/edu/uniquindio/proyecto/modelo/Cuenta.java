@@ -3,11 +3,13 @@ package co.edu.uniquindio.proyecto.modelo;
 import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
 import co.edu.uniquindio.proyecto.enums.Rol;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.lang.annotation.Inherited;
+
 
 @ToString
 @NoArgsConstructor
@@ -23,7 +25,7 @@ public class Cuenta implements Serializable {
                   Rol rol) {
         this.email = email;
         this.password = password;
-        this.estadoRegistro = EstadoRegistro.ACTIVO;
-        this.rol = Rol.USUARIO;
+        this.estadoRegistro = estadoRegistro;
+        this.rol = rol;
     }
 }

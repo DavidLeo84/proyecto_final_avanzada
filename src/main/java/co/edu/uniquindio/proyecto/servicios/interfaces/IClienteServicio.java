@@ -9,16 +9,12 @@ import org.springframework.stereotype.Service;
 @Service
 public interface IClienteServicio extends ICuentaServicio {
 
-    int registrarse(RegistroClienteDTO registroClienteDTO)throws Exception;
+    Cliente registrarse(RegistroClienteDTO registroClienteDTO)throws Exception;
 
-    Cliente editarPerfil(DetalleClienteDTO clienteDTO)throws Exception;
+    Cliente editarPerfil(DetalleClienteDTO clienteDTO, int codigo)throws Exception;
 
-    void eliminarPerfil(String codigo) throws Exception;
+    void eliminarPerfil(int codigo) throws Exception;
 
-    void obtenerUsuario(String codigo) throws Exception;
-
-    void recuperarPassword(CambioPasswordDTO cambioPasswordDTO) throws Exception;
-
-
+    DetalleClienteDTO obtenerUsuario(int codigo) throws Exception;
 
 }

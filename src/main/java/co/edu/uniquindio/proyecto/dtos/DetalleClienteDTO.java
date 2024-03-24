@@ -12,12 +12,6 @@ public record DetalleClienteDTO(
         @Size(max = 50)
         String nombre,
         @NotBlank
-        @Size(max = 50)
-        String nickname,
-        @Email
-        @NotBlank
-        String email,
-        @NotBlank
         @Size(max = 20)
         String ciudad,
         String fotoPerfil
@@ -28,7 +22,6 @@ public record DetalleClienteDTO(
     public DetalleClienteDTO(Cliente cliente){
         this(
                 cliente.getNombre();
-                cliente.getEmail();
                 cliente.getCiudad();
                 cliente.getFotoPerfil();
         );
