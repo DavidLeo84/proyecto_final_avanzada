@@ -1,4 +1,4 @@
-package co.edu.uniquindio.proyecto.modelo;
+package co.edu.uniquindio.proyecto.modelo.documentos;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -8,20 +8,18 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Document(collection = "comentarios")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Builder
 public class Comentario implements Serializable {
 
-    @Id
-    @EqualsAndHashCode.Include
-    private String codigo;
     private LocalDateTime fecha;
-    private int calificacion;
     private String mensaje;
     private String respuesta;
     private String codigoCliente;
     private String codigoNegocio;
+    private int calificar; // se califica con estrellas que tienen valores enteros
 }
