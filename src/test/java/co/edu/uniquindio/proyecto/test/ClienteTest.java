@@ -36,64 +36,61 @@ public class ClienteTest {
     public void registrarClienteTest() throws Exception {
 
         // Given - Dado o condicion previa o configuración
-        List<String> favoritos = new ArrayList<>();
-        List<String> negocios = new ArrayList<>();
-
         RegistroClienteDTO clienteDTO = new RegistroClienteDTO(
-                "Pika Romero",
-                "foto3.jpg",
-                "pikiña",
-                "pikaluz@gmail.com",
+                "Ronnie",
+                "foto1.jpg",
+                "salchiperro",
+                "salchiperro@gmail.com",
                 "123456",
-                "ARMENIA",
-                favoritos,
-                negocios
+                "ARMENIA"
         );
         // When - Acción o el comportamiento que se va a probar
         Cliente cliente = clienteServicio.registrarse(clienteDTO);
 
         //Then - Verificar la salida
         assertThat(cliente).isNotNull();
-        assertThat(cliente.getCodigo()).isGreaterThan(0);
     }
 
+    @DisplayName("Test para actualizar la informacion de un cliente")
     @Test
     public void actualizarClienteTest() throws Exception {
 
         // Given - Dado o condicion previa o configuración
         DetalleClienteDTO clienteDTO = new DetalleClienteDTO(
-                "Fiona Lucrecia",
-                "FILANDIA",
-                "foto3.jpg"
+                "Ronnie Romero",
+                "RISARALDA",
+                "foto1.jpg'"
         );
         // When - Acción o el comportamiento que se va a probar
-        Cliente actualizado = clienteServicio.editarPerfil(clienteDTO, 1);
+        Cliente actualizado = clienteServicio.editarPerfil(clienteDTO, "6603619f3a01ea038aa839b0");
 
         //Then - Verificar la salida
-        assertThat(actualizado.getCiudad()).isEqualTo("FILANDIA");
+        assertThat(actualizado.getCiudad()).isEqualTo("RISARALDA");
     }
 
+    @DisplayName("Test para eliminar la cuenta de un cliente")
     @Test
     public void eliminarCliente() throws Exception {
 
         // Given - Dado o condicion previa o configuración
-        Cliente cliente = validacion.buscarCliente(1);
+        Cliente cliente = validacion.buscarCliente("6603619f3a01ea038aa839b0");
 
         // When - Acción o el comportamiento que se va a probar
         clienteServicio.eliminarPerfil(cliente.getCodigo());
 
         //Then - Verificar la salida
-        assertThrows(ResourceNotFoundException.class, () -> validacion.buscarCliente(1));
+        assertThrows(ResourceNotFoundException.class, () -> validacion.buscarCliente("6603619f3a01ea038aa839b0"));
 
     }
 
+    @DisplayName("Test para buscar y traer un cliente")
     @Test
     public void obtenerClienteTest() throws Exception {
 
         // Given - Dado o condicion previa o configuración
 
         // When - Acción o el comportamiento que se va a probar
-        DetalleClienteDTO detalleClienteDTO = clienteServicio.obtenerUsuario(3);
+        DetalleClienteDTO detalleClienteDTO = clienteServicio.obtenerUsuario("66034bb18fc715359a09c9dc");
 
         //Then - Verificar la salida
         assertThat(detalleClienteDTO).isNotNull();

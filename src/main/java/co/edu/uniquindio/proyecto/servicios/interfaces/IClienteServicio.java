@@ -11,10 +11,10 @@ public interface IClienteServicio extends ICuentaServicio {
 
     Cliente registrarse(RegistroClienteDTO registroClienteDTO)throws Exception;
 
-    Cliente editarPerfil(DetalleClienteDTO clienteDTO, int codigo)throws Exception;
+    Cliente editarPerfil(DetalleClienteDTO clienteDTO, String codigo)throws Exception;
 
-    void eliminarPerfil(int codigo) throws Exception;
+    void eliminarPerfil(String codigo) throws Exception;
 
-    DetalleClienteDTO obtenerUsuario(int codigo) throws Exception;
+    DetalleClienteDTO obtenerUsuario(String codigo) throws Exception;
 
 }

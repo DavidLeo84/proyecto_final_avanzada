@@ -5,6 +5,7 @@ import co.edu.uniquindio.proyecto.repositorios.ModeradorRepo;
 import co.edu.uniquindio.proyecto.servicios.ClienteServicioImpl;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ResourceNotFoundException;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionCliente;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,16 +24,17 @@ public class ModeradorTest {
     @Autowired
     ModeradorRepo moderadorRepo;
 
+    @DisplayName("Test para eliminar la cuenta de un moderador")
     @Test
     public void eliminarCuentaTest() throws Exception {
 
         // Given - Dado o condicion previa o configuración
-        Moderador moderador = validacion.buscarModerador(2);
+        Moderador moderador = validacion.buscarModerador("2");
 
         // When - Acción o el comportamiento que se va a probar
         clienteServicio.eliminarCuenta(moderador.getCodigo());
 
         //Then - Verificar la salida
-        assertThrows(ResourceNotFoundException.class, () -> validacion.buscarModerador(2));
+        assertThrows(ResourceNotFoundException.class, () -> validacion.buscarModerador("2"));
     }
 }

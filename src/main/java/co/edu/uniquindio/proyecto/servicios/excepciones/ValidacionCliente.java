@@ -7,7 +7,9 @@ import co.edu.uniquindio.proyecto.repositorios.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -40,23 +42,23 @@ public class ValidacionCliente {
                     ("El usuario con email " + email + " ya se encuentra registrado");
     }
 
-    public Cliente buscarCliente(int codigo) throws Exception {
+    public Cliente buscarCliente(String codigoCliente) throws Exception {
 
-        Optional<Cliente> buscado = clienteRepo.findByCodigo(codigo);
+        Optional<Cliente> buscado = clienteRepo.findByCodigo(codigoCliente);
         Cliente cliente = null;
 
         if (buscado != null && buscado.get().getEstadoRegistro().equals(EstadoRegistro.ACTIVO)) {
             cliente = buscado.get();
         }
         if (buscado == null || buscado.get().getEstadoRegistro().equals(EstadoRegistro.INACTIVO)) {
-            throw new ResourceNotFoundException("No existe cliente con el codigo " + codigo);
+            throw new ResourceNotFoundException("No existe cliente con el codigo " + codigoCliente);
         }
         return cliente;
     }
 
-    public Moderador buscarModerador(int codigo) throws Exception {
+    public Moderador buscarModerador(String codigoModerador) throws Exception {
 
-        Optional<Moderador> buscado = moderadorRepo.findByCodigo(codigo);
+        Optional<Moderador> buscado = moderadorRepo.findByCodigo(codigoModerador);
         Moderador moderador = new Moderador();
 
         if (buscado != null && buscado.get().getEstadoRegistro().equals(EstadoRegistro.ACTIVO)) {
@@ -68,4 +70,20 @@ public class ValidacionCliente {
         return moderador;
     }
 
+    public Set<String> validarListaNegociosCliente(String codigoCliente) throws Exception {
+        Cliente cliente = buscarCliente(codigoCliente);
+        Set<String> lista = cliente.getNegocios();
+        if (lista.isEmpty()) {
+            throw new ResourceNotFoundException("No existe negocios asociados al cliente");
+        }
+        return lista;
+    }
+
+    public Set<String> validarListaGenericaCliente(Set<String> lista) throws Exception {
+
+        if (lista.isEmpty()) {
+            throw new ResourceNotFoundException("El cliente no tiene favoritos o recomendados");
+        }
+        return lista;
+    }
 } 

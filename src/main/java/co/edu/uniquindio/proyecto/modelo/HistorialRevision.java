@@ -1,4 +1,4 @@
-package co.edu.uniquindio.proyecto.modelo.documentos;
+package co.edu.uniquindio.proyecto.modelo;
 
 import co.edu.uniquindio.proyecto.enums.EstadoNegocio;
 import lombok.*;
@@ -6,9 +6,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
-@Document(collection = "historial_revisiones")
 @Data
 @ToString
 @AllArgsConstructor
@@ -17,8 +16,8 @@ import java.time.LocalDateTime;
 public class HistorialRevision implements Serializable {
 
     private String descripcion;
-    private EstadoNegocio estadoNegocio;
-    private LocalDateTime fecha;
+    private String estadoNegocio;
+    private String fecha;
     private String codigoModerador;
     private String codigoNegocio;
 

@@ -1,17 +1,15 @@
 package co.edu.uniquindio.proyecto.modelo;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class Ubicacion {
 
-    private Long longitud;
-    private Long latitud;
-
+    private int latitud;
+    private int longitud;
 }

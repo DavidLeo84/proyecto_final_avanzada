@@ -3,6 +3,7 @@ package co.edu.uniquindio.proyecto.servicios;
 import co.edu.uniquindio.proyecto.dtos.*;
 
 import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
+import co.edu.uniquindio.proyecto.enums.Rol;
 import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
 import co.edu.uniquindio.proyecto.modelo.documentos.Moderador;
 import co.edu.uniquindio.proyecto.repositorios.ClienteRepo;
@@ -11,15 +12,14 @@ import co.edu.uniquindio.proyecto.servicios.excepciones.ResourceNotFoundExceptio
 import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionCliente;
 import co.edu.uniquindio.proyecto.servicios.interfaces.IClienteServicio;
 
+import co.edu.uniquindio.proyecto.servicios.interfaces.ICloudinaryServicio;
 import co.edu.uniquindio.proyecto.servicios.interfaces.IEmailServicio;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +30,7 @@ public class ClienteServicioImpl implements IClienteServicio {
     private final ModeradorRepo moderadorRepo;
     private final ValidacionCliente validacion;
     private final IEmailServicio emailServicio;
+    private final ICloudinaryServicio cloudinaryServicio;
 
     @Override
     public void iniciarSesion(SesionDTO sesionDTO) throws Exception {
@@ -38,7 +39,7 @@ public class ClienteServicioImpl implements IClienteServicio {
 
     //Metodo para eliminar la cuenta del moderador
     @Override
-    public void eliminarCuenta(int codigo) throws Exception {
+    public void eliminarCuenta(String codigo) throws Exception {
         try {
             Moderador moderador = validacion.buscarModerador(codigo);
             moderador.setEstadoRegistro(EstadoRegistro.INACTIVO);
@@ -67,27 +68,35 @@ public class ClienteServicioImpl implements IClienteServicio {
     @Override
     public Cliente registrarse(RegistroClienteDTO clienteDTO) throws Exception {
 
-        int codigo = autoIncrementarCodigo();
         validacion.existeCliente(clienteDTO.nickname());
         validacion.existeEmail(clienteDTO.email());
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String passwordEncriptada = passwordEncoder.encode(clienteDTO.password());
-        Cliente cliente = clienteRepo.save(new Cliente(clienteDTO, passwordEncriptada, codigo));
+        ///BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        //String passwordEncriptada = passwordEncoder.encode(clienteDTO.password());
+        Cliente cliente = Cliente.builder()
+                .email(clienteDTO.email()).password(clienteDTO.password())
+                .estadoRegistro(EstadoRegistro.ACTIVO).rol(Rol.USUARIO)
+                .nickname(clienteDTO.nickname()).nombre(clienteDTO.nombre())
+                .ciudad(clienteDTO.ciudad()).fotoPerfil(clienteDTO.fotoPerfil())
+                .negocios(new HashSet<String>()).favoritos(new HashSet<>())
+                .recomendados(new HashSet<>()).build();
+        clienteRepo.save(cliente);
         return cliente;
     }
 
     @Override
-    public Cliente editarPerfil(DetalleClienteDTO clienteDTO, int codigo) throws Exception {
+    public Cliente editarPerfil(DetalleClienteDTO clienteDTO, String codigo) throws Exception {
 
-        Cliente cliente = clienteRepo.findByCodigo(codigo).orElse(null);
-        cliente.actualizar(clienteDTO);
+        Cliente cliente = validacion.buscarCliente(codigo);
+        cliente.setNombre(clienteDTO.nombre());
+        cliente.setCiudad(clienteDTO.ciudad());
+        cliente.setFotoPerfil(cliente.getFotoPerfil());
         clienteRepo.save(cliente);
         return cliente;
     }
 
     //Metodo para eliminar la cuenta del cliente
     @Override
-    public void eliminarPerfil(int codigo) throws Exception {
+    public void eliminarPerfil(String codigo) throws Exception {
         try {
             Cliente cliente = validacion.buscarCliente(codigo);
             cliente.setEstadoRegistro(EstadoRegistro.INACTIVO);
@@ -98,7 +107,7 @@ public class ClienteServicioImpl implements IClienteServicio {
     }
 
     @Override
-    public DetalleClienteDTO obtenerUsuario(int codigo) throws Exception {
+    public DetalleClienteDTO obtenerUsuario(String codigo) throws Exception {
 
         Cliente cliente = validacion.buscarCliente(codigo);
 
@@ -107,13 +116,5 @@ public class ClienteServicioImpl implements IClienteServicio {
                 cliente.getCiudad(),
                 cliente.getFotoPerfil()
         );
-
     }
-
-    private int autoIncrementarCodigo() {
-        List<Cliente> clientes = clienteRepo.findAll();
-        return clientes.isEmpty() ? 1 :
-                clientes.stream().max(Comparator.comparing(Cliente::getCodigo)).get().getCodigo() + 1;
-    }
-
 }

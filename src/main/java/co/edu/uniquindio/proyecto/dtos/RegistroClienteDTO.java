@@ -23,8 +23,7 @@ public record RegistroClienteDTO(
         String password,
         @NotBlank
         @Length(max = 30)
-        String ciudad,
-        List<String> favoritos,
-        List<String> negocios
+        String ciudad
+
 ) {
 }

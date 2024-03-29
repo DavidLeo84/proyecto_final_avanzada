@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 
 @Data
@@ -25,29 +26,27 @@ public class Cliente extends Cuenta implements Serializable {
 
     @Id
     @EqualsAndHashCode.Include
-    private int codigo;
+    private String codigo;
     private String nombre;
     private String nickname;
     private String ciudad;
     private String fotoPerfil;
-    private List<String> favoritos;
-    private List<String> negocios;
+    private Set<String> favoritos;
+    private Set<String> negocios;
+    private Set<String> recomendados; //funcionalidad adicional
 
-    public Cliente(RegistroClienteDTO clienteDTO, String password, int codigo) {
-        super(clienteDTO.email(), password, EstadoRegistro.ACTIVO, Rol.USUARIO);
+    @Builder
+    public Cliente(String email, String password, EstadoRegistro estadoRegistro, Rol rol,
+                   String codigo, String nombre, String nickname, String ciudad, String fotoPerfil,
+                   Set<String> favoritos, Set<String> negocios, Set<String> recomendados) {
+        super(email, password, EstadoRegistro.ACTIVO, Rol.USUARIO);
         this.codigo = codigo;
-        this.nombre = clienteDTO.nombre();
-        this.nickname = clienteDTO.nickname();
-        this.ciudad = clienteDTO.ciudad();
-        this.fotoPerfil = clienteDTO.fotoPerfil();
-        this.favoritos = clienteDTO.favoritos();
-        this.negocios = clienteDTO.negocios();
+        this.nombre = nombre;
+        this.nickname = nickname;
+        this.ciudad = ciudad;
+        this.fotoPerfil = fotoPerfil;
+        this.favoritos = favoritos;
+        this.negocios = negocios;
+        this.recomendados = recomendados;
     }
-
-    public void actualizar(DetalleClienteDTO clienteDTO) {
-        this.setNombre(clienteDTO.nombre());
-        this.setCiudad(clienteDTO.ciudad());
-        this.setFotoPerfil(clienteDTO.fotoPerfil());
-    }
-
 }

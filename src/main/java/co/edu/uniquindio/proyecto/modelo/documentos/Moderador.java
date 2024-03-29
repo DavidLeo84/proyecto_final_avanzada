@@ -17,10 +17,10 @@ public class Moderador extends Cuenta {
 
     @Id
     @EqualsAndHashCode.Include
-    private int codigo;
+    private String codigo;
 
     @Builder
-    public Moderador(String email, String password, EstadoRegistro estadoRegistro, Rol rol, int codigo) {
+    public Moderador(String email, String password, EstadoRegistro estadoRegistro, Rol rol, String codigo) {
         super(email, password, EstadoRegistro.ACTIVO, Rol.ADMINISTRADOR);
         this.codigo = codigo;
     }

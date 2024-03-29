@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public interface ICuentaServicio {
 
     void iniciarSesion(SesionDTO sesionDTO)throws Exception;
-    void eliminarCuenta(int codigo)throws Exception;
+    void eliminarCuenta(String codigo)throws Exception;
     void enviarLinkRecuperacion(String destinatario)throws Exception;
     void cambiarPassword(CambioPasswordDTO cambioPasswordDTO)throws Exception;
 }

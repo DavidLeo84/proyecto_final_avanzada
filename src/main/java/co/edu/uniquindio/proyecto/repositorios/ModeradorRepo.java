@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ModeradorRepo extends MongoRepository<Moderador, Integer> {
+public interface ModeradorRepo extends MongoRepository<Moderador, String> {
 
-    Optional<Moderador> findByCodigo(int codigo);
+    Optional<Moderador> findByCodigo(String codigo);
 }

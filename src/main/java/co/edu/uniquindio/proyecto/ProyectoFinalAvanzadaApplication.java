@@ -22,21 +22,22 @@ public class ProyectoFinalAvanzadaApplication {
 
 //    @Bean
 //    CommandLineRunner init(ModeradorRepo moderadorRepo) {
+//
 //        return args -> {
 //
 //            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 //            String password_1 = passwordEncoder.encode("1234");
-//             String password_2 = passwordEncoder.encode("5678");
+//            String password_2 = passwordEncoder.encode("5678");
 //            String password_3 = passwordEncoder.encode("9012");
 //
-//            Moderador moderador1 = new Moderador("mode1@correo.com",password_1,
-//                    EstadoRegistro.ACTIVO, Rol.ADMINISTRADOR, 1 );
+//            Moderador moderador1 = new Moderador("mode1@correo.com", password_1,
+//                    EstadoRegistro.ACTIVO, Rol.ADMINISTRADOR, "1");
 //
-//            Moderador moderador2 = new Moderador("mode2@correo.com",password_2,
-//                    EstadoRegistro.valueOf(EstadoRegistro.ACTIVO.name()), Rol.valueOf(Rol.ADMINISTRADOR.name()), 2 );
+//            Moderador moderador2 = new Moderador("mode2@correo.com", password_2,
+//                    EstadoRegistro.ACTIVO, Rol.ADMINISTRADOR, "2");
 //
-//            Moderador moderador3 = new Moderador("mode3@correo.com",password_3,
-//                    EstadoRegistro.ACTIVO, Rol.ADMINISTRADOR, 3 );
+//            Moderador moderador3 = new Moderador("mode3@correo.com", password_3,
+//                    EstadoRegistro.ACTIVO, Rol.ADMINISTRADOR, "3");
 //
 //            moderadorRepo.saveAll(List.of(moderador1, moderador2, moderador3));
 //        };

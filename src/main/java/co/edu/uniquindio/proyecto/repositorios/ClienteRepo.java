@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ClienteRepo extends MongoRepository<Cliente, Integer> {
+public interface ClienteRepo extends MongoRepository<Cliente, String> {
 
-    Optional<Cliente> findByCodigo(int codigo) throws Exception;
+    Optional<Cliente> findByCodigo(String codigo) throws Exception;
     Optional<Cliente> findByNickname(String nickname) throws Exception;
     Optional<Cliente> findByEmail(String email) throws Exception;
 
