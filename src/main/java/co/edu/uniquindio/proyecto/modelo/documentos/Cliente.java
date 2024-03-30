@@ -1,27 +1,21 @@
 package co.edu.uniquindio.proyecto.modelo.documentos;
 
-import co.edu.uniquindio.proyecto.dtos.ActualizarClienteDTO;
-import co.edu.uniquindio.proyecto.dtos.DetalleClienteDTO;
-import co.edu.uniquindio.proyecto.dtos.RegistroClienteDTO;
 import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
 import co.edu.uniquindio.proyecto.enums.Rol;
 import co.edu.uniquindio.proyecto.modelo.Cuenta;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
 
 @Data
 @ToString
+@NoArgsConstructor
 @Document(collection = "clientes")
 @EqualsAndHashCode(callSuper = false)
-@NoArgsConstructor
 public class Cliente extends Cuenta implements Serializable {
 
     @Id

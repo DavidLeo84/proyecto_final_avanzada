@@ -2,18 +2,15 @@ package co.edu.uniquindio.proyecto.servicios;
 
 import co.edu.uniquindio.proyecto.dtos.ActualizarNegocioDTO;
 import co.edu.uniquindio.proyecto.dtos.DetalleNegocioDTO;
-import co.edu.uniquindio.proyecto.dtos.RegistroHistorialDTO;
 import co.edu.uniquindio.proyecto.dtos.RegistroNegocioDTO;
-import co.edu.uniquindio.proyecto.enums.EstadoNegocio;
+import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
 import co.edu.uniquindio.proyecto.enums.TipoNegocio;
-import co.edu.uniquindio.proyecto.modelo.Calificacion;
+import co.edu.uniquindio.proyecto.enums.ValorCalificar;
 import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
-import co.edu.uniquindio.proyecto.modelo.documentos.Comentario;
 import co.edu.uniquindio.proyecto.modelo.HistorialRevision;
 import co.edu.uniquindio.proyecto.modelo.documentos.Negocio;
 import co.edu.uniquindio.proyecto.repositorios.ClienteRepo;
 import co.edu.uniquindio.proyecto.repositorios.NegocioRepo;
-import co.edu.uniquindio.proyecto.servicios.excepciones.ResourceNotFoundException;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionCliente;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionNegocio;
 import co.edu.uniquindio.proyecto.servicios.interfaces.INegocioServicio;
@@ -41,13 +38,12 @@ public class NegocioServicioImpl implements INegocioServicio {
 
         validacionNegocio.existeNegocio(negocioDTO.ubicacion().getLongitud(), negocioDTO.ubicacion().getLatitud());
         Cliente cliente = validacionCliente.buscarCliente(negocioDTO.codigoCliente());
-        Negocio nuevo = Negocio.builder().estado(EstadoNegocio.APROBADO).ubicacion(negocioDTO.ubicacion())
+        Negocio nuevo = Negocio.builder().estadoRegistro(EstadoRegistro.INACTIVO).ubicacion(negocioDTO.ubicacion())
                 .codigoCliente(cliente.getCodigo()).nombre(negocioDTO.nombre())
                 .descripcion(negocioDTO.descripcion()).tipoNegocio(TipoNegocio.valueOf(negocioDTO.tipoNegocio()))
                 .horarios(negocioDTO.horarios()).telefonos(negocioDTO.telefonos())
-                .imagenes(negocioDTO.imagenes()).comentarios(new HashSet<Comentario>())
-                .calificaciones(new HashSet<Calificacion>()).historialRevisiones(new HashSet<HistorialRevision>())
-                .build();
+                .imagenes(negocioDTO.imagenes()).calificaciones(new ArrayList<String>())
+                .historialRevisiones(new HashSet<HistorialRevision>()).build();
         negocioRepo.save(nuevo);
         cliente.getNegocios().add(nuevo.getCodigo());
         clienteRepo.save(cliente);
@@ -69,7 +65,7 @@ public class NegocioServicioImpl implements INegocioServicio {
     public void eliminarNegocio(String codigoNegocio) throws Exception {
 
         Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
-        negocio.setEstado(EstadoNegocio.ELIMINADO);
+        negocio.setEstadoRegistro(EstadoRegistro.INACTIVO);
         negocioRepo.save(negocio);
     }
 
@@ -85,10 +81,10 @@ public class NegocioServicioImpl implements INegocioServicio {
     }
 
     @Override
-    public Set<DetalleNegocioDTO> filtrarPorEstado(EstadoNegocio estado) throws Exception {
+    public Set<DetalleNegocioDTO> filtrarPorEstado(EstadoRegistro estadoRegistro) throws Exception {
 
-        validacionNegocio.validarListaNegociosEstado(estado);
-        Set<Negocio> negocios = negocioRepo.findAllByEstado(estado);
+        validacionNegocio.validarListaNegociosEstado(estadoRegistro);
+        Set<Negocio> negocios = negocioRepo.findAllByEstadoRegistro(estadoRegistro);
         Set<DetalleNegocioDTO> negocioDTOList = new HashSet<>();
         return negocios.stream().map(negocio -> new DetalleNegocioDTO(
                 negocio.getNombre(), negocio.getUbicacion(),
@@ -111,10 +107,10 @@ public class NegocioServicioImpl implements INegocioServicio {
     }
 
     @Override
-    public void cambiarEstado(String codigoNegocio, EstadoNegocio estado) throws Exception {
+    public void cambiarEstado(String codigoNegocio, EstadoRegistro estadoRegistro) throws Exception {
 
         Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
-        negocio.setEstado(estado);
+        negocio.setEstadoRegistro(estadoRegistro);
         negocioRepo.save(negocio);
     }
 
@@ -207,6 +203,41 @@ public class NegocioServicioImpl implements INegocioServicio {
                     negocio.getImagenes());
         }
         return negocioDTO;
+    }
+
+    @Override
+    public void calificarNegocio(String codigoNegocio, ValorCalificar calificacion) throws Exception {
+
+        Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
+        negocio.getCalificaciones().add(calificacion.name());
+        negocioRepo.save(negocio);
+    }
+
+    @Override
+    public float calcularPromedioCalificaficaciones(String codigoNegocio) throws Exception {
+
+        Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
+        int contador = negocio.getCalificaciones().stream()
+                .mapToInt(calfn -> {
+                    switch (calfn) {
+                        case "ONE_STAR":
+                            return 1;
+                        case "TWO_STAR":
+                            return 2;
+                        case "THREE_STAR":
+                            return 3;
+                        case "FOUR_STAR":
+                            return 4;
+                        case "FIVE_STAR":
+                            return 5;
+                        default:
+                            return 0;
+                    }
+                })
+                .sum();
+
+        float resultado = contador / negocio.getCalificaciones().size();
+        return resultado;
     }
 
 }

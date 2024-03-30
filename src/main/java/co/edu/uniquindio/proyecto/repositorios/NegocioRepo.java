@@ -1,6 +1,7 @@
 package co.edu.uniquindio.proyecto.repositorios;
 
 import co.edu.uniquindio.proyecto.enums.EstadoNegocio;
+import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
 import co.edu.uniquindio.proyecto.modelo.documentos.Negocio;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -19,7 +20,7 @@ public interface NegocioRepo extends MongoRepository<Negocio, String> {
 
     Optional<Negocio> findByCodigo(String codigo) throws Exception;
 
-    Set<Negocio> findAllByEstado(EstadoNegocio estadoNegocio) throws Exception;
+    Set<Negocio> findAllByEstadoRegistro(EstadoRegistro estadoRegistro) throws Exception;
 
     Set<Negocio> findAllByCodigoCliente(String codigo) throws Exception;
 

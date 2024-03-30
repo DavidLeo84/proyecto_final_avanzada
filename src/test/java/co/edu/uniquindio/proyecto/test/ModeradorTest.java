@@ -20,7 +20,7 @@ public class ModeradorTest {
     @Autowired
     private ClienteServicioImpl clienteServicio;
     @Autowired
-    private ValidacionCliente validacion;
+    private ValidacionCliente validacionCliente;
     @Autowired
     ModeradorRepo moderadorRepo;
 
@@ -29,12 +29,12 @@ public class ModeradorTest {
     public void eliminarCuentaTest() throws Exception {
 
         // Given - Dado o condicion previa o configuración
-        Moderador moderador = validacion.buscarModerador("2");
+        Moderador moderador = validacionCliente.buscarModerador("3");
 
         // When - Acción o el comportamiento que se va a probar
         clienteServicio.eliminarCuenta(moderador.getCodigo());
 
         //Then - Verificar la salida
-        assertThrows(ResourceNotFoundException.class, () -> validacion.buscarModerador("2"));
+        assertThrows(ResourceNotFoundException.class, () -> validacionCliente.buscarModerador("3"));
     }
 }

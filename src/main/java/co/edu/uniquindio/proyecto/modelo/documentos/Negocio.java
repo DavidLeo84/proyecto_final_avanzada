@@ -1,8 +1,8 @@
 package co.edu.uniquindio.proyecto.modelo.documentos;
 
 import co.edu.uniquindio.proyecto.enums.EstadoNegocio;
+import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
 import co.edu.uniquindio.proyecto.enums.TipoNegocio;
-import co.edu.uniquindio.proyecto.modelo.Calificacion;
 import co.edu.uniquindio.proyecto.modelo.HistorialRevision;
 import co.edu.uniquindio.proyecto.modelo.Horario;
 import co.edu.uniquindio.proyecto.modelo.Ubicacion;
@@ -15,13 +15,14 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
+
+@Data
+@Builder
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Document(collection = "negocios")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Data
-@NoArgsConstructor
-@ToString
-@Builder
-@AllArgsConstructor
 public class Negocio implements Serializable {
 
     @Id
@@ -31,12 +32,11 @@ public class Negocio implements Serializable {
     private String nombre;
     private Ubicacion ubicacion;
     private String descripcion;
-    private EstadoNegocio estado;
+    private EstadoRegistro estadoRegistro;
     private TipoNegocio tipoNegocio;
     private Set<Horario> horarios;
     private Set<String> telefonos;
     private Set<HistorialRevision> historialRevisiones;
     private Set<String> imagenes;
-    private Set<Comentario> comentarios;
-    private Set<Calificacion> calificaciones;
+    private List<String> calificaciones; // se califica con estrellas que tienen valores enteros
 }

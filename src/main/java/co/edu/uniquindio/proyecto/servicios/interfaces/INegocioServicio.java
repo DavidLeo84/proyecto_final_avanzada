@@ -5,6 +5,8 @@ import co.edu.uniquindio.proyecto.dtos.DetalleNegocioDTO;
 import co.edu.uniquindio.proyecto.dtos.RegistroHistorialDTO;
 import co.edu.uniquindio.proyecto.dtos.RegistroNegocioDTO;
 import co.edu.uniquindio.proyecto.enums.EstadoNegocio;
+import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
+import co.edu.uniquindio.proyecto.enums.ValorCalificar;
 import co.edu.uniquindio.proyecto.modelo.documentos.Negocio;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +24,11 @@ public interface INegocioServicio {
 
     DetalleNegocioDTO buscarNegocio(String codigoNegocio)throws Exception;
 
-    Set<DetalleNegocioDTO> filtrarPorEstado(EstadoNegocio estado)throws Exception;
+    Set<DetalleNegocioDTO> filtrarPorEstado(EstadoRegistro estado)throws Exception;
 
     Set<DetalleNegocioDTO> listarNegociosPropietario(String codigoCliente)throws Exception;
 
-    void cambiarEstado(String codigoNegocio, EstadoNegocio estado)throws Exception;
+    void cambiarEstado(String codigoNegocio, EstadoRegistro estado)throws Exception;
 
     void guardarRecomendados(String codigoNegocio, String codigoCliente) throws Exception;
 
@@ -39,5 +41,9 @@ public interface INegocioServicio {
     Set<DetalleNegocioDTO> listarFavoritos(String codigoCliente) throws Exception;
 
     DetalleNegocioDTO obtenerFavorito(String codigoCliente) throws Exception;
+
+    void calificarNegocio(String codigoNegocio, ValorCalificar calificacion) throws Exception;
+
+    float calcularPromedioCalificaficaciones(String codigoNegocio) throws Exception;
 
 }

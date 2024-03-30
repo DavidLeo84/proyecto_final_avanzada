@@ -4,13 +4,16 @@ import co.edu.uniquindio.proyecto.dtos.CambioPasswordDTO;
 import co.edu.uniquindio.proyecto.dtos.HistorialRevisionDTO;
 import co.edu.uniquindio.proyecto.dtos.SesionDTO;
 import co.edu.uniquindio.proyecto.enums.EstadoNegocio;
+import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
 import co.edu.uniquindio.proyecto.modelo.HistorialRevision;
 import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
+import co.edu.uniquindio.proyecto.modelo.documentos.Moderador;
 import co.edu.uniquindio.proyecto.modelo.documentos.Negocio;
 import co.edu.uniquindio.proyecto.repositorios.ModeradorRepo;
 import co.edu.uniquindio.proyecto.repositorios.NegocioRepo;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionCliente;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionNegocio;
+import co.edu.uniquindio.proyecto.servicios.interfaces.IEmailServicio;
 import co.edu.uniquindio.proyecto.servicios.interfaces.IModeradorServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +37,8 @@ public class ModeradorServicioImpl implements IModeradorServicio {
     private final ModeradorRepo moderadorRepo;
     private final NegocioServicioImpl negocioServicio;
     private final EmailServicioImpl emailServicio;
+    private final ClienteServicioImpl clienteServicio;
+
 
     @Override
     public void iniciarSesion(SesionDTO sesionDTO) throws Exception {
@@ -40,13 +46,17 @@ public class ModeradorServicioImpl implements IModeradorServicio {
     }
 
     @Override
-    public void eliminarCuenta(String codigo) throws Exception {
-
+    public void eliminarCuenta(String codigoModerador) throws Exception {
+//        clienteServicio.eliminarCuenta(codigoModerador);
     }
 
     @Override
     public void enviarLinkRecuperacion(String destinatario) throws Exception {
 
+//        validacionModerador.existeEmail(destinatario);
+//        //Optional<Moderador> moderadorOptional = moderadorRepo.findByEmail(destinatario);
+//        emailServicio.enviarEmail(destinatario, "Recuperar contraseña",
+//                "http://localhost:8080/api/moderador/recoPass");
     }
 
     @Override
@@ -58,6 +68,7 @@ public class ModeradorServicioImpl implements IModeradorServicio {
     public HistorialRevision revisarNegocio(HistorialRevisionDTO revisionDTO) throws Exception {
 
         Negocio negocio = validacion.buscarNegocioPendiente(revisionDTO.codigoNegocio());
+        Cliente cliente = validacionCliente.buscarCliente(negocio.getCodigoCliente());
 
         HistorialRevision revision = HistorialRevision.builder()
                 .descripcion(revisionDTO.descripcion())
@@ -66,7 +77,19 @@ public class ModeradorServicioImpl implements IModeradorServicio {
                 .codigoModerador(revisionDTO.codigoModerador())
                 .codigoNegocio(revisionDTO.codigoNegocio())
                 .build();
-        negocio.setEstado(revisionDTO.estadoNegocio());
+        if (revisionDTO.estadoNegocio().equals(EstadoNegocio.PENDIENTE)) {
+            negocio.setEstadoRegistro(EstadoRegistro.INACTIVO);
+        }
+        if (revisionDTO.estadoNegocio().equals(EstadoNegocio.APROBADO)) {
+            negocio.setEstadoRegistro(EstadoRegistro.ACTIVO);
+        }
+
+        if (revisionDTO.estadoNegocio().equals(EstadoNegocio.RECHAZADO)) {
+            negocio.setEstadoRegistro(EstadoRegistro.INACTIVO);
+        }
+        if (revisionDTO.estadoNegocio().equals(EstadoNegocio.ELIMINADO)) {
+            negocio.setEstadoRegistro(EstadoRegistro.INACTIVO);
+        }
         negocio.getHistorialRevisiones().add(revision);
         negocioRepo.save(negocio);
         enviarEmail(revisionDTO, negocio.getCodigoCliente());
