@@ -55,7 +55,6 @@ public class ClienteServicioImpl implements IClienteServicio {
     public void enviarLinkRecuperacion(String destinatario) throws Exception {
 
         validacionCliente.existeEmail(destinatario);
-        //Optional<Cliente> clienteOptional = clienteRepo.findByEmail(destinatario);
         emailServicio.enviarEmail(destinatario, "Recuperar contraseña",
                 "http://localhost:8080/api/cliente/recoPass");
     }

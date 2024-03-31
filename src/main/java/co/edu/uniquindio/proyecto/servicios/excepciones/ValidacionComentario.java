@@ -14,12 +14,12 @@ public class ValidacionComentario {
 
     private final ComentarioRepo comentarioRepo;
 
-//    public void validarCalificacion(int calificacion) throws Exception {
-//
-//        if (calificacion < 0 || calificacion > 5) {
-//            throw new ResourceInvalidException("Valor no válido para calificar sitio");
-//        }
-//    }
+    public void validarCalificacion(int calificacion) throws Exception {
+
+        if (calificacion < 0 || calificacion > 5) {
+            throw new ResourceInvalidException("Valor no válido para calificar sitio");
+        }
+    }
 
     public String validarFecha(LocalDateTime fecha) throws Exception {
 

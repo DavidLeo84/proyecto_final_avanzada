@@ -18,6 +18,9 @@ public interface NegocioRepo extends MongoRepository<Negocio, String> {
     @Query("{ubicacion:{latitud:?0,longitud:?1}}")
     Optional<Negocio> getNegocioByUbicacion(int latitud, int longitud) throws Exception;
 
+    @Query("{ubicacion:{latitud:?0,longitud:?1}}")
+    List<Negocio> getListNegocioByUbicacion(int latitud, int longitud) throws Exception;
+
     Optional<Negocio> findByCodigo(String codigo) throws Exception;
 
     Set<Negocio> findAllByEstadoRegistro(EstadoRegistro estadoRegistro) throws Exception;

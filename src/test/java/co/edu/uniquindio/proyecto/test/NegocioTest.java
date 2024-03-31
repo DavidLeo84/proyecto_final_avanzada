@@ -80,9 +80,9 @@ public class NegocioTest {
 
         // Given - Dado o condicion previa o configuración
         RegistroNegocioDTO negocioDTO = new RegistroNegocioDTO(
-                "La Primera Perrada de Sacha",
-                "660842f2e1f50b64a6376e3c",
-                new Ubicacion(293454780, 657654324),
+                "La Primera Perrada de Ronnie",
+                "6608622d7a6bf86424f727d3",
+                new Ubicacion(453454780, 217654324),
                 "Los mejores perros calientes de la ciudad",
                 TipoNegocio.COMIDAS_RAPIDAS.name(),
                 horarios,
