@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public record HistorialRevisionDTO(
         String descripcion,
         EstadoNegocio estadoNegocio,
-        LocalDateTime fecha,
+        //LocalDateTime fecha,
         String codigoModerador,
         String codigoNegocio
 ) {

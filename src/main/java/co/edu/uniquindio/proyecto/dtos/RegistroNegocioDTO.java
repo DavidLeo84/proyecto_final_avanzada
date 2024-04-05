@@ -23,7 +23,7 @@ public record RegistroNegocioDTO(
         @NotBlank
         String tipoNegocio,
         @NotBlank
-        Set<Horario> horarios,
+        List<Horario> horarios,
         @Size(max = 10)
         @NotEmpty
         Set<String>telefonos,

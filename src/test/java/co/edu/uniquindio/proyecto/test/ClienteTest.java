@@ -37,10 +37,10 @@ public class ClienteTest {
 
         // Given - Dado o condicion previa o configuración
         RegistroClienteDTO clienteDTO = new RegistroClienteDTO(
-                "Ronnie",
+                "Fiona Lucero",
                 "foto1.jpg",
-                "salchiperro",
-                "salchiperro@gmail.com",
+                "fiona",
+                "fiona@gmail.com",
                 "123456",
                 "ARMENIA"
         );
@@ -57,14 +57,15 @@ public class ClienteTest {
 
         // Given - Dado o condicion previa o configuración
         DetalleClienteDTO clienteDTO = new DetalleClienteDTO(
-                "Ronnie Romero",
+                "sacha",
                 "RISARALDA",
                 "foto1.jpg'"
         );
         // When - Acción o el comportamiento que se va a probar
-        Cliente actualizado = clienteServicio.editarPerfil(clienteDTO, "6603619f3a01ea038aa839b0");
+        Cliente actualizado = clienteServicio.editarPerfil(clienteDTO, "660842f2e1f50b64a6376e3c");
 
         //Then - Verificar la salida
+        System.out.println("actualizado = " + actualizado);
         assertThat(actualizado.getCiudad()).isEqualTo("RISARALDA");
     }
 
@@ -73,13 +74,13 @@ public class ClienteTest {
     public void eliminarCliente() throws Exception {
 
         // Given - Dado o condicion previa o configuración
-        Cliente cliente = validacion.buscarCliente("6603619f3a01ea038aa839b0");
+        Cliente cliente = validacion.buscarCliente("660842f2e1f50b64a6376e3c");
 
         // When - Acción o el comportamiento que se va a probar
         clienteServicio.eliminarPerfil(cliente.getCodigo());
 
         //Then - Verificar la salida
-        assertThrows(ResourceNotFoundException.class, () -> validacion.buscarCliente("6603619f3a01ea038aa839b0"));
+        assertThrows(ResourceNotFoundException.class, () -> validacion.buscarCliente("660842f2e1f50b64a6376e3c"));
 
     }
 
@@ -90,7 +91,7 @@ public class ClienteTest {
         // Given - Dado o condicion previa o configuración
 
         // When - Acción o el comportamiento que se va a probar
-        DetalleClienteDTO detalleClienteDTO = clienteServicio.obtenerUsuario("66034bb18fc715359a09c9dc");
+        DetalleClienteDTO detalleClienteDTO = clienteServicio.obtenerUsuario("660842f2e1f50b64a6376e3c");
 
         //Then - Verificar la salida
         assertThat(detalleClienteDTO).isNotNull();

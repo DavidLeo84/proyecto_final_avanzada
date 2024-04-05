@@ -7,7 +7,6 @@ import co.edu.uniquindio.proyecto.repositorios.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -22,24 +21,22 @@ public class ValidacionCliente {
     private final NegocioRepo negocioRepo;
 
 
-    //Este metodo se usa al registrar un nuevo cliente si existe ya un registro con su
-    // mismo nickname
-    public void existeCliente(String nickname) throws Exception {
-
-        Optional<Cliente> clienteOptional = clienteRepo.findByNickname(nickname);
-        if (!clienteOptional.isEmpty())
-            throw new Exception
-                    ("El usuario con nickname " + nickname + " ya se encuentra registrado");
-    }
-
     //Este método se usa para verificar el correo ya se encuentra registrado con otro
     // cliente al momento de registrar un nuevo cliente
     public void existeEmail(String email) throws Exception {
 
         Optional<Cliente> clienteOptional = clienteRepo.findByEmail(email);
-        if (!clienteOptional.isEmpty())
-            throw new Exception
-                    ("El usuario con email " + email + " ya se encuentra registrado");
+        if (!clienteOptional.isPresent())
+            throw new Exception("El usuario con email " + email + " ya se encuentra registrado");
+    }
+
+    public void validarUnicos(String email, String nickname) throws Exception {
+        if (estaRepetidoEmail(email)) {
+            throw new ResourceNotFoundException("El email " + email + " ya esta en uso");
+        }
+        if (estaRepetidoNickname(nickname)) {
+            throw new ResourceNotFoundException("El nickname " + nickname + " ya esta en uso");
+        }
     }
 
     public Cliente buscarCliente(String codigoCliente) throws Exception {
@@ -85,5 +82,13 @@ public class ValidacionCliente {
             throw new ResourceNotFoundException("El cliente no tiene favoritos o recomendados");
         }
         return lista;
+    }
+
+    private boolean estaRepetidoEmail(String email) throws Exception {
+        return clienteRepo.findByEmail(email).isPresent();
+    }
+
+    private boolean estaRepetidoNickname(String nickname) throws Exception {
+        return clienteRepo.findByNickname(nickname).isPresent();
     }
 } 

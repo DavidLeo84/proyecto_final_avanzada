@@ -16,6 +16,7 @@ import co.edu.uniquindio.proyecto.servicios.interfaces.ICloudinaryServicio;
 import co.edu.uniquindio.proyecto.servicios.interfaces.IEmailServicio;
 import lombok.RequiredArgsConstructor;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,20 +29,22 @@ public class ClienteServicioImpl implements IClienteServicio {
 
     private final ClienteRepo clienteRepo;
     private final ModeradorRepo moderadorRepo;
-    private final ValidacionCliente validacion;
-    private final IEmailServicio emailServicio;
-    private final ICloudinaryServicio cloudinaryServicio;
+    private final ValidacionCliente validacionCliente;
+    private final EmailServicioImpl emailServicio;
+    private final CloudinaryServicioImpl cloudinaryServicio;
 
     @Override
     public void iniciarSesion(SesionDTO sesionDTO) throws Exception {
 
+        //invoca al servicio de JWT de crear token
+        //return  token
     }
 
     //Metodo para eliminar la cuenta del moderador
     @Override
     public void eliminarCuenta(String codigo) throws Exception {
         try {
-            Moderador moderador = validacion.buscarModerador(codigo);
+            Moderador moderador = validacionCliente.buscarModerador(codigo);
             moderador.setEstadoRegistro(EstadoRegistro.INACTIVO);
             moderadorRepo.save(moderador);
         } catch (ResourceNotFoundException e) {
@@ -53,40 +56,38 @@ public class ClienteServicioImpl implements IClienteServicio {
     @Override
     public void enviarLinkRecuperacion(String destinatario) throws Exception {
 
-        validacion.existeEmail(destinatario);
-        Optional<Cliente> clienteOptional = clienteRepo.findByEmail(destinatario);
-        //Cliente cliente = clienteOptional.get();
+        validacionCliente.existeEmail(destinatario);
         emailServicio.enviarEmail(destinatario, "Recuperar contraseña",
-                "http://localhost:8080/auth/recoPass");
+                "http://localhost:8080/api/cliente/recoPass");
     }
 
     @Override
     public void cambiarPassword(CambioPasswordDTO cambioPasswordDTO) throws Exception {
 
+        //return token
     }
 
     @Override
     public Cliente registrarse(RegistroClienteDTO clienteDTO) throws Exception {
 
-        validacion.existeCliente(clienteDTO.nickname());
-        validacion.existeEmail(clienteDTO.email());
-        ///BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        //String passwordEncriptada = passwordEncoder.encode(clienteDTO.password());
-        Cliente cliente = Cliente.builder()
-                .email(clienteDTO.email()).password(clienteDTO.password())
+        validacionCliente.validarUnicos(clienteDTO.email(), clienteDTO.nickname());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String passwordEncriptada = passwordEncoder.encode(clienteDTO.password());
+        Cliente nuevo = Cliente.builder()
+                .email(clienteDTO.email()).password(passwordEncriptada)
                 .estadoRegistro(EstadoRegistro.ACTIVO).rol(Rol.USUARIO)
                 .nickname(clienteDTO.nickname()).nombre(clienteDTO.nombre())
                 .ciudad(clienteDTO.ciudad()).fotoPerfil(clienteDTO.fotoPerfil())
                 .negocios(new HashSet<String>()).favoritos(new HashSet<>())
                 .recomendados(new HashSet<>()).build();
-        clienteRepo.save(cliente);
-        return cliente;
+        clienteRepo.save(nuevo);
+        return nuevo;
     }
 
     @Override
     public Cliente editarPerfil(DetalleClienteDTO clienteDTO, String codigo) throws Exception {
 
-        Cliente cliente = validacion.buscarCliente(codigo);
+        Cliente cliente = validacionCliente.buscarCliente(codigo);
         cliente.setNombre(clienteDTO.nombre());
         cliente.setCiudad(clienteDTO.ciudad());
         cliente.setFotoPerfil(cliente.getFotoPerfil());
@@ -98,7 +99,7 @@ public class ClienteServicioImpl implements IClienteServicio {
     @Override
     public void eliminarPerfil(String codigo) throws Exception {
         try {
-            Cliente cliente = validacion.buscarCliente(codigo);
+            Cliente cliente = validacionCliente.buscarCliente(codigo);
             cliente.setEstadoRegistro(EstadoRegistro.INACTIVO);
             clienteRepo.save(cliente);
         } catch (ResourceNotFoundException e) {
@@ -109,7 +110,7 @@ public class ClienteServicioImpl implements IClienteServicio {
     @Override
     public DetalleClienteDTO obtenerUsuario(String codigo) throws Exception {
 
-        Cliente cliente = validacion.buscarCliente(codigo);
+        Cliente cliente = validacionCliente.buscarCliente(codigo);
 
         return new DetalleClienteDTO(
                 cliente.getNombre(),

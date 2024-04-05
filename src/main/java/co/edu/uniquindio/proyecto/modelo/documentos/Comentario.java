@@ -7,19 +7,23 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Document(collection = "comentarios")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+
 @Data
+@Builder
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Document(collection = "comentarios")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Comentario implements Serializable {
 
-    private LocalDateTime fecha;
-    private String mensaje;
-    private String respuesta;
+    @Id
+    @EqualsAndHashCode.Include
+    private String codigo;
     private String codigoCliente;
     private String codigoNegocio;
-    private int calificar; // se califica con estrellas que tienen valores enteros
+    private String mensaje;
+    private String respuesta;
+    private String fecha;
+
 }

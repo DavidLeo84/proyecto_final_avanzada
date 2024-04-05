@@ -17,7 +17,7 @@ public record ActualizarNegocioDTO(
         @Size(max = 200)
         String descripcion,
         @NotBlank
-        Set<Horario> horarios,
+        List<Horario> horarios,
         @Size(max = 10)
         @NotEmpty
         Set<String>telefonos,

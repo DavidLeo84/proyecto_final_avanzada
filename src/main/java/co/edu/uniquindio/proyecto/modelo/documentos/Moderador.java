@@ -12,7 +12,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString
 @NoArgsConstructor
 @Document(collection = "moderadores")
-//@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Moderador extends Cuenta {
 
     @Id
