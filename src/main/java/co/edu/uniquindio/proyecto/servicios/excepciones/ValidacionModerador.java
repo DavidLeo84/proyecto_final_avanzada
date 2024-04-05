@@ -10,6 +10,9 @@ import co.edu.uniquindio.proyecto.repositorios.NegocioRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Optional;
 
 @Component
@@ -29,7 +32,6 @@ public class ValidacionModerador {
         }
         return moderador.getEmail();
     }
-
 
     public Moderador buscarModerador(String codigoModerador) throws Exception {
 
@@ -55,5 +57,15 @@ public class ValidacionModerador {
         }
         Negocio negocio = buscado.get();
         return negocio;
+    }
+
+    public String formatearFecha(LocalDateTime fecha) throws Exception {
+
+        if (fecha.isAfter(LocalDateTime.now())) {
+            throw new ResourceInvalidException("Fecha no válida");
+        }
+        DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm:ss.000 a", Locale.ENGLISH);
+        String fechaFormateada = formatoFecha.format(fecha);
+        return fechaFormateada;
     }
 }

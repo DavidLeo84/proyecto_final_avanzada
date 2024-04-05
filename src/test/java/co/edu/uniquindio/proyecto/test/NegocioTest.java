@@ -48,7 +48,7 @@ public class NegocioTest {
 
 
     //private List<HistorialRevision> revisiones = new ArrayList<>();
-    private Set<Horario> horarios = new HashSet<>();
+    private List<Horario> horarios = new ArrayList<>();
     private Set<String> telefonos = new HashSet<>();
     private Set<String> imagenes = new HashSet<>();
 
@@ -80,9 +80,9 @@ public class NegocioTest {
 
         // Given - Dado o condicion previa o configuración
         RegistroNegocioDTO negocioDTO = new RegistroNegocioDTO(
-                "La Primera Perrada de Ronnie",
+                "La Quinta Perrada de Ronnie",
                 "6608622d7a6bf86424f727d3",
-                new Ubicacion(453454780, 217654324),
+                new Ubicacion(295444780, 657562124),
                 "Los mejores perros calientes de la ciudad",
                 TipoNegocio.COMIDAS_RAPIDAS.name(),
                 horarios,
@@ -143,12 +143,13 @@ public class NegocioTest {
         System.out.println("negocioDTO.toString() = " + negocioDTO.toString());
     }
 
+    //Volver a probar
     @DisplayName("Test para mostrar una lista de negocios buscados por un estado en especifico")
     @Test
     public void filtrarPorEstadoTest() throws Exception {
 
         // When - Acción o el comportamiento que se va a probar
-        Set<DetalleNegocioDTO> lista = negocioServicio.filtrarPorEstado(EstadoRegistro.ACTIVO);
+        List<ItemNegocioDTO> lista = negocioServicio.filtrarPorEstado(EstadoRegistro.ACTIVO);
 
         //Then - Verificar la salida
         Assertions.assertEquals(2, lista.size());
@@ -159,7 +160,7 @@ public class NegocioTest {
     public void listarNegociosPropietarioTest() throws Exception {
 
         // When - Acción o el comportamiento que se va a probar
-        Set<DetalleNegocioDTO> lista = negocioServicio.listarNegociosPropietario("660842f2e1f50b64a6376e3c");
+        Set<ItemNegocioDTO> lista = negocioServicio.listarNegociosPropietario("660842f2e1f50b64a6376e3c");
 
         //Then - Verificar la salida
         Assertions.assertEquals(2, lista.size());
@@ -205,7 +206,7 @@ public class NegocioTest {
     public void listarRecomendadosTest() throws Exception {
 
         // When - Acción o el comportamiento que se va a probar
-        Set<DetalleNegocioDTO> lista = negocioServicio.listarRecomendados("660606f92a21ae6f58cee4ef");
+        Set<ItemNegocioDTO> lista = negocioServicio.listarRecomendados("660606f92a21ae6f58cee4ef");
 
         //Then - Verificar la salida
         Assertions.assertEquals(1, lista.size());
@@ -230,7 +231,7 @@ public class NegocioTest {
     public void listarFavoritosTest() throws Exception {
 
         // When - Acción o el comportamiento que se va a probar
-        Set<DetalleNegocioDTO> lista = negocioServicio.listarFavoritos("660842f2e1f50b64a6376e3c");
+        Set<ItemNegocioDTO> lista = negocioServicio.listarFavoritos("660842f2e1f50b64a6376e3c");
         //Then - Verificar la salida
         System.out.println("lista.toString() = " + lista.toString());
         Assertions.assertEquals(1, lista.size());

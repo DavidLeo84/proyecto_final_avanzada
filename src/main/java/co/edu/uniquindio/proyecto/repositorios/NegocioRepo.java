@@ -23,9 +23,14 @@ public interface NegocioRepo extends MongoRepository<Negocio, String> {
 
     Optional<Negocio> findByCodigo(String codigo) throws Exception;
 
-    Set<Negocio> findAllByEstadoRegistro(EstadoRegistro estadoRegistro) throws Exception;
+    List<Negocio> findAllByEstadoRegistro(EstadoRegistro estadoRegistro) throws Exception;
 
     Set<Negocio> findAllByCodigoCliente(String codigo) throws Exception;
 
+    @Query("{estadoRegistro:INACTIVO},{historialRevisiones:{$elemMatch:{estadoNegocio:?0}}}")
+    List<Negocio> getListNegociosInactivos(String estadoNegocio) throws Exception;
+
+    @Query("{estadoRegistro:ELIMINADO},{historialRevisiones:{$elemMatch:{estadoNegocio:?0}}}")
+    List<Negocio> getListNegociosEliminados(String estadoNegocio) throws Exception;
 
 }

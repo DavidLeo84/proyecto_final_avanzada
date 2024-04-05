@@ -36,6 +36,8 @@ public class ClienteServicioImpl implements IClienteServicio {
     @Override
     public void iniciarSesion(SesionDTO sesionDTO) throws Exception {
 
+        //invoca al servicio de JWT de crear token
+        //return  token
     }
 
     //Metodo para eliminar la cuenta del moderador
@@ -62,6 +64,7 @@ public class ClienteServicioImpl implements IClienteServicio {
     @Override
     public void cambiarPassword(CambioPasswordDTO cambioPasswordDTO) throws Exception {
 
+        //return token
     }
 
     @Override

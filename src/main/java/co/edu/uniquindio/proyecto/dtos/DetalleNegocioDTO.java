@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.dtos;
 
+import co.edu.uniquindio.proyecto.enums.TipoNegocio;
 import co.edu.uniquindio.proyecto.modelo.Horario;
 import co.edu.uniquindio.proyecto.modelo.Ubicacion;
 import jakarta.validation.constraints.NotBlank;
@@ -14,12 +15,15 @@ public record DetalleNegocioDTO(
         @NotBlank
         @Size(max = 30)
         String nombre,
+       /* @NotBlank
+        TipoNegocio tipo,*/
+        @NotBlank
         Ubicacion ubicacion,
         @NotBlank
         @Size(max = 200)
         String descripcion,
         @NotBlank
-        Set<Horario> horarios,
+        List<Horario> horarios,
         @Size(max = 10)
         @NotEmpty
         Set<String> telefonos,

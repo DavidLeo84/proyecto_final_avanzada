@@ -1,9 +1,6 @@
 package co.edu.uniquindio.proyecto.servicios.interfaces;
 
-import co.edu.uniquindio.proyecto.dtos.ActualizarNegocioDTO;
-import co.edu.uniquindio.proyecto.dtos.DetalleNegocioDTO;
-import co.edu.uniquindio.proyecto.dtos.RegistroHistorialDTO;
-import co.edu.uniquindio.proyecto.dtos.RegistroNegocioDTO;
+import co.edu.uniquindio.proyecto.dtos.*;
 import co.edu.uniquindio.proyecto.enums.EstadoNegocio;
 import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
 import co.edu.uniquindio.proyecto.enums.ValorCalificar;
@@ -24,9 +21,9 @@ public interface INegocioServicio {
 
     DetalleNegocioDTO buscarNegocio(String codigoNegocio)throws Exception;
 
-    Set<DetalleNegocioDTO> filtrarPorEstado(EstadoRegistro estado)throws Exception;
+    List<ItemNegocioDTO> filtrarPorEstado(EstadoRegistro estado)throws Exception;
 
-    Set<DetalleNegocioDTO> listarNegociosPropietario(String codigoCliente)throws Exception;
+    Set<ItemNegocioDTO> listarNegociosPropietario(String codigoCliente)throws Exception;
 
     void cambiarEstado(String codigoNegocio, EstadoRegistro estado)throws Exception;
 
@@ -34,11 +31,11 @@ public interface INegocioServicio {
 
     DetalleNegocioDTO obtenerRecomendado(String codigoCliente, String codigoNegocio) throws Exception;
 
-    Set<DetalleNegocioDTO> listarRecomendados(String codigoCliente) throws Exception; // funcionalidad adicional
+    Set<ItemNegocioDTO> listarRecomendados(String codigoCliente) throws Exception; // funcionalidad adicional
 
     void guardarNegocioFavorito(String codigoNegocio, String codigoCliente) throws Exception;
 
-    Set<DetalleNegocioDTO> listarFavoritos(String codigoCliente) throws Exception;
+    Set<ItemNegocioDTO> listarFavoritos(String codigoCliente) throws Exception;
 
     DetalleNegocioDTO obtenerFavorito(String codigoCliente) throws Exception;
 
