@@ -3,10 +3,12 @@ package co.edu.uniquindio.proyecto.servicios.excepciones;
 import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
 import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
 import co.edu.uniquindio.proyecto.modelo.documentos.Moderador;
+import co.edu.uniquindio.proyecto.modelo.documentos.Negocio;
 import co.edu.uniquindio.proyecto.repositorios.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -67,21 +69,35 @@ public class ValidacionCliente {
         return moderador;
     }
 
-    public Set<String> validarListaNegociosCliente(String codigoCliente) throws Exception {
+    //Metodo para listar y mostrar los negocios de un cliente
+    public List<String> listarNegociosCliente(String codigoCliente) throws Exception {
         Cliente cliente = buscarCliente(codigoCliente);
-        Set<String> lista = cliente.getNegocios();
+        List<String> lista = cliente.getNegocios();
         if (lista.isEmpty()) {
             throw new ResourceNotFoundException("No existe negocios asociados al cliente");
         }
         return lista;
     }
 
+    //Metodo para listar los negocios favoritos o recomendados que tenga un cliente
     public Set<String> validarListaGenericaCliente(Set<String> lista) throws Exception {
 
         if (lista.isEmpty()) {
             throw new ResourceNotFoundException("El cliente no tiene favoritos o recomendados");
         }
         return lista;
+    }
+
+    //Metodo para obtener el listado de negocios en el estado actual
+    public List<String> obtenerListadoNegociosCliente(String codigoCliente) throws Exception {
+
+        try {
+            Cliente cliente = buscarCliente(codigoCliente);
+            List<String> lista = cliente.getNegocios();
+            return lista;
+        } catch (Exception ex) {
+            throw new Exception("No se puede hallar el listado de negocios", ex);
+        }
     }
 
     private boolean estaRepetidoEmail(String email) throws Exception {

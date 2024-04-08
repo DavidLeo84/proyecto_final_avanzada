@@ -8,14 +8,13 @@ import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
 import co.edu.uniquindio.proyecto.modelo.documentos.Moderador;
 import co.edu.uniquindio.proyecto.repositorios.ClienteRepo;
 import co.edu.uniquindio.proyecto.repositorios.ModeradorRepo;
+import co.edu.uniquindio.proyecto.servicios.excepciones.ResourceInvalidException;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ResourceNotFoundException;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionCliente;
 import co.edu.uniquindio.proyecto.servicios.interfaces.IClienteServicio;
 
-import co.edu.uniquindio.proyecto.servicios.interfaces.ICloudinaryServicio;
-import co.edu.uniquindio.proyecto.servicios.interfaces.IEmailServicio;
 import lombok.RequiredArgsConstructor;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +44,7 @@ public class ClienteServicioImpl implements IClienteServicio {
     public void eliminarCuenta(String codigo) throws Exception {
         try {
             Moderador moderador = validacionCliente.buscarModerador(codigo);
-            moderador.setEstadoRegistro(EstadoRegistro.INACTIVO);
+            moderador.setEstadoRegistro(EstadoRegistro.ELIMINADO);
             moderadorRepo.save(moderador);
         } catch (ResourceNotFoundException e) {
             e.getMessage();
@@ -78,39 +77,41 @@ public class ClienteServicioImpl implements IClienteServicio {
                 .estadoRegistro(EstadoRegistro.ACTIVO).rol(Rol.USUARIO)
                 .nickname(clienteDTO.nickname()).nombre(clienteDTO.nombre())
                 .ciudad(clienteDTO.ciudad()).fotoPerfil(clienteDTO.fotoPerfil())
-                .negocios(new HashSet<String>()).favoritos(new HashSet<>())
-                .recomendados(new HashSet<>()).build();
+                .negocios(new ArrayList<>()).favoritos(new HashSet<>())
+                .recomendados(new HashSet<>()).aprobacionesComentarios(new HashSet<>()).build();
         clienteRepo.save(nuevo);
         return nuevo;
     }
 
     @Override
-    public Cliente editarPerfil(DetalleClienteDTO clienteDTO, String codigo) throws Exception {
+    public Cliente editarPerfil(DetalleClienteDTO clienteDTO, String codigoCliente) throws Exception {
 
-        Cliente cliente = validacionCliente.buscarCliente(codigo);
+        Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
         cliente.setNombre(clienteDTO.nombre());
         cliente.setCiudad(clienteDTO.ciudad());
-        cliente.setFotoPerfil(cliente.getFotoPerfil());
+        cliente.setFotoPerfil(clienteDTO.fotoPerfil());
         clienteRepo.save(cliente);
         return cliente;
     }
 
     //Metodo para eliminar la cuenta del cliente
     @Override
-    public void eliminarPerfil(String codigo) throws Exception {
-        try {
-            Cliente cliente = validacionCliente.buscarCliente(codigo);
+    public void eliminarPerfil(String codigoCliente) throws Exception {
+
+        Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
+        List<String> lista = validacionCliente.obtenerListadoNegociosCliente(codigoCliente);
+        if (lista.isEmpty()) {
             cliente.setEstadoRegistro(EstadoRegistro.INACTIVO);
             clienteRepo.save(cliente);
-        } catch (ResourceNotFoundException e) {
-            e.getMessage();
+        }else {
+            throw new ResourceNotFoundException("Error! Hay negocios asociados que impiden eliminar la cuenta");
         }
     }
 
     @Override
-    public DetalleClienteDTO obtenerUsuario(String codigo) throws Exception {
+    public DetalleClienteDTO obtenerUsuario(String codigoCliente) throws Exception {
 
-        Cliente cliente = validacionCliente.buscarCliente(codigo);
+        Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
 
         return new DetalleClienteDTO(
                 cliente.getNombre(),

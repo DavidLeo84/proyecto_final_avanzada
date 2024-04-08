@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.servicios.excepciones;
 
+import co.edu.uniquindio.proyecto.enums.EstadoNegocio;
 import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
 import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
 import co.edu.uniquindio.proyecto.modelo.documentos.Moderador;
@@ -51,8 +52,9 @@ public class ValidacionModerador {
 
         Optional<Negocio> buscado = negocioRepo.findByCodigo(codigoNegocio);
 
-        if (buscado == null || buscado.get().getEstadoRegistro().equals(EstadoRegistro.ELIMINADO) ||
-                buscado.get().getEstadoRegistro().equals(EstadoRegistro.ACTIVO)) {
+        if (buscado == null || buscado.get().getEstadoNegocio().equals(EstadoNegocio.ELIMINADO) ||
+                buscado.get().getEstadoNegocio().equals(EstadoNegocio.APROBADO) ||
+                buscado.get().getEstadoNegocio().equals(EstadoNegocio.RECHAZADO)) {
             throw new ResourceNotFoundException("No existe negocio pendiente de aprobar con el codigo " + codigoNegocio);
         }
         Negocio negocio = buscado.get();

@@ -1,13 +1,17 @@
 package co.edu.uniquindio.proyecto.dtos;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.mongodb.repository.ExistsQuery;
-import org.springframework.data.mongodb.repository.Query;
 
 import java.time.LocalDateTime;
 
-public record RegistroComentarioDTO(
+public record RegistroRespuestaComentarioDTO(
 
+        @NotBlank
+        String codigoComentario,
         @NotBlank
         String codigoCliente,
         @NotBlank
@@ -18,13 +22,14 @@ public record RegistroComentarioDTO(
         @Pattern(regexp = "\".*[!@#$%^&*,/\\\\\\\\()¿~_'<>:;+.=?-].*\"")
         String mensaje,
         @FutureOrPresent
-        LocalDateTime fechaMensaje,
+        String fechaMensaje,
         @NotBlank
         @Size(max = 200)
+        @ExistsQuery(value = "false")
+        @Pattern(regexp = "\".*[!@#$%^&*,/\\\\\\\\()¿~_'<>:;+.=?-].*\"")
         String respuesta,
         @FutureOrPresent
         LocalDateTime fechaRespuesta
-
 
 ) {
 }

@@ -19,19 +19,23 @@ public interface INegocioServicio {
 
     void eliminarNegocio(String codigoNegocio)throws Exception;
 
-    DetalleNegocioDTO buscarNegocio(String codigoNegocio)throws Exception;
+    DetalleNegocioDTO obtenerNegocio(String codigoNegocio)throws Exception;
 
-    List<ItemNegocioDTO> filtrarPorEstado(EstadoRegistro estado)throws Exception;
+    List<ItemNegocioDTO> filtrarPorEstado(EstadoNegocio estado)throws Exception;
 
     Set<ItemNegocioDTO> listarNegociosPropietario(String codigoCliente)throws Exception;
 
-    void cambiarEstado(String codigoNegocio, EstadoRegistro estado)throws Exception;
+    //void cambiarEstado(String codigoNegocio, EstadoNegocio estado)throws Exception;
 
     void guardarRecomendados(String codigoNegocio, String codigoCliente) throws Exception;
 
     DetalleNegocioDTO obtenerRecomendado(String codigoCliente, String codigoNegocio) throws Exception;
 
     Set<ItemNegocioDTO> listarRecomendados(String codigoCliente) throws Exception; // funcionalidad adicional
+
+    DetalleRevisionDTO obtenerRevision(ItemRevisionDTO item) throws Exception;
+
+    List<ItemRevisionDTO> listarRevisiones(String codigoNegocio) throws Exception;
 
     void guardarNegocioFavorito(String codigoNegocio, String codigoCliente) throws Exception;
 

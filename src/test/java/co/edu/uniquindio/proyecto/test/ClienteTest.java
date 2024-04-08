@@ -6,6 +6,7 @@ import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
 import co.edu.uniquindio.proyecto.repositorios.ClienteRepo;
 import co.edu.uniquindio.proyecto.repositorios.ModeradorRepo;
 import co.edu.uniquindio.proyecto.servicios.ClienteServicioImpl;
+import co.edu.uniquindio.proyecto.servicios.excepciones.ResourceInvalidException;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ResourceNotFoundException;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionCliente;
 import org.junit.jupiter.api.DisplayName;
@@ -74,13 +75,13 @@ public class ClienteTest {
     public void eliminarCliente() throws Exception {
 
         // Given - Dado o condicion previa o configuración
-        Cliente cliente = validacion.buscarCliente("660842f2e1f50b64a6376e3c");
+        Cliente cliente = validacion.buscarCliente("660862be705e055490c3753c");
 
         // When - Acción o el comportamiento que se va a probar
         clienteServicio.eliminarPerfil(cliente.getCodigo());
 
         //Then - Verificar la salida
-        assertThrows(ResourceNotFoundException.class, () -> validacion.buscarCliente("660842f2e1f50b64a6376e3c"));
+        assertThrows(ResourceNotFoundException.class, () -> validacion.buscarCliente("660862be705e055490c3753c"));
 
     }
 
