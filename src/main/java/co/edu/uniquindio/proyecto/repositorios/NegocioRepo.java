@@ -33,5 +33,7 @@ public interface NegocioRepo extends MongoRepository<Negocio, String> {
     @Query("{estadoRegistro:ELIMINADO},{historialRevisiones:{$elemMatch:{estadoNegocio:?0}}}")
     List<Negocio> getListaNegociosEliminados(String estadoNegocio) throws Exception;
 
+    Optional<Negocio> findByNombre(String nombre) throws Exception;
+
 
 }

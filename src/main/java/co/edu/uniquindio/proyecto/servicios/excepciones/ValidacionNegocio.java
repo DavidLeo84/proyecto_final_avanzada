@@ -44,16 +44,14 @@ public class ValidacionNegocio {
     public Negocio buscarNegocio(String codigoNegocio) throws Exception {
 
         Optional<Negocio> buscado = negocioRepo.findByCodigo(codigoNegocio);
-        if (!buscado.isPresent()) {
-            throw new ResourceNotFoundException("No existe el negocio solicitado");
+        Negocio negocio = null;
+        if (!buscado.isEmpty() && buscado.get().getEstadoNegocio().equals(EstadoNegocio.APROBADO)) {
+            negocio = buscado.get();
         }
-        Negocio negocio = buscado.get();
-        EstadoNegocio estado = negocio.getEstadoNegocio();
-        if (estado.equals(EstadoNegocio.PENDIENTE) || estado.equals(EstadoNegocio.APROBADO) ||
-                estado.equals(EstadoNegocio.RECHAZADO) || estado.equals(EstadoNegocio.ELIMINADO)) {
-            return negocio;
+        if (buscado.isEmpty()) {
+            throw new ResourceNotFoundException("No existe el negocio");
         }
-        return null;
+        return negocio;
     }
 
     /*Metodo para validar una lista de negocios segun el estado que se solicite */
@@ -139,16 +137,15 @@ public class ValidacionNegocio {
             List<HistorialRevision> lista = validarListaHistorialRevision(codigoNegocio);
             HistorialRevision revision = null;
             for (HistorialRevision hr : lista) {
-                if (hr.getFecha().equals(fecha)){
+                if (hr.getFecha().equals(fecha)) {
                     revision = hr;
                 }
             }
-            if (revision == null){
+            if (revision == null) {
                 throw new ResourceNotFoundException("Fecha no válida o no se encuentra");
             }
             return revision;
-        }
-        catch (RuntimeException ex){
+        } catch (RuntimeException ex) {
             throw new RuntimeException("Error, No se pudo hallar el recurso");
         }
     }
@@ -157,7 +154,7 @@ public class ValidacionNegocio {
 
         List<Negocio> listaNegocios = negocioRepo.findAllByEstadoNegocio(estado);
         if (listaNegocios.isEmpty()) {
-            throw new ResourceNotFoundException("No hay negocios APROBADOS para mostrar");
+            throw new ResourceNotFoundException("No hay negocios con estado " + estado + " para mostrar");
         }
         return listaNegocios;
     }
@@ -166,7 +163,17 @@ public class ValidacionNegocio {
     public void validarCalificacionNegocio(ValorCalificar calificacion) throws Exception {
 
         if (calificacion.ordinal() < 0 || calificacion.ordinal() > 5) {
-            throw new ResourceInvalidException("Valor no válido para calificar sitio");
+            throw new Exception("Valor no válido para calificar sitio");
         }
+    }
+
+    public Negocio validarNegocioPorNombre(String nombreNegocio) throws Exception {
+
+        Optional<Negocio> negocioOptional = negocioRepo.findByNombre(nombreNegocio);
+        if (negocioOptional == null) {
+            throw new Exception("Nombre no válido o no existe un negocio con el nombre " + nombreNegocio);
+        }
+        Negocio negocio = negocioOptional.get();
+        return negocio;
     }
 }

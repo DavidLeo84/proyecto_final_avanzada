@@ -39,4 +39,5 @@ public class Negocio implements Serializable {
     private List<HistorialRevision> historialRevisiones;
     private Set<String> imagenes;
     private List<String> calificaciones; // se califica con estrellas que tienen valores enteros
+    private List<Integer> recomendaciones;
 }

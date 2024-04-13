@@ -36,7 +36,7 @@ public class Cliente extends Cuenta implements Serializable {
                    String codigo, String nombre, String nickname, String ciudad, String fotoPerfil,
                    Set<String> favoritos, List<String> negocios, Set<String> recomendados,
                    Set<String> aprobacionesComentarios) {
-        super(email, password, EstadoRegistro.ACTIVO, Rol.USUARIO);
+        super(email, password, EstadoRegistro.ACTIVO, Rol.CLIENTE);
         this.codigo = codigo;
         this.nombre = nombre;
         this.nickname = nickname;

@@ -23,13 +23,28 @@ public class ValidacionCliente {
     private final NegocioRepo negocioRepo;
 
 
-    //Este método se usa para verificar el correo ya se encuentra registrado con otro
-    // cliente al momento de registrar un nuevo cliente
     public void existeEmail(String email) throws Exception {
 
         Optional<Cliente> clienteOptional = clienteRepo.findByEmail(email);
-        if (!clienteOptional.isPresent())
-            throw new Exception("El usuario con email " + email + " ya se encuentra registrado");
+        if (clienteOptional == null)
+            throw new Exception("El correo no se encuentra registado");
+    }
+
+    public void validarEmail(String email) throws Exception {
+
+        Optional<Cliente> clienteOptional = clienteRepo.findByEmail(email);
+        if (clienteOptional.isPresent())
+            throw new Exception("El correo ya se encuentra registado");
+    }
+
+    public Cliente buscarPorEmail(String email) throws Exception {
+
+        Optional<Cliente> clienteOptional = clienteRepo.findByEmail(email);
+        if (clienteOptional == null) {
+            throw new ResourceNotFoundException("El correo no se encuentra registrado");
+        }
+        Cliente cliente = clienteOptional.get();
+        return cliente;
     }
 
     public void validarUnicos(String email, String nickname) throws Exception {
@@ -44,30 +59,13 @@ public class ValidacionCliente {
     public Cliente buscarCliente(String codigoCliente) throws Exception {
 
         Optional<Cliente> buscado = clienteRepo.findByCodigo(codigoCliente);
-        Cliente cliente = null;
-
-        if (buscado != null && buscado.get().getEstadoRegistro().equals(EstadoRegistro.ACTIVO)) {
-            cliente = buscado.get();
+        if (buscado.isEmpty() || buscado.get().getEstadoRegistro().equals(EstadoRegistro.INACTIVO)) {
+            throw new ResourceNotFoundException("No existe cliente");
         }
-        if (buscado == null || buscado.get().getEstadoRegistro().equals(EstadoRegistro.INACTIVO)) {
-            throw new ResourceNotFoundException("No existe cliente con el codigo " + codigoCliente);
-        }
+        Cliente cliente = buscado.get();
         return cliente;
     }
 
-    public Moderador buscarModerador(String codigoModerador) throws Exception {
-
-        Optional<Moderador> buscado = moderadorRepo.findByCodigo(codigoModerador);
-        Moderador moderador = new Moderador();
-
-        if (buscado != null && buscado.get().getEstadoRegistro().equals(EstadoRegistro.ACTIVO)) {
-            moderador = buscado.get();
-        }
-        if (buscado == null || buscado.get().getEstadoRegistro().equals(EstadoRegistro.INACTIVO)) {
-            throw new ResourceNotFoundException("No existe el moderador");
-        }
-        return moderador;
-    }
 
     //Metodo para listar y mostrar los negocios de un cliente
     public List<String> listarNegociosCliente(String codigoCliente) throws Exception {

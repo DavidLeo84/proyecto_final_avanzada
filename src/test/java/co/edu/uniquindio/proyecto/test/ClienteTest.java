@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,10 +39,10 @@ public class ClienteTest {
 
         // Given - Dado o condicion previa o configuración
         RegistroClienteDTO clienteDTO = new RegistroClienteDTO(
-                "Fiona Lucero",
+                "Elmo",
                 "foto1.jpg",
-                "fiona",
-                "fiona@gmail.com",
+                "elmocho",
+                "elmo@gmail.com",
                 "123456",
                 "ARMENIA"
         );
@@ -59,6 +60,7 @@ public class ClienteTest {
         // Given - Dado o condicion previa o configuración
         DetalleClienteDTO clienteDTO = new DetalleClienteDTO(
                 "sacha",
+                "sacha@gmail.com",
                 "RISARALDA",
                 "foto1.jpg'"
         );
@@ -72,13 +74,13 @@ public class ClienteTest {
 
     @DisplayName("Test para eliminar la cuenta de un cliente")
     @Test
-    public void eliminarCliente() throws Exception {
+    public void eliminarCuentaTest() throws Exception {
 
         // Given - Dado o condicion previa o configuración
         Cliente cliente = validacion.buscarCliente("660862be705e055490c3753c");
 
         // When - Acción o el comportamiento que se va a probar
-        clienteServicio.eliminarPerfil(cliente.getCodigo());
+        clienteServicio.eliminarCuenta(cliente.getCodigo());
 
         //Then - Verificar la salida
         assertThrows(ResourceNotFoundException.class, () -> validacion.buscarCliente("660862be705e055490c3753c"));
@@ -92,7 +94,7 @@ public class ClienteTest {
         // Given - Dado o condicion previa o configuración
 
         // When - Acción o el comportamiento que se va a probar
-        DetalleClienteDTO detalleClienteDTO = clienteServicio.obtenerUsuario("660842f2e1f50b64a6376e3c");
+        DetalleClienteDTO detalleClienteDTO = clienteServicio.obtenerUsuario("661aa51d50a424787193f372");
 
         //Then - Verificar la salida
         assertThat(detalleClienteDTO).isNotNull();

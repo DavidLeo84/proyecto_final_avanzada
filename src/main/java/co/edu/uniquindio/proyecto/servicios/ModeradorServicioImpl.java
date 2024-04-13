@@ -2,15 +2,19 @@ package co.edu.uniquindio.proyecto.servicios;
 
 import co.edu.uniquindio.proyecto.dtos.*;
 import co.edu.uniquindio.proyecto.enums.EstadoNegocio;
+import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
 import co.edu.uniquindio.proyecto.modelo.HistorialRevision;
 import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
+import co.edu.uniquindio.proyecto.modelo.documentos.Moderador;
 import co.edu.uniquindio.proyecto.modelo.documentos.Negocio;
 import co.edu.uniquindio.proyecto.repositorios.ModeradorRepo;
 import co.edu.uniquindio.proyecto.repositorios.NegocioRepo;
 import co.edu.uniquindio.proyecto.servicios.excepciones.*;
-import co.edu.uniquindio.proyecto.servicios.interfaces.IModeradorServicio;
+import co.edu.uniquindio.proyecto.servicios.interfaces.*;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +25,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class ModeradorServicioImpl implements IModeradorServicio {
 
     private final ValidacionNegocio validacionNegocio;
@@ -30,31 +34,48 @@ public class ModeradorServicioImpl implements IModeradorServicio {
     private final ValidacionModerador validacionModerador;
     private final NegocioRepo negocioRepo;
     private final ModeradorRepo moderadorRepo;
-    private final NegocioServicioImpl negocioServicio;
     private final EmailServicioImpl emailServicio;
+    private final NegocioServicioImpl negocioServicio;
     private final ClienteServicioImpl clienteServicio;
+    private final AutenticacionServicioImpl autenticacionServicio;
 
     @Override
-    public void iniciarSesion(SesionDTO sesionDTO) throws Exception {
+    public TokenDTO iniciarSesion(LoginDTO loginDTO) throws Exception {
 
+        TokenDTO token = autenticacionServicio.iniciarSesionModerador(loginDTO);
+        return token;
     }
 
     @Override
     public void eliminarCuenta(String codigoModerador) throws Exception {
-        clienteServicio.eliminarCuenta(codigoModerador);
+        try {
+            Moderador moderador = validacionModerador.buscarModerador(codigoModerador);
+            moderador.setEstadoRegistro(EstadoRegistro.INACTIVO);
+            moderadorRepo.save(moderador);
+        } catch (ResourceNotFoundException e) {
+            e.getMessage();
+        }
     }
 
     @Override
-    public void enviarLinkRecuperacion(String destinatario) throws Exception {
+    public TokenDTO enviarLinkRecuperacion(String email) throws Exception {
 
-        String email = validacionModerador.existeEmail(destinatario);;
+        validacionModerador.existeEmail(email);
         emailServicio.enviarEmail(email, "Recuperar contraseña",
                 "http://localhost:8080/api/moderador/recoPass");
+        TokenDTO token = autenticacionServicio.recuperarPasswordModerador(email);
+        return token;
     }
 
     @Override
-    public void cambiarPassword(CambioPasswordDTO cambioPasswordDTO) throws Exception {
+    public String cambiarPassword(CambioPasswordDTO cambioPasswordDTO) throws Exception {
 
+        Moderador moderador = validacionModerador.buscarModerador(cambioPasswordDTO.codigo());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String nuevaPassword = passwordEncoder.encode(cambioPasswordDTO.passwordNueva());
+        moderador.setPassword(nuevaPassword);
+        moderadorRepo.save(moderador);
+        return "El password fue cambiado con éxito";
     }
 
     @Override
@@ -109,13 +130,13 @@ public class ModeradorServicioImpl implements IModeradorServicio {
                 List<HistorialRevision> lista = validacionNegocio.validarListaHistorialRevision(n.getCodigo());
                 HistorialRevision masReciente = lista.get(0);
                 for (HistorialRevision hr : lista) {
-                    LocalDateTime fecha1 = transformarFecha(masReciente.getFecha());
-                    LocalDateTime fecha2 = transformarFecha(hr.getFecha());
+                    LocalDateTime fecha1 = validacionModerador.transformarFecha(masReciente.getFecha());
+                    LocalDateTime fecha2 = validacionModerador.transformarFecha(hr.getFecha());
                     if (fecha2.isAfter(fecha1)) {
                         masReciente = hr;
                     }
                 }
-                if (transformarFecha(masReciente.getFecha()).plusDays(5).isBefore(fechaActual)) {
+                if (validacionModerador.transformarFecha(masReciente.getFecha()).plusDays(5).isBefore(fechaActual)) {
                     n.setEstadoNegocio(EstadoNegocio.ELIMINADO);
                     negocioRepo.save(n);
                 }
@@ -223,13 +244,13 @@ public class ModeradorServicioImpl implements IModeradorServicio {
                 .collect(Collectors.toList());
     }
 
-    private void enviarEmail(String estado, String codigo) throws Exception {
+    private void enviarEmail(String estado, String codigoCliente) throws Exception {
 
-        Cliente cliente = validacionCliente.buscarCliente(codigo);
+        Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
         emailServicio.enviarEmail(cliente.getEmail(), "Respuesta solicitud de negocio", "Su negocio fue " + estado);
     }
 
-    private LocalDateTime transformarFecha(String fechaRevision) throws Exception {
+    /*private LocalDateTime transformarFecha(String fechaRevision) throws Exception {
 
         try {
             String fechaString1 = fechaRevision.replaceAll("/", "-");
@@ -240,5 +261,5 @@ public class ModeradorServicioImpl implements IModeradorServicio {
         } catch (Exception ex) {
             throw new Exception("La fecha no cumple con el formato requerido");
         }
-    }
+    }*/
 }

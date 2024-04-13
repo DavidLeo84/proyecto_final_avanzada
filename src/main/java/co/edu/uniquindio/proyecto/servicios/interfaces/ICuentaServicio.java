@@ -1,15 +1,13 @@
 package co.edu.uniquindio.proyecto.servicios.interfaces;
 
-import co.edu.uniquindio.proyecto.dtos.CambioPasswordDTO;
-import co.edu.uniquindio.proyecto.dtos.EmailDTO;
-import co.edu.uniquindio.proyecto.dtos.SesionDTO;
+import co.edu.uniquindio.proyecto.dtos.*;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface ICuentaServicio {
 
-    void iniciarSesion(SesionDTO sesionDTO)throws Exception;
+    TokenDTO iniciarSesion(LoginDTO loginDTO)throws Exception;
     void eliminarCuenta(String codigo)throws Exception;
-    void enviarLinkRecuperacion(String destinatario)throws Exception;
-    void cambiarPassword(CambioPasswordDTO cambioPasswordDTO)throws Exception;
+    TokenDTO enviarLinkRecuperacion(String destinatario)throws Exception;
+    String cambiarPassword(CambioPasswordDTO cambioPasswordDTO)throws Exception;
 }

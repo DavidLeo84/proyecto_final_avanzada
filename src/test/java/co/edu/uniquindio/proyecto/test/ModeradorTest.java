@@ -14,6 +14,7 @@ import co.edu.uniquindio.proyecto.servicios.ModeradorServicioImpl;
 import co.edu.uniquindio.proyecto.servicios.NegocioServicioImpl;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ResourceNotFoundException;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionCliente;
+import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionModerador;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionNegocio;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,13 +34,15 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ModeradorTest {
 
     @Autowired
-    private ClienteServicioImpl clienteServicio;
-    @Autowired
     private ValidacionCliente validacionCliente;
+    @Autowired
+    private ValidacionModerador validacionModerador;
     @Autowired
     private ValidacionNegocio validacionNegocio;
     @Autowired
     ModeradorRepo moderadorRepo;
+    @Autowired
+    private ClienteServicioImpl clienteServicio;
     @Autowired
     private ModeradorServicioImpl moderadorServicio;
     @Autowired
@@ -58,13 +61,13 @@ public class ModeradorTest {
     public void eliminarCuentaTest() throws Exception {
 
         /*Given - Dado o condicion previa o configuración*/
-        Moderador moderador = validacionCliente.buscarModerador("3");
+        Moderador moderador = validacionModerador.buscarModerador("6618bece184b4b36653f9ada");
 
         /*When - Acción o el comportamiento que se va a probar*/
-        clienteServicio.eliminarCuenta(moderador.getCodigo());
+        moderadorServicio.eliminarCuenta(moderador.getCodigo());
 
         /*Then - Verificar la salida*/
-        assertThrows(ResourceNotFoundException.class, () -> validacionCliente.buscarModerador("3"));
+        assertThrows(ResourceNotFoundException.class, () -> validacionModerador.buscarModerador("3"));
     }
 
     @DisplayName("Test para registrar una revision a un negocio creado")
@@ -75,14 +78,14 @@ public class ModeradorTest {
         HistorialRevisionDTO revisionDTO = new HistorialRevisionDTO(
                 "Su negocio cumple con las normas de la aplicación",
                 EstadoNegocio.APROBADO,
-                "1",
-                "6611f8060d65450fe2d86d4c"
+                "661aad765a17e523f53fb224",
+                "661aacb404561d72bdbf16f2"
         );
         /*When - Acción o el comportamiento que se va a probar*/
         moderadorServicio.revisarNegocio(revisionDTO);
 
         /*Then - Verificar la salida*/
-        Negocio negocio = validacionNegocio.buscarNegocio("6608438bfd6d342c8005bdc8");
+        Negocio negocio = validacionNegocio.validarNegocioAprobado("661aacb404561d72bdbf16f2");
         System.out.println("negocio = " + negocio);
         assertThat(negocio.getHistorialRevisiones().size()).isGreaterThan(1);
     }
@@ -93,8 +96,8 @@ public class ModeradorTest {
 
         /*Given - Dado o condicion previa o configuración*/
         ItemNegocioDTO negocioDTO = new ItemNegocioDTO(
-                "6611f8060d65450fe2d86d4c",
-                "La Sexta Perrada de Ronnie",
+                "661aacb404561d72bdbf16f2",
+                "La Perrada de Ronnie",
                 tipoNegocios
         );
         /*When - Acción o el comportamiento que se va a probar*/

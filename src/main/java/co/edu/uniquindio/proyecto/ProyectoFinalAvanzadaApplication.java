@@ -30,14 +30,29 @@ public class ProyectoFinalAvanzadaApplication {
             String password_2 = passwordEncoder.encode("5678");
             String password_3 = passwordEncoder.encode("9012");
 
-            Moderador moderador1 = new Moderador("mode1@correo.com", password_1,
-                    EstadoRegistro.ACTIVO, Rol.ADMINISTRADOR, "1");
+            Moderador moderador1 = Moderador.builder()
+                    .password(password_1)
+                    .rol(Rol.MODERADOR)
+                    .estadoRegistro(EstadoRegistro.ACTIVO)
+                    .email("mode1@correo.com")
+                    .nombre("David")
+                    .build();
 
-            Moderador moderador2 = new Moderador("mode2@correo.com", password_2,
-                    EstadoRegistro.ACTIVO, Rol.ADMINISTRADOR, "2");
+            Moderador moderador2 = Moderador.builder()
+                    .password(password_2)
+                    .rol(Rol.MODERADOR)
+                    .estadoRegistro(EstadoRegistro.ACTIVO)
+                    .email("mode2@correo.com")
+                    .nombre("Leonardo")
+                    .build();
 
-            Moderador moderador3 = new Moderador("mode3@correo.com", password_3,
-                    EstadoRegistro.ACTIVO, Rol.ADMINISTRADOR, "3");
+            Moderador moderador3 = Moderador.builder()
+                    .password(password_3)
+                    .rol(Rol.MODERADOR)
+                    .estadoRegistro(EstadoRegistro.ACTIVO)
+                    .email("mode3@correo.com")
+                    .nombre("Ronnie")
+                    .build();
 
             moderadorRepo.saveAll(List.of(moderador1, moderador2, moderador3));
         };

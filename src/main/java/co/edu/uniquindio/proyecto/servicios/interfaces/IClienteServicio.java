@@ -13,7 +13,7 @@ public interface IClienteServicio extends ICuentaServicio {
 
     Cliente editarPerfil(DetalleClienteDTO clienteDTO, String codigo)throws Exception;
 
-    void eliminarPerfil(String codigo) throws Exception;
+    //void eliminarPerfil(String codigo) throws Exception;
 
     DetalleClienteDTO obtenerUsuario(String codigo) throws Exception;
 

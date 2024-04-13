@@ -11,23 +11,14 @@ public record DetalleClienteDTO(
         @NotBlank
         @Size(max = 50)
         String nombre,
+        @Email
+        @NotBlank
+        String email,
         @NotBlank
         @Size(max = 20)
         String ciudad,
+        @NotBlank
         String fotoPerfil
-
-
 ) {
-/*
-    public DetalleClienteDTO(Cliente cliente){
-        this(
-                cliente.getNombre();
-                cliente.getCiudad();
-                cliente.getFotoPerfil();
-        );
-    }
-
- */
-
 
 }

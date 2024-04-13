@@ -3,6 +3,5 @@ package co.edu.uniquindio.proyecto.enums;
 public enum EstadoRegistro {
 
     ACTIVO,
-    INACTIVO,
-    ELIMINADO
+    INACTIVO
 }

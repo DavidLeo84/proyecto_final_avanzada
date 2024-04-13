@@ -7,6 +7,8 @@ import co.edu.uniquindio.proyecto.enums.ValorCalificar;
 import co.edu.uniquindio.proyecto.modelo.documentos.Negocio;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 
@@ -31,13 +33,19 @@ public interface INegocioServicio {
 
     DetalleNegocioDTO obtenerRecomendado(String codigoCliente, String codigoNegocio) throws Exception;
 
-    Set<ItemNegocioDTO> listarRecomendados(String codigoCliente) throws Exception; // funcionalidad adicional
+    String eliminarNegocioRecomendado(String codigoNegocio, String codigoCliente) throws Exception;
+
+    Set<ItemNegocioDTO> listarRecomendadosCliente(String codigoCliente) throws Exception; // funcionalidad adicional
+
+    List<ItemNegocioDTO> listaNegociosRecomendadosPorClientes() throws Exception;
 
     DetalleRevisionDTO obtenerRevision(ItemRevisionDTO item) throws Exception;
 
     List<ItemRevisionDTO> listarRevisiones(String codigoNegocio) throws Exception;
 
     void guardarNegocioFavorito(String codigoNegocio, String codigoCliente) throws Exception;
+
+    String eliminarNegocioFavorito(String codigoNegocio, String codigoCliente) throws Exception;
 
     Set<ItemNegocioDTO> listarFavoritos(String codigoCliente) throws Exception;
 
@@ -46,5 +54,9 @@ public interface INegocioServicio {
     void calificarNegocio(String codigoNegocio, ValorCalificar calificacion) throws Exception;
 
     float calcularPromedioCalificaficaciones(String codigoNegocio) throws Exception;
+
+    String determinarDisponibilidadNegocio(String codigoNegocio, FechaActualDTO fechaActualDTO) throws Exception;
+
+    DetalleNegocioDTO buscarNegocioPorNombre(String nombreNegocio) throws Exception;
 
 }
