@@ -2,6 +2,7 @@ package co.edu.uniquindio.proyecto.servicios.excepciones;
 
 import co.edu.uniquindio.proyecto.enums.EstadoNegocio;
 import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
+import co.edu.uniquindio.proyecto.enums.TipoNegocio;
 import co.edu.uniquindio.proyecto.enums.ValorCalificar;
 import co.edu.uniquindio.proyecto.modelo.HistorialRevision;
 import co.edu.uniquindio.proyecto.modelo.Ubicacion;
@@ -175,5 +176,22 @@ public class ValidacionNegocio {
         }
         Negocio negocio = negocioOptional.get();
         return negocio;
+    }
+
+    public List<Negocio> validarListaNegociosPorTipo(TipoNegocio tipoNegocio) throws Exception {
+
+        List<Negocio> listaNegocios = negocioRepo.findAllByEstadoNegocio(EstadoNegocio.APROBADO);
+        List<Negocio> listaNegociosTipo = new ArrayList<>();
+        for (Negocio n : listaNegocios) {
+            for (TipoNegocio tipo : n.getTipoNegocios()) {
+                if (tipo.equals(tipoNegocio)) {
+                    listaNegociosTipo.add(n);
+                }
+            }
+            if (listaNegociosTipo.size() == 0) {
+                throw new ResourceNotFoundException("No hay negocios registrados de ese tipo");
+            }
+        }
+        return listaNegociosTipo;
     }
 }

@@ -3,6 +3,7 @@ package co.edu.uniquindio.proyecto.servicios.interfaces;
 import co.edu.uniquindio.proyecto.dtos.*;
 import co.edu.uniquindio.proyecto.enums.EstadoNegocio;
 import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
+import co.edu.uniquindio.proyecto.enums.TipoNegocio;
 import co.edu.uniquindio.proyecto.enums.ValorCalificar;
 import co.edu.uniquindio.proyecto.modelo.documentos.Negocio;
 import org.springframework.stereotype.Service;
@@ -55,8 +56,10 @@ public interface INegocioServicio {
 
     float calcularPromedioCalificaficaciones(String codigoNegocio) throws Exception;
 
-    String determinarDisponibilidadNegocio(String codigoNegocio, FechaActualDTO fechaActualDTO) throws Exception;
+    String determinarDisponibilidadNegocio(String codigoNegocio) throws Exception;
 
     DetalleNegocioDTO buscarNegocioPorNombre(String nombreNegocio) throws Exception;
+
+    List<ItemNegocioDTO> listarNegociosAbiertosPorTipoSegunHora(TipoNegocio tipoNegocio) throws Exception;
 
 }

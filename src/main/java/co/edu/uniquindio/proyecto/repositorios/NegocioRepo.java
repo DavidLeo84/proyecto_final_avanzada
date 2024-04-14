@@ -36,4 +36,5 @@ public interface NegocioRepo extends MongoRepository<Negocio, String> {
     Optional<Negocio> findByNombre(String nombre) throws Exception;
 
 
+
 }

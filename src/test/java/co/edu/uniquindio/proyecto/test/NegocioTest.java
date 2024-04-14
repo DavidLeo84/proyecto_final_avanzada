@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -73,6 +74,7 @@ public class NegocioTest {
         DayOfWeek dia = LocalDate.now().getDayOfWeek();
 
         horarios.add(new Horario(dia, abierto, cierre));
+
     }
 
     @DisplayName("Test para guardar o registrar un negocio")
@@ -288,6 +290,7 @@ public class NegocioTest {
     @Test
     public void eliminarNegocioFavorito () throws Exception {
 
+        // When - Acción o el comportamiento que se va a probar
         String eliminado = negocioServicio.eliminarNegocioFavorito("661aacb404561d72bdbf16f2","661aa62f1434fa40da4a039a");
 
         //Then - Verificar la salida
@@ -346,21 +349,12 @@ public class NegocioTest {
     @Test
     public void determinarDisponibilidadNegocioTest() throws Exception {
 
-        // Given - Dado o condicion previa o configuración
-        DayOfWeek dia = LocalDate.now().getDayOfWeek();
-        LocalTime horaActual = LocalTime.now();
-
-        FechaActualDTO fechaActualDTO = new FechaActualDTO(
-                dia,
-                horaActual
-        );
-
         /*When - Acción o el comportamiento que se va a probar*/
-        String estado = negocioServicio.determinarDisponibilidadNegocio("6608442e31eff35db34b4b8a", fechaActualDTO);
+        String estado = negocioServicio.determinarDisponibilidadNegocio("661aacb404561d72bdbf16f2");
 
         /*Then - Verificar la salida*/
         System.out.println("El negocio se encuentra " + estado);
-        assertThat(estado).isEqualTo("Abierto");
+        assertThat(estado).isEqualTo("Cerrado");
     }
 
     @DisplayName("Test para buscar un negocio por un nombre dado")
@@ -372,5 +366,17 @@ public class NegocioTest {
         /*Then - Verificar la salida*/
         System.out.println("negocioDTO.toString() = " + negocioDTO.toString());
         assertThat(negocioDTO).isNotNull();
+    }
+
+    @DisplayName("Test listar los negocios por segun tipoNegocio esten abiertos o cerrados")
+    @Test
+    public void listarNegociosAbiertosPorTipoSegunHoraTest() throws Exception {
+
+
+        /*When - Acción o el comportamiento que se va a probar*/
+        List<ItemNegocioDTO> lista = negocioServicio.listarNegociosAbiertosPorTipoSegunHora(TipoNegocio.COMIDAS_RAPIDAS);
+
+        /*Then - Verificar la salida*/
+        Assertions.assertEquals(2, lista.size());
     }
 }

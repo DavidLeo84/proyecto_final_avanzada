@@ -226,14 +226,14 @@ public class NegocioServicioImpl implements INegocioServicio {
         String respuesta = "";
         Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
         Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
-            for (String codigo : cliente.getFavoritos()) {
-                if (codigo.equals(codigoNegocio)) {
-                    cliente.getFavoritos().remove(codigo);
-                    clienteRepo.save(cliente);
-                    respuesta = "El negocio fue eliminado de su lista de favoritos con éxito";
-                }
+        for (String codigo : cliente.getFavoritos()) {
+            if (codigo.equals(codigoNegocio)) {
+                cliente.getFavoritos().remove(codigo);
+                clienteRepo.save(cliente);
+                respuesta = "El negocio fue eliminado de su lista de favoritos con éxito";
             }
-            return respuesta;
+        }
+        return respuesta;
     }
 
     @Override
@@ -308,15 +308,17 @@ public class NegocioServicioImpl implements INegocioServicio {
     }
 
     @Override
-    public String determinarDisponibilidadNegocio(String codigoNegocio, FechaActualDTO fechaActualDTO) throws Exception {
+    public String determinarDisponibilidadNegocio(String codigoNegocio) throws Exception {
 
+        LocalDateTime fechaActualDTO = LocalDateTime.now();
+        LocalTime horaActual = fechaActualDTO.toLocalTime();
         String estado = "";
         Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
         for (Horario diaNegocio : negocio.getHorarios()) {
-            if (diaNegocio.getDia().equals(fechaActualDTO.dia())) {
+            if (diaNegocio.getDia().equals(fechaActualDTO.getDayOfWeek())) {
                 for (Horario horaNegocio : negocio.getHorarios()) {
-                    if (fechaActualDTO.hora().isBefore(transformarHora(horaNegocio.getHoraFin())) &&
-                            fechaActualDTO.hora().isAfter(transformarHora(horaNegocio.getHoraInicio()))) {
+                    if (horaActual.isBefore(transformarHora(horaNegocio.getHoraFin())) &&
+                            horaActual.isAfter(transformarHora(horaNegocio.getHoraInicio()))) {
                         estado = "Abierto";
                     } else {
                         estado = "Cerrado";
@@ -342,6 +344,21 @@ public class NegocioServicioImpl implements INegocioServicio {
                 negocio.getTelefonos(),
                 negocio.getImagenes()
         );
+    }
+
+    @Override
+    public List<ItemNegocioDTO> listarNegociosAbiertosPorTipoSegunHora(TipoNegocio tipoNegocio) throws Exception {
+
+        List<Negocio> negocios = validacionNegocio.validarListaNegociosPorTipo(tipoNegocio);
+
+        for (Negocio n : negocios) {
+            String estado = determinarDisponibilidadNegocio(n.getCodigo());
+        }
+        return negocios.stream().map(n -> new ItemNegocioDTO(
+                        n.getCodigo(),
+                        n.getNombre(),
+                        n.getTipoNegocios()))
+                .collect(Collectors.toList());
     }
 
     private LocalTime transformarHora(String hora) throws Exception {

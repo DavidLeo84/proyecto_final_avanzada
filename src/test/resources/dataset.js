@@ -201,14 +201,13 @@ db.negocios.insertMany([
         descripcion: 'La mejor atencion en su corte de cabello',
         estadoNegocio: 'APROBADO',
         tipoNegocios: [
-            'COMIDAS_RAPIDAS',
-            'BAR'
+            'PELUQUERIA'
         ],
         horarios: [
             {
                 dia: 'SATURDAY',
-                horaInicio: '10:00:00 AM',
-                horaFin: '09:00:00 PM'
+                horaInicio: '10:00:00',
+                horaFin: '20:00:00'
             }
         ],
         telefonos: [
@@ -257,14 +256,13 @@ db.negocios.insertMany([
         descripcion: 'Precios economicos y grandes ofertas',
         estadoNegocio: 'APROBADO',
         tipoNegocios: [
-            'COMIDAS_RAPIDAS',
-            'BAR'
+            'SUPERMERCADO'
         ],
         horarios: [
             {
                 dia: 'SATURDAY',
-                horaInicio: '10:00:00 AM',
-                horaFin: '09:00:00 PM'
+                horaInicio: '10:00:00',
+                horaFin: '18:00:00'
             }
         ],
         telefonos: [
@@ -306,14 +304,13 @@ db.negocios.insertMany([
         descripcion: 'Precios economicos y grandes ofertas',
         estadoNegocio: 'APROBADO',
         tipoNegocios: [
-            'COMIDAS_RAPIDAS',
-            'BAR'
+            'SUPERMERCADO'
         ],
         horarios: [
             {
                 dia: 'SATURDAY',
-                horaInicio: '10:00:00 AM',
-                horaFin: '09:00:00 PM'
+                horaInicio: '10:00:00',
+                horaFin: '18:00:00'
             }
         ],
         telefonos: [
@@ -361,8 +358,8 @@ db.negocios.insertMany([
         horarios: [
             {
                 dia: 'SATURDAY',
-                horaInicio: '10:00:00 AM',
-                horaFin: '09:00:00 PM'
+                horaInicio: '10:00:00',
+                horaFin: '23:40:00'
             }
         ],
         telefonos: [
