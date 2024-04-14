@@ -130,7 +130,7 @@ public class ClienteServicioImpl implements IClienteServicio {
     @Override
     public DetalleClienteDTO obtenerUsuario(String codigoCliente) throws Exception {
 
-        Cliente cliente = clienteRepo.findById(codigoCliente).get();
+        Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
         return new DetalleClienteDTO(
                 cliente.getNombre(),
                 cliente.getEmail(),

@@ -1,129 +1,175 @@
-db = connect('mongodb://root:example@localhost:27017/proyecto-test?authSource=admin');
-db.clientes.insertMany([
+db = connect('mongodb://root:example@localhost:27018/proyecto-test?authSource=admin');
+
+db.moderadores.insertMany([
     {
-        _id: {
-            $oid: '660842f2e1f50b64a6376e3c'
-        },
-        nombre: 'sacha',
-        nickname: 'sacha',
-        ciudad: 'RISARALDA',
-        fotoPerfil: 'foto1.jpg',
-        favoritos: [
-            '6608438bfd6d342c8005bdc8'
-        ],
-        negocios: [
-            '6608438bfd6d342c8005bdc8',
-            '6608442e31eff35db34b4b8a'
-        ],
-        recomendados: [
-            '6608438bfd6d342c8005bdc8'
-        ],
-        aprobacionesComentarios: [
-            '660eb8c49bcd74720e2df999'
-        ],
-        email: 'leoromero141@gmail.com',
-        password: '$2a$10$1zX.0gLJsMo2bw0M.2TkkeTvKzsADXaA0wk6aciPd5hglr.C/e3lu',
+        _id:  '661aad765a17e523f53fb224',
+        nombre: 'David',
+        email: 'mode1@correo.com',
+        password: '$2a$10$ikCsbqn4H/D12ZehmM541e69EvcClVSiCyrVZrzg42UhAgwIzFYAG',
         estadoRegistro: 'ACTIVO',
-        rol: 'USUARIO',
-        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Cliente'
+        rol: 'MODERADOR',
+        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Moderador'
     },
     {
-        _id: {
-            $oid: '6608622d7a6bf86424f727d3'
-        },
-        nombre: 'Ronnie James Dio',
-        nickname: 'Ronnie',
+        _id: '661aad765a17e523f53fb225',
+        nombre: 'Leonardo',
+        mail: 'mode2@correo.com',
+        password: '$2a$10$2Vb5bywTAx4Hoss688TGMeMX/7GGKOwesifLQgNYBlkFQSHYHKMHi',
+        estadoRegistro: 'ACTIVO',
+        rol: 'MODERADOR',
+        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Moderador'
+    },
+    {
+        _id: '661aad765a17e523f53fb226',
+        nombre: 'Ronnie',
+        email: 'mode3@correo.com',
+        password: '$2a$10$p4DDvjHNrRVEk9SMLGZ6TOqYtZbVJZSU5oRU5wuzEs4EpawBjcS76',
+        estadoRegistro: 'ACTIVO',
+        rol: 'MODERADOR',
+        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Moderador'
+    }
+]);
+
+db.clientes.insertMany([
+    {
+        _id: '661aa51d50a424787193f372',
+        nombre: 'Fiona Lucero',
+        nickname: 'fiona',
         ciudad: 'ARMENIA',
         fotoPerfil: 'foto1.jpg',
         favoritos: [],
         negocios: [
-            '6608abf0548f03646c38dbd8',
-            '660dd5416990af4a40637949',
-            '660ee368ba2cce724783399f',
-            '660ee420767f881e7797e463',
-            '660f7b100dfb28723e03c232',
-            '6611f8060d65450fe2d86d4c'
+            '661ade9b1911ac23d4bafbd5'
         ],
-        recomendados: [],
-        aprobacionesComentarios: [
-            '66086e5a7d8dcb33817cd67f',
-            '660eb8c49bcd74720e2df999'
+        recomendados: [
+            '661aacb404561d72bdbf16f2'
         ],
-        email: 'ronnie@gmail.com',
-        password: '$2a$10$Hl4CTbbRoYilUXtbyCctn.nflxo0xxoLu2wl9gYkT1y/IO0SE3q6a',
+        aprobacionesComentarios: [],
+        email: 'fiona@gmail.com',
+        password: '$2a$10$YAH8PV6Pa6UwhA4X3oIOp.D2wCck3mP15dsQbwM4PlSXDzfB3LV46',
         estadoRegistro: 'ACTIVO',
-        rol: 'USUARIO',
+        rol: 'CLIENTE',
         _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Cliente'
     },
     {
-        _id: {
-            $oid: '660862be705e055490c3753c'
-        },
-        nombre: 'Fiona Lucero',
-        nickname: 'fiona',
-        'ciudad': 'ARMENIA',
-        'fotoPerfil': 'foto1.jpg',
-        'favoritos': [],
-        'negocios': [],
-        'recomendados': [],
-        'aprobacionesComentarios': [
-            '660eb8c49bcd74720e2df999'
+        _id: '661aa62f1434fa40da4a039a',
+        nombre: 'Ronnie James',
+        nickname: 'Dio',
+        ciudad: 'ARMENIA',
+        fotoPerfil: 'foto1.jpg',
+        favoritos: [
+            '661aacb404561d72bdbf16f2'
         ],
-        'email': 'fiona@gmail.com',
-        'password': '$2a$10$N.iO7yzLweENpQxH9RAgluTX7Pj9o3kBCkZ4RpeSDiBAO3ofUL4SK',
-        'estadoRegistro': 'ACTIVO',
-        'rol': 'USUARIO',
-        '_class': 'co.edu.uniquindio.proyecto.modelo.documentos.Cliente'
+        negocios: [
+            '661aacb404561d72bdbf16f2',
+            '661ae308bda88567695426c1'
+        ],
+        recomendados: [
+            '661aacb404561d72bdbf16f2'
+        ],
+        aprobacionesComentarios: [],
+        email: 'ronnie@gmail.com',
+        password: '$2a$10$wehzH1H8mQmiLXeKOzQoBOFfm6tNnss6PM.2gFTw7DivBOarduK9i',
+        estadoRegistro: 'ACTIVO',
+        rol: 'CLIENTE',
+        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Cliente'
+    },
+    {
+        _id: '661aa6b492e1d716362980a0',
+        nombre: 'Sacha',
+        nickname: 'chusacha',
+        ciudad: 'ARMENIA',
+        fotoPerfil: 'foto1.jpg',
+        favoritos: [],
+        negocios: [
+            '661adf7fb017e172e90f9896',
+            '661ae25e87e99b3d73ec998a'
+        ],
+        recomendados: [],
+        aprobacionesComentarios: [],
+        email: 'sacha@gmail.com',
+        password: '$2a$10$C4t.dLokIa25.6h4Kz6lTuo434tHKdsPuiQ/Qh6p9bHxJy8NoGVbu',
+        estadoRegistro: 'ACTIVO',
+        rol: 'CLIENTE',
+        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Cliente'
+    },
+    {
+        _id: '661aa710a04bed5af9438baa',
+        nombre: 'Pika',
+        nickname: 'pikiña',
+        ciudad: 'ARMENIA',
+        fotoPerfil: 'foto1.jpg',
+        favoritos: [],
+        negocios: [],
+        recomendados: [
+            '661aacb404561d72bdbf16f2'
+        ],
+        aprobacionesComentarios: [],
+        email: 'pika@gmail.com',
+        password: '$2a$10$HlMCP68MXIIwQ0pkLPXGq.4z4HGtFLOeaNSvoeZQdWO0qRWO6BKqm',
+        estadoRegistro: 'ACTIVO',
+        rol: 'CLIENTE',
+        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Cliente'
+    },
+    {
+        _id: '661aa76c33505c024afd0680',
+        nombre: 'Elmo',
+        nickname: 'elmocho',
+        ciudad: 'ARMENIA',
+        fotoPerfil: 'foto.jpg',
+        favoritos: [],
+        negocios: [],
+        recomendados: [
+            '661aacb404561d72bdbf16f2'
+        ],
+        aprobacionesComentarios: [],
+        email: 'elmo@gmail.com',
+        password: '$2a$10$dLC.LZIlpiLGqaPoI24ntu6l/5Xgen1MKuLIbvfH2Df.WefQt.Fxa',
+        estadoRegistro: 'ACTIVO',
+        rol: 'CLIENTE',
+        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Cliente'
     }
-]);
+])
 db.negocios.insertMany([
     {
-        _id: {
-            $oid: '6608438bfd6d342c8005bdc8'
-        },
-        codigoCliente: '660842f2e1f50b64a6376e3c',
-        nombre: 'La Segunda Perrada de Sacha',
+        _id: '661aacb404561d72bdbf16f2',
+        codigoCliente: '661aa62f1434fa40da4a039a',
+        nombre: 'La Perrada de Ronnie',
         ubicacion: {
-            latitud: 693453780,
-            longitud: 957654624
+            latitud: 135444770,
+            longitud: 985862111
         },
-        descripcion: 'Los mejores perros calientes y hamburguesas de la ciudad',
+        descripcion: 'Los mejores perros calientes de la ciudad',
         estadoNegocio: 'APROBADO',
         tipoNegocios: [
-            'COMIDAS_RAPIDAS'
+            'COMIDAS_RAPIDAS',
+            'BAR'
         ],
         horarios: [
             {
-                dia: 'MONDAY',
+                dia: 'SATURDAY',
                 horaInicio: '10:00:00 AM',
                 horaFin: '09:00:00 PM'
             }
         ],
         telefonos: [
-            '3013967627',
-            '3152647156'
+            '3018967657',
+            '3102647656'
         ],
         historialRevisiones: [
             {
-                descripcion: 'La ubicación propuesta coincide con un establecimiento presente',
+                descripcion: '',
                 estadoNegocio: 'PENDIENTE',
-                fecha: '2024/03/29 03:41:20.000 PM',
-                codigoModerador: '1',
-                codigoNegocio: '6608438bfd6d342c8005bdc8'
-            },
-            {
-                descripcion: 'La ubicación propuesta coincide con un establecimiento presente',
-                estadoNegocio: 'RECHAZADO',
-                fecha: '2024/03/30 05:41:20.000 PM',
-                codigoModerador: '1',
-                codigoNegocio: '6608438bfd6d342c8005bdc8'
+                fecha: '2024/04/13 11:03:00.000 AM',
+                codigoModerador: 'default',
+                codigoNegocio: ''
             },
             {
                 descripcion: 'Su negocio cumple con las normas de la aplicación',
                 estadoNegocio: 'APROBADO',
-                fecha: '2024/04/01 12:15:01.000 PM',
-                codigoModerador: '1',
-                codigoNegocio: '6608438bfd6d342c8005bdc8'
+                fecha: '2024/04/13 12:12:57.000 PM',
+                codigoModerador: '661aad765a17e523f53fb224',
+                codigoNegocio: '661aacb404561d72bdbf16f2'
             }
         ],
         imagenes: [
@@ -131,132 +177,36 @@ db.negocios.insertMany([
             'cloudinary_2.com'
         ],
         calificaciones: [
-            'THREE_STAR',
-            'FIVE_STAR',
             'FOUR_STAR',
+            'FIVE_STAR',
             'FOUR_STAR'
         ],
-        recomendaciones: [],
+        recomendaciones: [
+            1,
+            1,
+            1,
+            1,
+
+        ],
         _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Negocio'
     },
     {
-        _id: {
-            $oid: '6608442e31eff35db34b4b8a'
-        },
-        codigoCliente: '660842f2e1f50b64a6376e3c',
-        nombre: 'La Primera Perrada de Sacha',
+        _id: '661ade9b1911ac23d4bafbd5',
+        codigoCliente: '661aa51d50a424787193f372',
+        nombre: 'Peluqueria Fiona',
         ubicacion: {
-            latitud: 293454780,
-            longitud: 657654324
+            latitud: 145444770,
+            longitud: 596862321
         },
-        descripcion: 'Los mejores perros calientes de la ciudad',
+        descripcion: 'La mejor atencion en su corte de cabello',
         estadoNegocio: 'APROBADO',
         tipoNegocios: [
-            'COMIDAS_RAPIDAS'
+            'COMIDAS_RAPIDAS',
+            'BAR'
         ],
         horarios: [
             {
-                'dia': 'WEDNESDAY',
-                'horaInicio': '10:00:00',
-                'horaFin': '21:00:00'
-            }
-        ],
-        telefonos: [
-            '3018967657',
-            '3102647656'
-        ],
-        historialRevisiones: [
-            {
-                descripcion: 'La ubicación propuesta coincide con un establecimiento presente',
-                estadoNegocio: 'PENDIENTE',
-                fecha: '2024/03/31 04:12:15.000 PM',
-                codigoModerador: 'Default',
-                codigoNegocio: ''
-            },
-            {
-                descripcion: 'La ubicación propuesta coincide con un establecimiento presente',
-                estadoNegocio: 'APROBADO',
-                fecha: '2024/03/31 05:05:45.000 PM',
-                codigoModerador: '1',
-                codigoNegocio: '6608442e31eff35db34b4b8a'
-            }
-        ],
-        imagenes: [
-            'cloudinary_1.com',
-            'cloudinary_2.com'
-        ],
-        calificaciones: [],
-        recomendaciones: [],
-        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Negocio'
-    },
-    {
-        _id: {
-            $oid: '6608abf0548f03646c38dbd8'
-        },
-        codigoCliente: '6608622d7a6bf86424f727d3',
-        nombre: 'La Primera Perrada de Ronnie',
-        ubicacion: {
-            latitud: 453454780,
-            longitud: 217654324
-        },
-        descripcion: 'Los mejores perros calientes de la ciudad',
-        stadoNegocio: 'APROBADO',
-        tipoNegocios: [
-            'COMIDAS_RAPIDAS'
-        ],
-        horarios: [
-            {
-                dia: 'Thursday',
-                horaInicio: '10:00:00 AM',
-                horaFin: '09:00:00 PM'
-            }
-        ],
-        telefonos: [
-            '3018967657',
-            '3102647656'
-        ],
-        historialRevisiones: [
-            {
-                descripcion: 'Su negocio cumple con las normas de la aplicación',
-                estadoNegocio: 'PENDIENTE',
-                fecha: '2024/04/04 11:24:39.000 PM',
-                codigoModerador: 'Default',
-                codigoNegocio: ''
-            },
-            {
-                descripcion: 'Su negocio cumple con las normas de la aplicación',
-                estadoNegocio: 'APROBADO',
-                fecha: '2024/04/05 10:14:25.000 PM',
-                codigoModerador: '1',
-                codigoNegocio: '6608abf0548f03646c38dbd8'
-            }
-        ],
-        imagenes: [
-            'cloudinary_1.com',
-            'cloudinary_2.com'
-        ],
-        calificaciones: [],
-        recomendaciones: [],
-        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Negocio'
-    },
-    {
-        _id: {
-            $oid: '660dd5416990af4a40637949'
-        },
-        codigoCliente: '6608622d7a6bf86424f727d3',
-        nombre: 'La Tercera Perrada de Ronnie',
-        ubicacion: {
-            latitud: 452254780,
-            longitud: 217884324
-        },
-        descripcion: 'Los mejores perros calientes de la ciudad',
-        estadoNegocio: 'APROBADO',
-        tipoNegocios: [
-            'COMIDAS_RAPIDAS'
-        ],
-        horarios: [
-            {
-                dia: 'WEDNESDAY',
+                dia: 'SATURDAY',
                 horaInicio: '10:00:00 AM',
                 horaFin: '09:00:00 PM'
             }
@@ -269,66 +219,23 @@ db.negocios.insertMany([
             {
                 descripcion: '',
                 estadoNegocio: 'PENDIENTE',
-                fecha: '2024/04/03 05:16:20.000 PM',
+                fecha: '2024/04/13 02:35:54.000 PM',
                 codigoModerador: 'default',
                 codigoNegocio: ''
             },
             {
-                descripcion: '',
-                estadoNegocio: 'APROBADO',
-                fecha: '2024/04/04 05:20:11.000 PM',
-                codigoModerador: '1',
-                codigoNegocio: '660dd5416990af4a40637949'
-            }
-        ],
-        imagenes: [
-            'cloudinary_1.com',
-            'cloudinary_2.com'
-        ],
-        calificaciones: [],
-        recomendaciones: [],
-        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Negocio'
-    },
-    {
-        _id: {
-            $oid: '660ee420767f881e7797e463'
-        },
-        codigoCliente: '6608622d7a6bf86424f727d3',
-        nombre: 'La Cuarta Perrada de Ronnie',
-        ubicacion: {
-            latitud: 296544780,
-            longitud: 657564324
-        },
-        descripcion: 'Los mejores perros calientes de la ciudad',
-        estadoNegocio: 'ELIMINADO',
-        tipoNegocios: [
-            'COMIDAS_RAPIDAS'
-        ],
-        horarios: [
-            {
-                dia: 'SUNDAY',
-                horaInicio: '10:00:00 AM',
-                horaFin: '09:00:00 PM'
-            }
-        ],
-        telefonos: [
-            '3018967657',
-            '3102647656'
-        ],
-        historialRevisiones: [
-            {
-                descripcion: '',
-                estadoNegocio: 'PENDIENTE',
-                fecha: '2024/04/04 10:32:05.000 AM',
-                codigoModerador: 'default',
-                codigoNegocio: ''
-            },
-            {
-                descripcion: '',
+                descripcion: 'La ubicación propuesta coincide con un establecimiento ya vigente',
                 estadoNegocio: 'RECHAZADO',
-                fecha: '2024/04/04 12:30:18.000 PM',
-                codigoModerador: '1',
-                codigoNegocio: '660ee420767f881e7797e463'
+                fecha: '2024/04/13 02:57:56.000 PM',
+                codigoModerador: '661aad765a17e523f53fb224',
+                codigoNegocio: '661ade9b1911ac23d4bafbd5'
+            },
+            {
+                descripcion: 'Su negocio cumple con las normas de la aplicación',
+                estadoNegocio: 'APROBADO',
+                fecha: '2024/04/13 03:03:39.000 PM',
+                codigoModerador: '661aad765a17e523f53fb224',
+                codigoNegocio: '661ade9b1911ac23d4bafbd5'
             }
         ],
         imagenes: [
@@ -338,87 +245,205 @@ db.negocios.insertMany([
         calificaciones: [],
         recomendaciones: [],
         _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Negocio'
-    }
-])
-db.comentarios.insertMany([
-    {
-        _id: {
-            $oid: '66086e5a7d8dcb33817cd67f'
-        },
-        codigoCliente: '6608622d7a6bf86424f727d3',
-        codigoNegocio: '6611f8060d65450fe2d86d4c',
-        mensaje: 'este es el mensaje',
-        respuesta: '',
-        fechaMensaje: '2024/03/30 02:56:12.000 PM',
-        fechaRespuesta: '',
-        meGusta: [
-            1
-        ],
-        _clas: 'co.edu.uniquindio.proyecto.modelo.documentos.Comentario'
     },
     {
-        _id: {
-            $oid: '660eb8c49bcd74720e2df999'
+        _id: '661adf7fb017e172e90f9896',
+        codigoCliente: '661aa6b492e1d716362980a0',
+        nombre: 'Supermercado la popular',
+        ubicacion: {
+            latitud: 140343570,
+            longitud: 596862872
         },
-        codigoCliente: '660842f2e1f50b64a6376e3c',
-        codigoNegocio: '6608438bfd6d342c8005bdc8',
-        mensaje: 'este es el mensaje',
-        respuesta: '',
-        fechaMensaje: '2024/04/04 02:27:25.000 PM',
-        fechaRespuesta: '',
-        meGusta: [
-            1,
-            1,
-            1
+        descripcion: 'Precios economicos y grandes ofertas',
+        estadoNegocio: 'APROBADO',
+        tipoNegocios: [
+            'COMIDAS_RAPIDAS',
+            'BAR'
         ],
-        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Comentario'
+        horarios: [
+            {
+                dia: 'SATURDAY',
+                horaInicio: '10:00:00 AM',
+                horaFin: '09:00:00 PM'
+            }
+        ],
+        telefonos: [
+            '3018967657',
+            '3102647656'
+        ],
+        historialRevisiones: [
+            {
+                descripcion: '',
+                estadoNegocio: 'PENDIENTE',
+                fecha: '2024/04/13 02:39:43.000 PM',
+                codigoModerador: 'default',
+                codigoNegocio: ''
+            },
+            {
+                descripcion: 'Su negocio cumple con las normas de la aplicación',
+                estadoNegocio: 'APROBADO',
+                fecha: '2024/04/13 03:06:21.000 PM',
+                codigoModerado: '661aad765a17e523f53fb224',
+                codigoNegocio: '661adf7fb017e172e90f9896'
+            }
+        ],
+        imagenes: [
+            'cloudinary_1.com',
+            'cloudinary_2.com'
+        ],
+        calificaciones: [],
+        recomendaciones: [],
+        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Negocio'
     },
     {
-        _id: {
-            $oid: '66135c174d13ae048cf2d67e'
+        _id: '661ae25e87e99b3d73ec998a',
+        codigoCliente: '661aa6b492e1d716362980a0',
+        nombre: 'Supermercado la popular 2',
+        ubicacion: {
+            latitud: 282444770,
+            longitud: 743862111
         },
-        codigoCliente: '6608622d7a6bf86424f727d3',
-        codigoNegocio: '6611f8060d65450fe2d86d4c',
-        mensaje: 'ese es el mensaje',
-        respuesta: 'este es la respuesta',
-        fechaMensaje: '2024/04/07 09:53:11.000 PM',
-        fechaRespuesta: '2024/04/07 10:15:10.000 PM',
-        meGusta: [],
-        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Comentario'
+        descripcion: 'Precios economicos y grandes ofertas',
+        estadoNegocio: 'APROBADO',
+        tipoNegocios: [
+            'COMIDAS_RAPIDAS',
+            'BAR'
+        ],
+        horarios: [
+            {
+                dia: 'SATURDAY',
+                horaInicio: '10:00:00 AM',
+                horaFin: '09:00:00 PM'
+            }
+        ],
+        telefonos: [
+            '3018967657',
+            '3102647656'
+        ],
+        historialRevisiones: [
+            {
+                descripcion: '',
+                estadoNegocio: 'PENDIENTE',
+                fecha: '2024/04/13 02:51:58.000 PM',
+                codigoModerador: 'default',
+                codigoNegocio: ''
+            },
+            {
+                descripcion: 'Su negocio cumple con las normas de la aplicación',
+                estadoNegocio: 'APROBADO',
+                fecha: '2024/04/13 03:09:24.000 PM',
+                codigoModerador: '661aad765a17e523f53fb224',
+                codigoNegocio: '661ae25e87e99b3d73ec998a'
+            }
+        ],
+        imagenes: [
+            'cloudinary_1.com',
+            'cloudinary_2.com'
+        ],
+        calificaciones: [],
+        recomendaciones: [],
+        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Negocio'
+    },
+    {
+        _id: '661ae308bda88567695426c1',
+        codigoCliente: '661aa62f1434fa40da4a039a',
+        nombre: 'La Segunda Perrada de Ronnie',
+        ubicacion: {
+            latitud: 575144770,
+            longitud: 765865111
+        },
+        descripcion: 'Los mejores perros calientes y hamburguesas de la ciudad',
+        estadoNegocio: 'APROBADO',
+        tipoNegocios: [
+            'COMIDAS_RAPIDAS',
+            'BAR'
+        ],
+        horarios: [
+            {
+                dia: 'SATURDAY',
+                horaInicio: '10:00:00 AM',
+                horaFin: '09:00:00 PM'
+            }
+        ],
+        telefonos: [
+            '3018967657',
+            '3102647656'
+        ],
+        historialRevisiones: [
+            {
+                descripcion: '',
+                estadoNegocio: 'PENDIENTE',
+                fecha: '2024/04/13 02:54:48.000 PM',
+                codigoModerador: 'default',
+                codigoNegocio: ''
+            },
+            {
+                descripcion: 'Su negocio cumple con las normas de la aplicación',
+                estadoNegocio: 'APROBADO',
+                fecha: '2024/04/13 03:13:44.000 PM',
+                codigoModerador: '661aad765a17e523f53fb224',
+                codigoNegocio: '661ae308bda88567695426c1'
+            }
+        ],
+        imagenes: [
+            'cloudinary_1.com',
+            'cloudinary_2.com'
+        ],
+        calificaciones: [],
+        recomendaciones: [],
+        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Negocio'
     }
 ]);
-db.moderadores.insertMany([
+
+db.comentarios.insertMany([
     {
-        _id: {
-            $oid: '6618bece184b4b36653f9ad8'
-        },
-        nombre: 'David',
-        email: 'mode1@correo.com',
-        password: '$2a$10$Lpc7Yym7PmRdFPxnco0S.e54DodK4WejyGWXXjKzlF5kSQ69hcyY2',
-        estadoRegistro: 'ACTIVO',
-        rol: 'ADMINISTRADOR',
-        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Moderador'
+        _id: '661ae8b3ee37de6100ef8c5d',
+        codigoCliente: '661aa51d50a424787193f372',
+        codigoNegoci: '661aacb404561d72bdbf16f2',
+        mensaje: 'este es el mensaje',
+        respuest: '',
+        fechaMensaje: '2024/04/13 03:18:56.000 PM',
+        fechaRespuesta: '',
+        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Comentario'
     },
     {
-        _id: {
-            $oid: '6618bece184b4b36653f9ad9'
-        },
-        nombre: 'Leonardo',
-        email: 'mode2@correo.com',
-        password: '$2a$10$p6zCL1wHJasEF6HpdAbafeokL66yn2xLzzxphrkP74xVO9CBLv1ny',
-        estadoRegistro: 'ACTIVO',
-        rol: 'ADMINISTRADOR',
-        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Moderador'
+        _id: '661ae90735a89a1e74bbcc7b',
+        codigoCliente: '661aa6b492e1d716362980a0',
+        codigoNegocio: '661aacb404561d72bdbf16f2',
+        mensaje: 'este es el mensaje',
+        respuesta: '',
+        fechaMensaje: '2024/04/13 03:20:21.000 PM',
+        fechaRespuesta: '',
+        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Comentario'
     },
     {
-        _id: {
-            $oid: '6618bece184b4b36653f9ada'
-        },
-        nombre: 'Ronnie',
-        email: 'mode3@correo.com',
-        password: '$2a$10$3eSfhbDgV35fS2rkSRuCjuejRuJMCQ36/hFjYahY/9ZA45drson6K',
-        estadoRegistro: 'ACTIVO',
-        rol: 'ADMINISTRADOR',
-        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Moderador'
+        _id: '661ae97c0cb2fd031f74750c',
+        codigoCliente: '661aa710a04bed5f9438baa',
+        codigoNegocio: '661aacb404561d72bdbf16f2',
+        mensaje: 'este es el mensaje',
+        respuesta: '',
+        fechaMensaje: '2024/04/13 03:22:18.000 PM',
+        fechaRespuesta: '',
+        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Comentario'
+    },
+    {
+        _id: '661ae9f66434680bfa3b7e2e',
+        codigoCliente: '661aa76c33505c024afd0680',
+        codigoNegocio: '661aacb404561d72bdbf16f2',
+        mensaje: 'este es el mensaje',
+        respuesta: '',
+        fechaMensaje: '2024/04/13 03:24:18.000 PM',
+        fechaRespuesta: '',
+        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Comentario'
+    },
+    {
+        _id: '661aead48eb6862012a89348',
+        codigoCliente: '661aa6b492e1d716362980a0',
+        codigoNegocio: '661aacb404561d72bdbf16f2',
+        mensaje: 'este es el mensaje',
+        respuesta: '',
+        fechaMensaje: '2024/04/13 03:28:02.000 PM',
+        fechaRespuesta: '',
+        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Comentario'
     }
 ]);

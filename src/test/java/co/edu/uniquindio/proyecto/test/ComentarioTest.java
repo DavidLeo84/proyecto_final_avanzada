@@ -46,8 +46,8 @@ public class ComentarioTest {
 
         // Given - Dado o condicion previa o configuración
         RegistroComentarioDTO comentarioDTO = new RegistroComentarioDTO(
-                "6608622d7a6bf86424f727d3",
-                "6611f8060d65450fe2d86d4c",
+                "661aa6b492e1d716362980a0",
+                "661aacb404561d72bdbf16f2",
                 "este es el mensaje",
                 LocalDateTime.now(),
                 "",

@@ -191,7 +191,6 @@ public class NegocioServicioImpl implements INegocioServicio {
                 n.getCodigo(),
                 n.getNombre(),
                 n.getTipoNegocios())).collect(Collectors.toList());
-
     }
 
     @Override

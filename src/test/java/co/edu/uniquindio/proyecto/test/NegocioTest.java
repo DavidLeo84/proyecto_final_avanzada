@@ -81,10 +81,10 @@ public class NegocioTest {
 
         // Given - Dado o condicion previa o configuración
         RegistroNegocioDTO negocioDTO = new RegistroNegocioDTO(
-                "La Perrada de Ronnie",
+                "La Segunda Perrada de Ronnie",
                 "661aa62f1434fa40da4a039a",
-                new Ubicacion(135444770, 985862111),
-                "Los mejores perros calientes de la ciudad",
+                new Ubicacion(144144770, 599865111),
+                "Los mejores perros calientes y hamburguesas de la ciudad",
                 tipoNegocios,
                 horarios,
                 telefonos,
@@ -211,7 +211,7 @@ public class NegocioTest {
         // Given - Dado o condicion previa o configuración
 
         // When - Acción o el comportamiento que se va a probar
-        String eliminado = negocioServicio.eliminarNegocioRecomendado("","");
+        String eliminado = negocioServicio.eliminarNegocioRecomendado("661aacb404561d72bdbf16f2","661aa6b492e1d716362980a0");
 
         //Then - Verificar la salida
         Assertions.assertEquals(eliminado, "El negocio fue eliminado de su lista de recomendados con éxito");
