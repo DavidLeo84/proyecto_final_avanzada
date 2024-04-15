@@ -3,12 +3,12 @@ package co.edu.uniquindio.proyecto.servicios;
 import co.edu.uniquindio.proyecto.dtos.*;
 
 import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
-import co.edu.uniquindio.proyecto.enums.Rol;
+import co.edu.uniquindio.proyecto.enums.PermisoEnum;
+import co.edu.uniquindio.proyecto.enums.RolEnum;
+import co.edu.uniquindio.proyecto.modelo.Rol;
 import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
-import co.edu.uniquindio.proyecto.modelo.documentos.Moderador;
 import co.edu.uniquindio.proyecto.repositorios.ClienteRepo;
 import co.edu.uniquindio.proyecto.repositorios.ModeradorRepo;
-import co.edu.uniquindio.proyecto.servicios.excepciones.ResourceInvalidException;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ResourceNotFoundException;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionCliente;
 import co.edu.uniquindio.proyecto.servicios.interfaces.IAutenticacionServicio;
@@ -18,11 +18,9 @@ import co.edu.uniquindio.proyecto.servicios.interfaces.ICloudinaryServicio;
 import co.edu.uniquindio.proyecto.servicios.interfaces.IEmailServicio;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -34,7 +32,6 @@ public class ClienteServicioImpl implements IClienteServicio {
     private final ClienteRepo clienteRepo;
     private final ModeradorRepo moderadorRepo;
     private final ValidacionCliente validacionCliente;
-
 
     private IEmailServicio emailServicio;
     private ICloudinaryServicio cloudinaryServicio;
@@ -56,7 +53,7 @@ public class ClienteServicioImpl implements IClienteServicio {
         if (lista.isEmpty()) {
             cliente.setEstadoRegistro(EstadoRegistro.INACTIVO);
             clienteRepo.save(cliente);
-        }else {
+        } else {
             throw new ResourceNotFoundException("Error! Hay negocios asociados que impiden eliminar la cuenta");
         }
     }
@@ -89,10 +86,12 @@ public class ClienteServicioImpl implements IClienteServicio {
         validacionCliente.validarUnicos(clienteDTO.email(), clienteDTO.nickname());
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String passwordEncriptada = passwordEncoder.encode(clienteDTO.password());
-
         Cliente nuevo = Cliente.builder()
+                .isEnabled(true).accountNoExpired(true).accountNoLocked(true).credentialNoExpired(true)
                 .email(clienteDTO.email()).password(passwordEncriptada)
-                .estadoRegistro(EstadoRegistro.ACTIVO).rol(Rol.CLIENTE)
+                .estadoRegistro(EstadoRegistro.ACTIVO).rol(Rol.builder().nombreRol(RolEnum.CLIENTE)
+                        .permisos(Set.of(PermisoEnum.APROBAR, PermisoEnum.COMENTAR,
+                                PermisoEnum.CALIFICAR, PermisoEnum.BUSCAR)).build())
                 .nickname(clienteDTO.nickname()).nombre(clienteDTO.nombre())
                 .ciudad(clienteDTO.ciudad()).fotoPerfil(clienteDTO.fotoPerfil())
                 .negocios(new ArrayList<>()).favoritos(new HashSet<>())

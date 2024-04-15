@@ -1,10 +1,9 @@
 package co.edu.uniquindio.proyecto.config;
 
-import co.edu.uniquindio.proyecto.enums.Rol;
-import org.springframework.cglib.proxy.NoOp;
+import co.edu.uniquindio.proyecto.enums.RolEnum;
+import co.edu.uniquindio.proyecto.servicios.UserDetailServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -36,31 +35,18 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
         return httpSecurity
-                //.httpBasic(Customizer.withDefaults())
+                .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
-                .sessionManagement(session ->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(http -> {
+                .sessionManagement(session ->session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+               /* .authorizeHttpRequests(http -> {
                     http.requestMatchers(HttpMethod.GET, "/authtest/hello").permitAll();
                     http.requestMatchers(HttpMethod.GET, "authtest/hello-secured").hasAuthority("READ");
                     //http.anyRequest().authenticated();
                     http.anyRequest().denyAll();
-                })
+                })*/
                 .build();
     }
 
-    /*@Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-
-        return httpSecurity
-                .authorizeHttpRequests()
-                .requestMatchers("authtest/hello").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin().permitAll()
-                .and()
-                .build();
-    }
-*/
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
 
@@ -69,35 +55,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider(UserDetailServiceImpl userDetailService) {
 
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(userDetailsService());
+        provider.setUserDetailsService(userDetailService);
         return provider;
-    }
-
-    public UserDetailsService userDetailsService() {
-
-        List<UserDetails> userDetailsList = new ArrayList<>();
-
-        userDetailsList.add(User.withUsername("leonardo")
-                .password("123456")
-                .roles(Rol.MODERADOR.name())
-                .authorities("READ")
-                .build());
-
-        userDetailsList.add(User.withUsername("ronnie")
-                .password("123456")
-                .roles(Rol.CLIENTE.name())
-                .authorities("READ", "CREATE")
-                .build());
-
-        return new InMemoryUserDetailsManager(userDetailsList);
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 }

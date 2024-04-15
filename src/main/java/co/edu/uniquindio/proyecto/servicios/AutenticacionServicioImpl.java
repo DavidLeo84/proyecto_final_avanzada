@@ -67,7 +67,7 @@ public class AutenticacionServicioImpl implements IAutenticacionServicio {
         Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
 
         Map<String, Object> map = new HashMap<>();
-        map.put("rol", "CLIENTE");
+        map.put("rolEnum", "CLIENTE");
         map.put("nombre", cliente.getNombre());
         map.put("id", cliente.getCodigo());
         return new TokenDTO(jwtUtils.generarToken(cliente.getEmail(), map));

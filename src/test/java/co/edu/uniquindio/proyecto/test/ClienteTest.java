@@ -39,12 +39,12 @@ public class ClienteTest {
 
         // Given - Dado o condicion previa o configuración
         RegistroClienteDTO clienteDTO = new RegistroClienteDTO(
-                "Elmo",
+                "Maria Cano",
                 "foto1.jpg",
-                "elmocho",
-                "elmo@gmail.com",
+                "mary",
+                "marycano@gmail.com",
                 "123456",
-                "ARMENIA"
+                "PEREIRA"
         );
         // When - Acción o el comportamiento que se va a probar
         Cliente cliente = clienteServicio.registrarse(clienteDTO);

@@ -2,138 +2,208 @@ db = connect('mongodb://root:example@localhost:27018/proyecto-test?authSource=ad
 
 db.moderadores.insertMany([
     {
-        _id:  '661aad765a17e523f53fb224',
+        _id: ObjectId('661c478c84bcf729883e3c2e'),
         nombre: 'David',
         email: 'mode1@correo.com',
-        password: '$2a$10$ikCsbqn4H/D12ZehmM541e69EvcClVSiCyrVZrzg42UhAgwIzFYAG',
+        password: '$2a$10$F9xgA/6V.rQ1s4SCCoioUem0F/nwzWdrdwphkjA27e/jDB2QfjCxS',
         estadoRegistro: 'ACTIVO',
-        rol: 'MODERADOR',
+        rol: {
+            _id: ObjectId('661c478b84bcf729883e3c2d'),
+            rol: 'MODERADOR',
+            listaPermisos: [
+                'APROBAR',
+                'COMENTAR'
+            ]
+        },
+        isEnabled: true,
+        accountNoExpired: true,
+        accountNoLocked: true,
+        credentialNoExpired: true,
         _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Moderador'
     },
     {
-        _id: '661aad765a17e523f53fb225',
+        _id: ObjectId('661c478c84bcf729883e3c2f'),
         nombre: 'Leonardo',
-        mail: 'mode2@correo.com',
-        password: '$2a$10$2Vb5bywTAx4Hoss688TGMeMX/7GGKOwesifLQgNYBlkFQSHYHKMHi',
+        email: 'mode2@correo.com',
+        password: '$2a$10$v88gxFutjqwv734h9lbkeu80Oqzo8tQp/OicmE7XN.oA6B9C9QIqe',
         estadoRegistro: 'ACTIVO',
-        rol: 'MODERADOR',
+        rol: {
+            _id: ObjectId('661c478b84bcf729883e3c2d'),
+            rol: 'MODERADOR',
+            listaPermisos: [
+                'APROBAR',
+                'COMENTAR'
+            ]
+        },
+        isEnabled: true,
+        accountNoExpired: true,
+        accountNoLocked: true,
+        credentialNoExpired: true,
         _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Moderador'
     },
     {
-        _id: '661aad765a17e523f53fb226',
+        _id: ObjectId('661c478c84bcf729883e3c30'),
         nombre: 'Ronnie',
         email: 'mode3@correo.com',
-        password: '$2a$10$p4DDvjHNrRVEk9SMLGZ6TOqYtZbVJZSU5oRU5wuzEs4EpawBjcS76',
+        password: '$2a$10$.IbF9XqeAGT99OXtt/0K5.UTxrsrwpKTlxuabt9drTrsIxOODBy5i',
         estadoRegistro: 'ACTIVO',
-        rol: 'MODERADOR',
+        rol: {
+            _id: ObjectId('661c478b84bcf729883e3c2d'),
+            rol: 'MODERADOR',
+            listaPermisos: [
+                'APROBAR',
+                'COMENTAR'
+            ]
+        },
+        isEnabled: true,
+        accountNoExpired: true,
+        accountNoLocked: true,
+        credentialNoExpired: true,
         _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Moderador'
     }
 ]);
 
 db.clientes.insertMany([
     {
-        _id: '661aa51d50a424787193f372',
-        nombre: 'Fiona Lucero',
-        nickname: 'fiona',
+        _id: ObjectId('661c48abd36eeb64ed610953'),
+        nombre: 'Maria Cano',
+        nickname: 'mary',
         ciudad: 'ARMENIA',
         fotoPerfil: 'foto1.jpg',
         favoritos: [],
-        negocios: [
-            '661ade9b1911ac23d4bafbd5'
-        ],
-        recomendados: [
-            '661aacb404561d72bdbf16f2'
-        ],
-        aprobacionesComentarios: [],
-        email: 'fiona@gmail.com',
-        password: '$2a$10$YAH8PV6Pa6UwhA4X3oIOp.D2wCck3mP15dsQbwM4PlSXDzfB3LV46',
-        estadoRegistro: 'ACTIVO',
-        rol: 'CLIENTE',
-        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Cliente'
-    },
-    {
-        _id: '661aa62f1434fa40da4a039a',
-        nombre: 'Ronnie James',
-        nickname: 'Dio',
-        ciudad: 'ARMENIA',
-        fotoPerfil: 'foto1.jpg',
-        favoritos: [
-            '661aacb404561d72bdbf16f2'
-        ],
-        negocios: [
-            '661aacb404561d72bdbf16f2',
-            '661ae308bda88567695426c1'
-        ],
-        recomendados: [
-            '661aacb404561d72bdbf16f2'
-        ],
-        aprobacionesComentarios: [],
-        email: 'ronnie@gmail.com',
-        password: '$2a$10$wehzH1H8mQmiLXeKOzQoBOFfm6tNnss6PM.2gFTw7DivBOarduK9i',
-        estadoRegistro: 'ACTIVO',
-        rol: 'CLIENTE',
-        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Cliente'
-    },
-    {
-        _id: '661aa6b492e1d716362980a0',
-        nombre: 'Sacha',
-        nickname: 'chusacha',
-        ciudad: 'ARMENIA',
-        fotoPerfil: 'foto1.jpg',
-        favoritos: [],
-        negocios: [
-            '661adf7fb017e172e90f9896',
-            '661ae25e87e99b3d73ec998a'
-        ],
+        negocios: [],
         recomendados: [],
         aprobacionesComentarios: [],
-        email: 'sacha@gmail.com',
-        password: '$2a$10$C4t.dLokIa25.6h4Kz6lTuo434tHKdsPuiQ/Qh6p9bHxJy8NoGVbu',
+        email: 'mariacano@gmail.com',
+        password: '$2a$10$.8i1NP9NxTnQUreHinnOc.0nfOnTJIxz.ZtRZcAFgA7czWUKvy386',
         estadoRegistro: 'ACTIVO',
-        rol: 'CLIENTE',
+        rol: {
+            _id: ObjectId('661c48aad36eeb64ed610952'),
+            rol: 'CLIENTE',
+            listaPermisos: [
+                'CREAR',
+                'CALIFICAR'
+            ]
+        },
+        isEnabled: true,
+        accountNoExpired: true,
+        accountNoLocked: true,
+        credentialNoExpired: true,
         _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Cliente'
     },
     {
-        _id: '661aa710a04bed5af9438baa',
-        nombre: 'Pika',
-        nickname: 'pikiña',
+        _id: ObjectId('661c4a4289852b27687d80a7'),
+        nombre: 'Roberto Lopez',
+        nickname: 'beto',
         ciudad: 'ARMENIA',
         fotoPerfil: 'foto1.jpg',
         favoritos: [],
         negocios: [],
-        recomendados: [
-            '661aacb404561d72bdbf16f2'
-        ],
+        recomendados: [],
         aprobacionesComentarios: [],
-        email: 'pika@gmail.com',
-        password: '$2a$10$HlMCP68MXIIwQ0pkLPXGq.4z4HGtFLOeaNSvoeZQdWO0qRWO6BKqm',
+        email: 'robertopez@gmail.com',
+        password: '$2a$10$YCOvcXA0Gj2ocwGWbA/t2O.W3WBqRAQW/hjvzarx7IdMS/0f9xJ.y',
         estadoRegistro: 'ACTIVO',
-        rol: 'CLIENTE',
+        rol: {
+            _id: ObjectId('661c4a4289852b27687d80a6'),
+            rol: 'CLIENTE',
+            listaPermisos: [
+                'CREAR',
+                'CALIFICAR'
+            ]
+        },
+        isEnabled: true,
+        accountNoExpired: true,
+        accountNoLocked: true,
+        credentialNoExpired: true,
         _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Cliente'
     },
     {
-        _id: '661aa76c33505c024afd0680',
-        nombre: 'Elmo',
-        nickname: 'elmocho',
+        _id: ObjectId('661c4aaa02acb36e691c9c17'),
+        nombre: 'Cecilia Muñoz',
+        nickname: 'cecy',
         ciudad: 'ARMENIA',
-        fotoPerfil: 'foto.jpg',
+        fotoPerfil: 'foto1.jpg',
         favoritos: [],
         negocios: [],
-        recomendados: [
-            '661aacb404561d72bdbf16f2'
-        ],
+        recomendados: [],
         aprobacionesComentarios: [],
-        email: 'elmo@gmail.com',
-        password: '$2a$10$dLC.LZIlpiLGqaPoI24ntu6l/5Xgen1MKuLIbvfH2Df.WefQt.Fxa',
+        email: 'ceciliañoz@gmail.com',
+        password: '$2a$10$KPiqRVr2jOASWl4MgynHGerIsQigtva7M77cUYsxZtM1XA7vywdXy',
         estadoRegistro: 'ACTIVO',
-        rol: 'CLIENTE',
+        rol: {
+            _id: ObjectId('661c4aaa02acb36e691c9c16'),
+            rol: 'CLIENTE',
+            listaPermisos: [
+                'CREAR',
+                'CALIFICAR'
+            ]
+        },
+        isEnabled: true,
+        accountNoExpired: true,
+        accountNoLocked: true,
+        credentialNoExpired: true,
+        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Cliente'
+    },
+    {
+        _id: ObjectId('661c4b0ea2ece971f83f5a7b'),
+        nombre: 'Juan Valdez',
+        nickname: 'juancho',
+        ciudad: 'ARMENIA',
+        fotoPerfil: 'foto1.jpg',
+        favoritos: [],
+        negocios: [],
+        recomendados: [],
+        aprobacionesComentarios: [],
+        email: 'juanvaldez@gmail.com',
+        password: '$2a$10$vt3qxTreVZl7VMdnhh45yO0YFH3x6IFJqeYAbNI/U667gVHXidCt.',
+        estadoRegistro: 'ACTIVO',
+        rol: {
+            _id: ObjectId('661c4b0ea2ece971f83f5a7a'),
+            rol: 'CLIENTE',
+            listaPermisos: [
+                'CREAR',
+                'CALIFICAR'
+            ]
+        },
+        isEnabled: true,
+        accountNoExpired: true,
+        accountNoLocked: true,
+        credentialNoExpired: true,
+        _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Cliente'
+    },
+    {
+        _id: ObjectId('661c4b6c03dc96547afaca75'),
+        nombre: 'Pedro Perez',
+        nickname: 'pepe',
+        ciudad: 'ARMENIA',
+        fotoPerfil: 'foto1.jpg',
+        favoritos: [],
+        negocios: [],
+        recomendados: [],
+        aprobacionesComentarios: [],
+        email: 'pedrope@gmail.com',
+        password: '$2a$10$slwri/gpINlOTBU1EnjwbOM9qBYrEhAiSCeMSPrIgPkF1OuQTj20K',
+        estadoRegistro: 'ACTIVO',
+        rol: {
+            _id: ObjectId('661c4b6b03dc96547afaca74'),
+            rol: 'CLIENTE',
+            listaPermisos: [
+                'CREAR',
+                'CALIFICAR'
+            ]
+        },
+        isEnabled: true,
+        accountNoExpired: true,
+        accountNoLocked: true,
+        credentialNoExpired: true,
         _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Cliente'
     }
 ])
 db.negocios.insertMany([
     {
         _id: '661aacb404561d72bdbf16f2',
-        codigoCliente: '661aa62f1434fa40da4a039a',
+        codigoCliente: '661c48abd36eeb64ed610953',
         nombre: 'La Perrada de Ronnie',
         ubicacion: {
             latitud: 135444770,
@@ -148,8 +218,8 @@ db.negocios.insertMany([
         horarios: [
             {
                 dia: 'SATURDAY',
-                horaInicio: '10:00:00 AM',
-                horaFin: '09:00:00 PM'
+                horaInicio: '10:00:00',
+                horaFin: '23:40:00'
             }
         ],
         telefonos: [
@@ -168,7 +238,7 @@ db.negocios.insertMany([
                 descripcion: 'Su negocio cumple con las normas de la aplicación',
                 estadoNegocio: 'APROBADO',
                 fecha: '2024/04/13 12:12:57.000 PM',
-                codigoModerador: '661aad765a17e523f53fb224',
+                codigoModerador: '661c478c84bcf729883e3c2e',
                 codigoNegocio: '661aacb404561d72bdbf16f2'
             }
         ],
@@ -185,14 +255,13 @@ db.negocios.insertMany([
             1,
             1,
             1,
-            1,
-
+            1
         ],
         _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Negocio'
     },
     {
         _id: '661ade9b1911ac23d4bafbd5',
-        codigoCliente: '661aa51d50a424787193f372',
+        codigoCliente: '661c48abd36eeb64ed610953',
         nombre: 'Peluqueria Fiona',
         ubicacion: {
             latitud: 145444770,
@@ -226,14 +295,14 @@ db.negocios.insertMany([
                 descripcion: 'La ubicación propuesta coincide con un establecimiento ya vigente',
                 estadoNegocio: 'RECHAZADO',
                 fecha: '2024/04/13 02:57:56.000 PM',
-                codigoModerador: '661aad765a17e523f53fb224',
+                codigoModerador: '661c478c84bcf729883e3c2e',
                 codigoNegocio: '661ade9b1911ac23d4bafbd5'
             },
             {
                 descripcion: 'Su negocio cumple con las normas de la aplicación',
                 estadoNegocio: 'APROBADO',
                 fecha: '2024/04/13 03:03:39.000 PM',
-                codigoModerador: '661aad765a17e523f53fb224',
+                codigoModerador: '661c478c84bcf729883e3c2e',
                 codigoNegocio: '661ade9b1911ac23d4bafbd5'
             }
         ],
@@ -247,7 +316,7 @@ db.negocios.insertMany([
     },
     {
         _id: '661adf7fb017e172e90f9896',
-        codigoCliente: '661aa6b492e1d716362980a0',
+        codigoCliente: '661c48abd36eeb64ed610953',
         nombre: 'Supermercado la popular',
         ubicacion: {
             latitud: 140343570,
@@ -281,7 +350,7 @@ db.negocios.insertMany([
                 descripcion: 'Su negocio cumple con las normas de la aplicación',
                 estadoNegocio: 'APROBADO',
                 fecha: '2024/04/13 03:06:21.000 PM',
-                codigoModerado: '661aad765a17e523f53fb224',
+                codigoModerado: '661c478c84bcf729883e3c2e',
                 codigoNegocio: '661adf7fb017e172e90f9896'
             }
         ],
@@ -295,7 +364,7 @@ db.negocios.insertMany([
     },
     {
         _id: '661ae25e87e99b3d73ec998a',
-        codigoCliente: '661aa6b492e1d716362980a0',
+        codigoCliente: '661c48abd36eeb64ed610953',
         nombre: 'Supermercado la popular 2',
         ubicacion: {
             latitud: 282444770,
@@ -309,8 +378,8 @@ db.negocios.insertMany([
         horarios: [
             {
                 dia: 'SATURDAY',
-                horaInicio: '10:00:00',
-                horaFin: '18:00:00'
+                horaInicio: '10:00:00 AM',
+                horaFin: '18:00:00 PM'
             }
         ],
         telefonos: [
@@ -329,7 +398,7 @@ db.negocios.insertMany([
                 descripcion: 'Su negocio cumple con las normas de la aplicación',
                 estadoNegocio: 'APROBADO',
                 fecha: '2024/04/13 03:09:24.000 PM',
-                codigoModerador: '661aad765a17e523f53fb224',
+                codigoModerador: '661c478c84bcf729883e3c2e',
                 codigoNegocio: '661ae25e87e99b3d73ec998a'
             }
         ],
@@ -343,7 +412,7 @@ db.negocios.insertMany([
     },
     {
         _id: '661ae308bda88567695426c1',
-        codigoCliente: '661aa62f1434fa40da4a039a',
+        codigoCliente: '661c48abd36eeb64ed610953',
         nombre: 'La Segunda Perrada de Ronnie',
         ubicacion: {
             latitud: 575144770,
@@ -378,7 +447,7 @@ db.negocios.insertMany([
                 descripcion: 'Su negocio cumple con las normas de la aplicación',
                 estadoNegocio: 'APROBADO',
                 fecha: '2024/04/13 03:13:44.000 PM',
-                codigoModerador: '661aad765a17e523f53fb224',
+                codigoModerador: '661c478c84bcf729883e3c2e',
                 codigoNegocio: '661ae308bda88567695426c1'
             }
         ],
@@ -395,7 +464,7 @@ db.negocios.insertMany([
 db.comentarios.insertMany([
     {
         _id: '661ae8b3ee37de6100ef8c5d',
-        codigoCliente: '661aa51d50a424787193f372',
+        codigoCliente: '661c48abd36eeb64ed610953',
         codigoNegoci: '661aacb404561d72bdbf16f2',
         mensaje: 'este es el mensaje',
         respuest: '',
@@ -405,7 +474,7 @@ db.comentarios.insertMany([
     },
     {
         _id: '661ae90735a89a1e74bbcc7b',
-        codigoCliente: '661aa6b492e1d716362980a0',
+        codigoCliente: '661c48abd36eeb64ed610953',
         codigoNegocio: '661aacb404561d72bdbf16f2',
         mensaje: 'este es el mensaje',
         respuesta: '',
@@ -415,7 +484,7 @@ db.comentarios.insertMany([
     },
     {
         _id: '661ae97c0cb2fd031f74750c',
-        codigoCliente: '661aa710a04bed5f9438baa',
+        codigoCliente: '661c48abd36eeb64ed610953',
         codigoNegocio: '661aacb404561d72bdbf16f2',
         mensaje: 'este es el mensaje',
         respuesta: '',
@@ -425,7 +494,7 @@ db.comentarios.insertMany([
     },
     {
         _id: '661ae9f66434680bfa3b7e2e',
-        codigoCliente: '661aa76c33505c024afd0680',
+        codigoCliente: '661c48abd36eeb64ed610953',
         codigoNegocio: '661aacb404561d72bdbf16f2',
         mensaje: 'este es el mensaje',
         respuesta: '',
@@ -435,7 +504,7 @@ db.comentarios.insertMany([
     },
     {
         _id: '661aead48eb6862012a89348',
-        codigoCliente: '661aa6b492e1d716362980a0',
+        codigoCliente: '661c48abd36eeb64ed610953',
         codigoNegocio: '661aacb404561d72bdbf16f2',
         mensaje: 'este es el mensaje',
         respuesta: '',
@@ -443,4 +512,7 @@ db.comentarios.insertMany([
         fechaRespuesta: '',
         _class: 'co.edu.uniquindio.proyecto.modelo.documentos.Comentario'
     }
+]);
+db.roles.insertMany([
+
 ]);

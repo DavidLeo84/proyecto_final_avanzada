@@ -1,8 +1,9 @@
 package co.edu.uniquindio.proyecto.modelo.documentos;
 
 import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
-import co.edu.uniquindio.proyecto.enums.Rol;
+import co.edu.uniquindio.proyecto.enums.RolEnum;
 import co.edu.uniquindio.proyecto.modelo.Cuenta;
+import co.edu.uniquindio.proyecto.modelo.Rol;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -31,12 +32,14 @@ public class Cliente extends Cuenta implements Serializable {
     private Set<String> recomendados; //funcionalidad adicional
     private Set<String> aprobacionesComentarios;
 
+
     @Builder
     public Cliente(String email, String password, EstadoRegistro estadoRegistro, Rol rol,
-                   String codigo, String nombre, String nickname, String ciudad, String fotoPerfil,
-                   Set<String> favoritos, List<String> negocios, Set<String> recomendados,
-                   Set<String> aprobacionesComentarios) {
-        super(email, password, EstadoRegistro.ACTIVO, Rol.CLIENTE);
+                   boolean isEnabled, boolean accountNoExpired, boolean accountNoLocked,
+                   boolean credentialNoExpired, String codigo, String nombre, String nickname,
+                   String ciudad, String fotoPerfil, Set<String> favoritos, List<String> negocios,
+                   Set<String> recomendados, Set<String> aprobacionesComentarios) {
+        super(email, password, estadoRegistro, rol, isEnabled, accountNoExpired, accountNoLocked, credentialNoExpired);
         this.codigo = codigo;
         this.nombre = nombre;
         this.nickname = nickname;
