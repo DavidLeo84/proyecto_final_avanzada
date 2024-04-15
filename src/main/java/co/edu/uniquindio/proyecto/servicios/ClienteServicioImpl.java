@@ -44,7 +44,6 @@ public class ClienteServicioImpl implements IClienteServicio {
         return token;
     }
 
-    //Metodo para eliminar la cuenta del moderador
     @Override
     public void eliminarCuenta(String codigoCliente) throws Exception {
 
@@ -101,10 +100,10 @@ public class ClienteServicioImpl implements IClienteServicio {
     }
 
     @Override
-    public Cliente editarPerfil(DetalleClienteDTO clienteDTO, String codigoCliente) throws Exception {
+    public Cliente actualizarCliente(ActualizarClienteDTO clienteDTO) throws Exception {
 
         validacionCliente.validarEmail(clienteDTO.email());
-        Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
+        Cliente cliente = validacionCliente.buscarCliente(clienteDTO.codigo());
         cliente.setNombre(clienteDTO.nombre());
         cliente.setCiudad(clienteDTO.ciudad());
         cliente.setEmail(clienteDTO.email());
@@ -113,19 +112,6 @@ public class ClienteServicioImpl implements IClienteServicio {
         return cliente;
     }
 
-    /*@Override
-    public void eliminarPerfil(String codigoCliente) throws Exception {
-
-        Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
-        List<String> lista = validacionCliente.obtenerListadoNegociosCliente(codigoCliente);
-        if (lista.isEmpty()) {
-            cliente.setEstadoRegistro(EstadoRegistro.INACTIVO);
-            clienteRepo.save(cliente);
-        }else {
-            throw new ResourceNotFoundException("Error! Hay negocios asociados que impiden eliminar la cuenta");
-        }
-    }
-*/
     @Override
     public DetalleClienteDTO obtenerUsuario(String codigoCliente) throws Exception {
 

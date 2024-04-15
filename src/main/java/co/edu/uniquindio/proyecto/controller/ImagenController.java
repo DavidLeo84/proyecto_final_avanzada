@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.controller;
 
+import co.edu.uniquindio.proyecto.dtos.ImagenDTO;
 import co.edu.uniquindio.proyecto.dtos.MensajeDTO;
 import co.edu.uniquindio.proyecto.servicios.CloudinaryServicioImpl;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.Map;
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/imagen")
+@RequestMapping("/api/imagenes")
 public class ImagenController {
 
     private final CloudinaryServicioImpl cloudinaryServicio;
@@ -29,14 +30,16 @@ public class ImagenController {
             return new ResponseEntity(new MensajeDTO(false,"imagen no valida"), HttpStatus.BAD_REQUEST);
         }
         Map resultado = cloudinaryServicio.subirImagen(imagen);
-        return new ResponseEntity(resultado, HttpStatus.OK);
+        //return new ResponseEntity(resultado, HttpStatus.OK);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, resultado));
     }
 
-    @PostMapping("/eliminar/{idImagen}")
-    public ResponseEntity<?> eliminarImagen(@PathVariable("idImagen") String idImagen) throws Exception {
+    @PostMapping("/eliminar")
+    public ResponseEntity<?> eliminarImagen(@RequestBody ImagenDTO imagenDTO) throws Exception {
 
-        Map resultado = cloudinaryServicio.eliminarImagen(idImagen);
-        return new ResponseEntity(resultado, HttpStatus.OK);
+        Map resultado = cloudinaryServicio.eliminarImagen(imagenDTO.id());
+        //return new ResponseEntity(resultado, HttpStatus.OK);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, resultado));
     }
 
 }

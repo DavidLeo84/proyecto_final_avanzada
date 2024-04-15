@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.test;
 
+import co.edu.uniquindio.proyecto.dtos.ActualizarClienteDTO;
 import co.edu.uniquindio.proyecto.dtos.DetalleClienteDTO;
 import co.edu.uniquindio.proyecto.dtos.RegistroClienteDTO;
 import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
@@ -58,14 +59,16 @@ public class ClienteTest {
     public void actualizarClienteTest() throws Exception {
 
         // Given - Dado o condicion previa o configuración
-        DetalleClienteDTO clienteDTO = new DetalleClienteDTO(
-                "sacha",
-                "sacha@gmail.com",
+        ActualizarClienteDTO clienteDTO = new ActualizarClienteDTO(
+
+                "661c48abd36eeb64ed610953",
+                "Maria Cano",
+                "marycano@gmail.com",
                 "RISARALDA",
-                "foto1.jpg'"
+                "foto1.jpg"
         );
         // When - Acción o el comportamiento que se va a probar
-        Cliente actualizado = clienteServicio.editarPerfil(clienteDTO, "660842f2e1f50b64a6376e3c");
+        Cliente actualizado = clienteServicio.actualizarCliente(clienteDTO);
 
         //Then - Verificar la salida
         System.out.println("actualizado = " + actualizado);

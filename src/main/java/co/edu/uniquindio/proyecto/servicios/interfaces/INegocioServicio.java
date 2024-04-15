@@ -18,7 +18,7 @@ public interface INegocioServicio {
 
     Negocio crearNegocio(RegistroNegocioDTO registroNegocioDTO)throws Exception;
 
-    void actualizarNegocio(ActualizarNegocioDTO negocioDTO, String codigoNegocio)throws Exception;
+    void actualizarNegocio(ActualizarNegocioDTO negocioDTO)throws Exception;
 
     void eliminarNegocio(String codigoNegocio)throws Exception;
 
@@ -26,7 +26,7 @@ public interface INegocioServicio {
 
     List<ItemNegocioDTO> filtrarPorEstado(EstadoNegocio estado)throws Exception;
 
-    Set<ItemNegocioDTO> listarNegociosPropietario(String codigoCliente)throws Exception;
+    List<ItemNegocioDTO> listarNegociosPropietario(String codigoCliente)throws Exception;
 
     //void cambiarEstado(String codigoNegocio, EstadoNegocio estado)throws Exception;
 

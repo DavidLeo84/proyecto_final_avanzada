@@ -98,13 +98,14 @@ public class NegocioTest {
         assertThat(nuevo).isNotNull();
     }
 
-    @DisplayName("Test para actualizar un negocio")
+    @DisplayName("Test para actualizar la descripcion de un negocio")
     @Test
     public void actualizarNegocioTest() throws Exception {
 
         // Given - Dado o condicion previa o configuración
         Negocio negocio = validacionNegocio.buscarNegocio("6608438bfd6d342c8005bdc8");
         ActualizarNegocioDTO negocioDTO = new ActualizarNegocioDTO(
+                negocio.getCodigo(),
                 "Los mejores perros calientes y hamburguesas del pueblo",
                 negocio.getUbicacion(),
                 negocio.getHorarios(),
@@ -112,7 +113,7 @@ public class NegocioTest {
                 negocio.getImagenes()
         );
         // When - Acción o el comportamiento que se va a probar
-        negocioServicio.actualizarNegocio(negocioDTO, "6608438bfd6d342c8005bdc8");
+        negocioServicio.actualizarNegocio(negocioDTO);
 
         //Then - Verificar la salida
         Negocio buscado = validacionNegocio.buscarNegocio("6608438bfd6d342c8005bdc8");
@@ -165,7 +166,7 @@ public class NegocioTest {
     public void listarNegociosPropietarioTest() throws Exception {
 
         // When - Acción o el comportamiento que se va a probar
-        Set<ItemNegocioDTO> lista = negocioServicio.listarNegociosPropietario("660842f2e1f50b64a6376e3c");
+        List<ItemNegocioDTO> lista = negocioServicio.listarNegociosPropietario("660842f2e1f50b64a6376e3c");
 
         //Then - Verificar la salida
         Assertions.assertEquals(2, lista.size());

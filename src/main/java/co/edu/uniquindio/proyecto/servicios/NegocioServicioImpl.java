@@ -59,9 +59,9 @@ public class NegocioServicioImpl implements INegocioServicio {
     }
 
     @Override
-    public void actualizarNegocio(ActualizarNegocioDTO negocioDTO, String codigoNegocio) throws Exception {
+    public void actualizarNegocio(ActualizarNegocioDTO negocioDTO) throws Exception {
 
-        Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
+        Negocio negocio = validacionNegocio.buscarNegocio(negocioDTO.codigo());
         negocio.setDescripcion(negocioDTO.descripcion());
         negocio.setUbicacion(negocioDTO.ubicacion());
         negocio.setHorarios(negocioDTO.horarios());
@@ -100,7 +100,7 @@ public class NegocioServicioImpl implements INegocioServicio {
     }
 
     @Override
-    public Set<ItemNegocioDTO> listarNegociosPropietario(String codigoCliente) throws Exception {
+    public List<ItemNegocioDTO> listarNegociosPropietario(String codigoCliente) throws Exception {
 
         Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
         validacionCliente.listarNegociosCliente(codigoCliente);
@@ -108,7 +108,7 @@ public class NegocioServicioImpl implements INegocioServicio {
         Set<ItemNegocioDTO> lista = new HashSet<>();
         return negocios.stream().map(n -> new ItemNegocioDTO(
                 n.getCodigo(), n.getNombre(), n.getTipoNegocios())
-        ).collect(Collectors.toSet());
+        ).collect(Collectors.toList());
     }
 
     /*@Override

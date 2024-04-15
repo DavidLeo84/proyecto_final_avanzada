@@ -19,6 +19,8 @@ public class JWTUtils {
     private String secretKey;
     @Value("${jwt.time.expiration}")
     private String timeExpiration;
+    @Value("${jwt.user.generator}")
+    private String userGenerator;
 
     public String generarToken(String email, Map<String, Object> claims) {
         Instant now = Instant.now();
@@ -27,6 +29,7 @@ public class JWTUtils {
                 .subject(email)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plus(1L, ChronoUnit.HOURS)))
+                //.expiration(new Date(System.currentTimeMillis() + 3600000))
                 .signWith(getKey())
                 .compact();
 
