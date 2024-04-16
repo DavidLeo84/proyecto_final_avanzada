@@ -54,7 +54,7 @@ public class ValidacionComentario {
 
         for (String codigo : cliente.getAprobacionesComentarios()) {
             if (codigo.equals(codigoComentario)) {
-                throw new ResourceNotFoundException("Este comentario ya fue aprobado");
+                throw new ResourceNotFoundException("Este comentario ya fue aprobado con me gusta");
             }
         }
     }

@@ -5,6 +5,7 @@ import co.edu.uniquindio.proyecto.enums.TipoNegocio;
 import co.edu.uniquindio.proyecto.enums.ValorCalificar;
 import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
 import co.edu.uniquindio.proyecto.servicios.ClienteServicioImpl;
+import co.edu.uniquindio.proyecto.servicios.ComentarioServicioImpl;
 import co.edu.uniquindio.proyecto.servicios.NegocioServicioImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class ClienteController {
 
     private final ClienteServicioImpl clienteServicio;
     private final NegocioServicioImpl negocioServicio;
+    private final ComentarioServicioImpl comentarioServicio;
 
     @PutMapping("/editar-perfil")
     public ResponseEntity<MensajeDTO<String>> actualizarCliente(@Valid @RequestBody
@@ -74,7 +76,7 @@ public class ClienteController {
 
     @GetMapping("/obtener-negocio/{codigoNegocio}")
     public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> obtenerNegocio(@PathVariable String codigoNegocio,
-                                                                            @Valid @RequestBody ValorCalificar calificacion) throws Exception {
+                                                                        @Valid @RequestBody ValorCalificar calificacion) throws Exception {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.obtenerNegocio(codigoNegocio, calificacion)));
     }
 
@@ -118,7 +120,8 @@ public class ClienteController {
     }
 
     @GetMapping("/obtener-revision")
-    public ResponseEntity<MensajeDTO<DetalleRevisionDTO>> obtenerRevision(@Valid @RequestBody ItemRevisionDTO item) throws Exception {
+    public ResponseEntity<MensajeDTO<DetalleRevisionDTO>> obtenerRevision(@Valid @RequestBody
+                                                                          ItemRevisionDTO item) throws Exception {
 
         return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.obtenerRevision(item)));
     }
@@ -131,14 +134,14 @@ public class ClienteController {
 
     @PutMapping("/guardar-favorito/{codigoNegocio}/{codigoCliente}")
     public ResponseEntity<MensajeDTO<String>> guardarFavorito(@PathVariable String codigoNegocio,
-                                                                 @PathVariable String codigoCliente) throws Exception {
+                                                              @PathVariable String codigoCliente) throws Exception {
         negocioServicio.guardarNegocioFavorito(codigoNegocio, codigoCliente);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "Has guardado este negocio entre tus favoritos"));
     }
 
     @DeleteMapping("/borrar-favorito/{codigoNegocio}/{codigoCliente}")
     public ResponseEntity<MensajeDTO<String>> eliminarFavorito(@PathVariable String codigoNegocio,
-                                                                  @PathVariable String codigoCliente) throws Exception {
+                                                               @PathVariable String codigoCliente) throws Exception {
         negocioServicio.eliminarNegocioFavorito(codigoNegocio, codigoCliente);
         return ResponseEntity.ok().body(new MensajeDTO<>(false,
                 "El negocio fue eliminado de su lista de favoritos con éxito"));
@@ -152,7 +155,7 @@ public class ClienteController {
 
     @GetMapping("/obtener-favorito/{codigoCliente}")
     public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> obtenerFavorito(@PathVariable String codigo,
-                                                                         @Valid @RequestBody ValorCalificar calificacion ) throws Exception {
+                                                                         @Valid @RequestBody ValorCalificar calificacion) throws Exception {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.obtenerFavorito(codigo, calificacion)));
     }
 
@@ -169,8 +172,46 @@ public class ClienteController {
     }
 
     @GetMapping("/lista-negocios-abiertos/{tipo}")
-    public ResponseEntity<MensajeDTO<List<ItemNegocioDTO>>> listarNegociosAbiertosPorTipoSegunHora(@PathVariable TipoNegocio tipo) throws Exception {
+    public ResponseEntity<MensajeDTO<List<ItemNegocioDTO>>> listarNegociosAbiertosPorTipoSegunHora(@PathVariable
+                                                                                                   TipoNegocio tipo) throws Exception {
 
         return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.listarNegociosAbiertosPorTipoSegunHora(tipo)));
     }
+
+
+    @PostMapping("/crer-comentario")
+    public ResponseEntity<MensajeDTO<String>> crearComentario(@Valid @RequestBody
+                                                              RegistroComentarioDTO comentarioDTO) throws Exception {
+
+        comentarioServicio.crearComentario(comentarioDTO);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, "Se ha agregado un nuevo comentario"));
+    }
+
+    @PostMapping("/responder-comentario")
+    public ResponseEntity<MensajeDTO<String>> responderComentario(@Valid @RequestBody
+                                                                  RegistroRespuestaComentarioDTO comentarioDTO) throws Exception {
+
+        comentarioServicio.responderComentario(comentarioDTO);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, "Se ha agregado la respuesta al comentario"));
+    }
+
+    @GetMapping("/listar-comentarios/{codigo}")
+    public ResponseEntity<MensajeDTO<List<ItemComentarioDTO>>> listarComentariosNegocio(@PathVariable String codigo) throws Exception {
+
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, comentarioServicio.listarComentariosNegocio(codigo)));
+    }
+
+    @GetMapping("/obtener-comentario/{codigo}")
+    public ResponseEntity<MensajeDTO<DetalleComentarioDTO>> obtenerComentarioNegocio(@PathVariable String codigo) throws Exception {
+
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, comentarioServicio.obtenerComentarioNegocio(codigo)));
+    }
+
+    @PutMapping("/aprobar-comentario/{codigoComentario}/{codigoCliente}")
+    public ResponseEntity<MensajeDTO<String>> aprobarComentario(@PathVariable String codigoComentario,
+                                                                @PathVariable String codigoCliente) throws Exception {
+        comentarioServicio.aprobarComentario(codigoComentario, codigoCliente);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, "Te gustó este comentario"));
+    }
+
 }
