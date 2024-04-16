@@ -16,7 +16,7 @@ import java.time.LocalTime;
 public class HistorialRevision implements Serializable {
 
     private String descripcion;
-    private String estadoNegocio;
+    private EstadoNegocio estadoNegocio;
     private String fecha;
     private String codigoModerador;
     private String codigoNegocio;
