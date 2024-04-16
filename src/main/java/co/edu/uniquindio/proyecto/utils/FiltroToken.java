@@ -24,7 +24,10 @@ import static co.edu.uniquindio.proyecto.enums.RolEnum.CLIENTE;
 public class FiltroToken extends OncePerRequestFilter {
 
     private final JWTUtils jwtUtils;
-
+    /*public FiltroToken(JWTUtils jwtUtils) {
+        this.jwtUtils = jwtUtils;
+    }
+*/
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {

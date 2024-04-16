@@ -57,6 +57,7 @@ public class ModeradorServicioImpl implements IModeradorServicio {
         }
     }
 
+    //pendiente para implementar en controller
     @Override
     public TokenDTO enviarLinkRecuperacion(String email) throws Exception {
 
@@ -157,6 +158,7 @@ public class ModeradorServicioImpl implements IModeradorServicio {
                 negocio.getTipoNegocios(),
                 negocio.getUbicacion(),
                 negocio.getDescripcion(),
+                negocio.getCalificacion(),
                 negocio.getHorarios(),
                 negocio.getTelefonos(),
                 negocio.getImagenes()
@@ -172,6 +174,7 @@ public class ModeradorServicioImpl implements IModeradorServicio {
                 negocio.getTipoNegocios(),
                 negocio.getUbicacion(),
                 negocio.getDescripcion(),
+                negocio.getCalificacion(),
                 negocio.getHorarios(),
                 negocio.getTelefonos(),
                 negocio.getImagenes()
@@ -188,6 +191,7 @@ public class ModeradorServicioImpl implements IModeradorServicio {
                 negocio.getTipoNegocios(),
                 negocio.getUbicacion(),
                 negocio.getDescripcion(),
+                negocio.getCalificacion(),
                 negocio.getHorarios(),
                 negocio.getTelefonos(),
                 negocio.getImagenes()
@@ -203,6 +207,7 @@ public class ModeradorServicioImpl implements IModeradorServicio {
                 negocio.getTipoNegocios(),
                 negocio.getUbicacion(),
                 negocio.getDescripcion(),
+                negocio.getCalificacion(),
                 negocio.getHorarios(),
                 negocio.getTelefonos(),
                 negocio.getImagenes()
@@ -249,17 +254,4 @@ public class ModeradorServicioImpl implements IModeradorServicio {
         Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
         emailServicio.enviarEmail(cliente.getEmail(), "Respuesta solicitud de negocio", "Su negocio fue " + estado);
     }
-
-    /*private LocalDateTime transformarFecha(String fechaRevision) throws Exception {
-
-        try {
-            String fechaString1 = fechaRevision.replaceAll("/", "-");
-            String fechaString1_1 = fechaString1.replaceAll(" ", "T");
-            DateTimeFormatter formatoFecha = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-            TemporalAccessor fechaFormateada = formatoFecha.parse(fechaString1_1.substring(0, 20));
-            return LocalDateTime.from(fechaFormateada);
-        } catch (Exception ex) {
-            throw new Exception("La fecha no cumple con el formato requerido");
-        }
-    }*/
 }
