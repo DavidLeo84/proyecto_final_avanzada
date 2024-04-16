@@ -19,18 +19,22 @@ public interface NegocioRepo extends MongoRepository<Negocio, String> {
     Optional<Negocio> getNegocioByUbicacion(int latitud, int longitud) throws Exception;
 
     @Query("{ubicacion:{latitud:?0,longitud:?1}}")
-    List<Negocio> getListNegocioByUbicacion(int latitud, int longitud) throws Exception;
+    List<Negocio> getListaNegocioByUbicacion(int latitud, int longitud) throws Exception;
 
     Optional<Negocio> findByCodigo(String codigo) throws Exception;
 
-    List<Negocio> findAllByEstadoRegistro(EstadoRegistro estadoRegistro) throws Exception;
+    List<Negocio> findAllByEstadoNegocio(EstadoNegocio estado) throws Exception;
 
     Set<Negocio> findAllByCodigoCliente(String codigo) throws Exception;
 
-    @Query("{estadoRegistro:INACTIVO},{historialRevisiones:{$elemMatch:{estadoNegocio:?0}}}")
-    List<Negocio> getListNegociosInactivos(String estadoNegocio) throws Exception;
+    @Query("{estadoNegocio:?0},{historialRevisiones:{$elemMatch:{estadoNegocio:?0}}}")
+    List<Negocio> getListaRevisiones(String codigoNegocio) throws Exception;
 
     @Query("{estadoRegistro:ELIMINADO},{historialRevisiones:{$elemMatch:{estadoNegocio:?0}}}")
-    List<Negocio> getListNegociosEliminados(String estadoNegocio) throws Exception;
+    List<Negocio> getListaNegociosEliminados(String estadoNegocio) throws Exception;
+
+    Optional<Negocio> findByNombre(String nombre) throws Exception;
+
+
 
 }

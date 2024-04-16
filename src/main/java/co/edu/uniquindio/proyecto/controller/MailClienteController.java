@@ -2,6 +2,7 @@ package co.edu.uniquindio.proyecto.controller;
 
 import co.edu.uniquindio.proyecto.dtos.EmailDTO;
 import co.edu.uniquindio.proyecto.servicios.ClienteServicioImpl;
+import co.edu.uniquindio.proyecto.servicios.interfaces.IClienteServicio;
 import co.edu.uniquindio.proyecto.servicios.interfaces.IEmailServicio;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,9 @@ import java.util.Map;
 @RequestMapping("/api/cliente")
 public class MailClienteController {
 
-    @Autowired
+
     private IEmailServicio emailServicio;
-    @Autowired
-    private ClienteServicioImpl clienteServicio;
+    private IClienteServicio clienteServicio;
 
     @PostMapping("/enviarMensaje")
     public ResponseEntity<Map> recibirPeticionEmail(@Valid @RequestBody EmailDTO emailDTO) {

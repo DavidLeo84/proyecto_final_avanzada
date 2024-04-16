@@ -10,8 +10,6 @@ public record ActualizarClienteDTO(
         @NotBlank
         String nombre,
         @NotBlank
-        String nickname,
-        @NotBlank
         String fotoPerfil,
         @NotBlank
         @Email

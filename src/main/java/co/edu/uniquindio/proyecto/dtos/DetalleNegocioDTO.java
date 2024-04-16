@@ -15,8 +15,8 @@ public record DetalleNegocioDTO(
         @NotBlank
         @Size(max = 30)
         String nombre,
-       /* @NotBlank
-        TipoNegocio tipo,*/
+        @NotBlank
+        List<TipoNegocio> tipoNegocios,
         @NotBlank
         Ubicacion ubicacion,
         @NotBlank

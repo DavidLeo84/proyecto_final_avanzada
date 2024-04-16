@@ -1,7 +1,8 @@
 package co.edu.uniquindio.proyecto.enums;
 
-public enum Rol {
+public enum RolEnum {
 
+    CLIENTE,
     USUARIO,
-    ADMINISTRADOR
+    MODERADOR
 }

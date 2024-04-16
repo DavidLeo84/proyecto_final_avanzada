@@ -3,10 +3,12 @@ package co.edu.uniquindio.proyecto.servicios.excepciones;
 import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
 import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
 import co.edu.uniquindio.proyecto.modelo.documentos.Moderador;
+import co.edu.uniquindio.proyecto.modelo.documentos.Negocio;
 import co.edu.uniquindio.proyecto.repositorios.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,13 +23,28 @@ public class ValidacionCliente {
     private final NegocioRepo negocioRepo;
 
 
-    //Este método se usa para verificar el correo ya se encuentra registrado con otro
-    // cliente al momento de registrar un nuevo cliente
     public void existeEmail(String email) throws Exception {
 
         Optional<Cliente> clienteOptional = clienteRepo.findByEmail(email);
-        if (!clienteOptional.isPresent())
-            throw new Exception("El usuario con email " + email + " ya se encuentra registrado");
+        if (clienteOptional == null)
+            throw new Exception("El correo no se encuentra registado");
+    }
+
+    public void validarEmail(String email) throws Exception {
+
+        Optional<Cliente> clienteOptional = clienteRepo.findByEmail(email);
+        if (clienteOptional.isPresent())
+            throw new Exception("El correo ya se encuentra registado");
+    }
+
+    public Cliente buscarPorEmail(String email) throws Exception {
+
+        Optional<Cliente> clienteOptional = clienteRepo.findByEmail(email);
+        if (clienteOptional == null) {
+            throw new ResourceNotFoundException("El correo no se encuentra registrado");
+        }
+        Cliente cliente = clienteOptional.get();
+        return cliente;
     }
 
     public void validarUnicos(String email, String nickname) throws Exception {
@@ -42,46 +59,43 @@ public class ValidacionCliente {
     public Cliente buscarCliente(String codigoCliente) throws Exception {
 
         Optional<Cliente> buscado = clienteRepo.findByCodigo(codigoCliente);
-        Cliente cliente = null;
-
-        if (buscado != null && buscado.get().getEstadoRegistro().equals(EstadoRegistro.ACTIVO)) {
-            cliente = buscado.get();
+        if (buscado.isEmpty() || buscado.get().getEstadoRegistro().equals(EstadoRegistro.INACTIVO)) {
+            throw new ResourceNotFoundException("No existe cliente");
         }
-        if (buscado == null || buscado.get().getEstadoRegistro().equals(EstadoRegistro.INACTIVO)) {
-            throw new ResourceNotFoundException("No existe cliente con el codigo " + codigoCliente);
-        }
+        Cliente cliente = buscado.get();
         return cliente;
     }
 
-    public Moderador buscarModerador(String codigoModerador) throws Exception {
 
-        Optional<Moderador> buscado = moderadorRepo.findByCodigo(codigoModerador);
-        Moderador moderador = new Moderador();
-
-        if (buscado != null && buscado.get().getEstadoRegistro().equals(EstadoRegistro.ACTIVO)) {
-            moderador = buscado.get();
-        }
-        if (buscado == null || buscado.get().getEstadoRegistro().equals(EstadoRegistro.INACTIVO)) {
-            throw new ResourceNotFoundException("No existe el moderador");
-        }
-        return moderador;
-    }
-
-    public Set<String> validarListaNegociosCliente(String codigoCliente) throws Exception {
+    //Metodo para listar y mostrar los negocios de un cliente
+    public List<String> listarNegociosCliente(String codigoCliente) throws Exception {
         Cliente cliente = buscarCliente(codigoCliente);
-        Set<String> lista = cliente.getNegocios();
+        List<String> lista = cliente.getNegocios();
         if (lista.isEmpty()) {
             throw new ResourceNotFoundException("No existe negocios asociados al cliente");
         }
         return lista;
     }
 
+    //Metodo para listar los negocios favoritos o recomendados que tenga un cliente
     public Set<String> validarListaGenericaCliente(Set<String> lista) throws Exception {
 
         if (lista.isEmpty()) {
             throw new ResourceNotFoundException("El cliente no tiene favoritos o recomendados");
         }
         return lista;
+    }
+
+    //Metodo para obtener el listado de negocios en el estado actual
+    public List<String> obtenerListadoNegociosCliente(String codigoCliente) throws Exception {
+
+        try {
+            Cliente cliente = buscarCliente(codigoCliente);
+            List<String> lista = cliente.getNegocios();
+            return lista;
+        } catch (Exception ex) {
+            throw new Exception("No se puede hallar el listado de negocios", ex);
+        }
     }
 
     private boolean estaRepetidoEmail(String email) throws Exception {

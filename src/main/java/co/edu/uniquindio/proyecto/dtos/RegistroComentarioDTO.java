@@ -17,11 +17,14 @@ public record RegistroComentarioDTO(
         @ExistsQuery(value = "false")
         @Pattern(regexp = "\".*[!@#$%^&*,/\\\\\\\\()¿~_'<>:;+.=?-].*\"")
         String mensaje,
+        @FutureOrPresent
+        LocalDateTime fechaMensaje,
         @NotBlank
         @Size(max = 200)
         String respuesta,
         @FutureOrPresent
-        LocalDateTime fecha
+        LocalDateTime fechaRespuesta
+
 
 ) {
 }

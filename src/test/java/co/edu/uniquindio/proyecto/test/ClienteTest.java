@@ -1,17 +1,20 @@
 package co.edu.uniquindio.proyecto.test;
 
+import co.edu.uniquindio.proyecto.dtos.ActualizarClienteDTO;
 import co.edu.uniquindio.proyecto.dtos.DetalleClienteDTO;
 import co.edu.uniquindio.proyecto.dtos.RegistroClienteDTO;
 import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
 import co.edu.uniquindio.proyecto.repositorios.ClienteRepo;
 import co.edu.uniquindio.proyecto.repositorios.ModeradorRepo;
 import co.edu.uniquindio.proyecto.servicios.ClienteServicioImpl;
+import co.edu.uniquindio.proyecto.servicios.excepciones.ResourceInvalidException;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ResourceNotFoundException;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionCliente;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,12 +40,12 @@ public class ClienteTest {
 
         // Given - Dado o condicion previa o configuración
         RegistroClienteDTO clienteDTO = new RegistroClienteDTO(
-                "Fiona Lucero",
+                "Maria Cano",
                 "foto1.jpg",
-                "fiona",
-                "fiona@gmail.com",
+                "mary",
+                "marycano@gmail.com",
                 "123456",
-                "ARMENIA"
+                "PEREIRA"
         );
         // When - Acción o el comportamiento que se va a probar
         Cliente cliente = clienteServicio.registrarse(clienteDTO);
@@ -56,13 +59,16 @@ public class ClienteTest {
     public void actualizarClienteTest() throws Exception {
 
         // Given - Dado o condicion previa o configuración
-        DetalleClienteDTO clienteDTO = new DetalleClienteDTO(
-                "sacha",
+        ActualizarClienteDTO clienteDTO = new ActualizarClienteDTO(
+
+                "661c48abd36eeb64ed610953",
+                "Maria Cano",
+                "marycano@gmail.com",
                 "RISARALDA",
-                "foto1.jpg'"
+                "foto1.jpg"
         );
         // When - Acción o el comportamiento que se va a probar
-        Cliente actualizado = clienteServicio.editarPerfil(clienteDTO, "660842f2e1f50b64a6376e3c");
+        Cliente actualizado = clienteServicio.actualizarCliente(clienteDTO);
 
         //Then - Verificar la salida
         System.out.println("actualizado = " + actualizado);
@@ -71,16 +77,16 @@ public class ClienteTest {
 
     @DisplayName("Test para eliminar la cuenta de un cliente")
     @Test
-    public void eliminarCliente() throws Exception {
+    public void eliminarCuentaTest() throws Exception {
 
         // Given - Dado o condicion previa o configuración
-        Cliente cliente = validacion.buscarCliente("660842f2e1f50b64a6376e3c");
+        Cliente cliente = validacion.buscarCliente("660862be705e055490c3753c");
 
         // When - Acción o el comportamiento que se va a probar
-        clienteServicio.eliminarPerfil(cliente.getCodigo());
+        clienteServicio.eliminarCuenta(cliente.getCodigo());
 
         //Then - Verificar la salida
-        assertThrows(ResourceNotFoundException.class, () -> validacion.buscarCliente("660842f2e1f50b64a6376e3c"));
+        assertThrows(ResourceNotFoundException.class, () -> validacion.buscarCliente("660862be705e055490c3753c"));
 
     }
 
@@ -91,7 +97,7 @@ public class ClienteTest {
         // Given - Dado o condicion previa o configuración
 
         // When - Acción o el comportamiento que se va a probar
-        DetalleClienteDTO detalleClienteDTO = clienteServicio.obtenerUsuario("660842f2e1f50b64a6376e3c");
+        DetalleClienteDTO detalleClienteDTO = clienteServicio.obtenerUsuario("661aa51d50a424787193f372");
 
         //Then - Verificar la salida
         assertThat(detalleClienteDTO).isNotNull();

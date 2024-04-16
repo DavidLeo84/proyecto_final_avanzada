@@ -2,7 +2,10 @@ package co.edu.uniquindio.proyecto.dtos;
 
 import co.edu.uniquindio.proyecto.enums.TipoNegocio;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+
+import java.util.List;
 
 public record ItemNegocioDTO(
 
@@ -10,7 +13,7 @@ public record ItemNegocioDTO(
         @NotBlank
         @Size(max = 30)
         String nombre,
-        @NotBlank
-        TipoNegocio tipo
+        @NotEmpty
+        List<TipoNegocio> tiposNegocios
 ) {
 }

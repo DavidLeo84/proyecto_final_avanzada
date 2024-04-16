@@ -1,7 +1,8 @@
 package co.edu.uniquindio.proyecto.dtos;
 
-public record MensajeDTO(
+public record MensajeDTO<T>(
 
-        String mensaje
+        boolean error,
+        T mensaje
 ) {
 }

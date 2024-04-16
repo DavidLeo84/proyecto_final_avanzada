@@ -12,6 +12,7 @@ public enum TipoNegocio {
     FRUTERIA,
     TIENDA,
     COMIDAS_RAPIDAS,
+    PELUQUERIA,
     OTRO
 
 }

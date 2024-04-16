@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Data
@@ -24,6 +25,7 @@ public class Comentario implements Serializable {
     private String codigoNegocio;
     private String mensaje;
     private String respuesta;
-    private String fecha;
-
+    private String fechaMensaje;
+    private String fechaRespuesta;
+    private List<Integer> meGusta;
 }

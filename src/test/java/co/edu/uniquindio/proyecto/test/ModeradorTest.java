@@ -1,10 +1,11 @@
 package co.edu.uniquindio.proyecto.test;
 
+import co.edu.uniquindio.proyecto.dtos.DetalleNegocioDTO;
 import co.edu.uniquindio.proyecto.dtos.HistorialRevisionDTO;
 import co.edu.uniquindio.proyecto.dtos.ItemNegocioDTO;
 import co.edu.uniquindio.proyecto.enums.EstadoNegocio;
+import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
 import co.edu.uniquindio.proyecto.enums.TipoNegocio;
-import co.edu.uniquindio.proyecto.modelo.HistorialRevision;
 import co.edu.uniquindio.proyecto.modelo.documentos.Moderador;
 import co.edu.uniquindio.proyecto.modelo.documentos.Negocio;
 import co.edu.uniquindio.proyecto.repositorios.ModeradorRepo;
@@ -13,13 +14,16 @@ import co.edu.uniquindio.proyecto.servicios.ModeradorServicioImpl;
 import co.edu.uniquindio.proyecto.servicios.NegocioServicioImpl;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ResourceNotFoundException;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionCliente;
+import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionModerador;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionNegocio;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,30 +34,40 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ModeradorTest {
 
     @Autowired
-    private ClienteServicioImpl clienteServicio;
-    @Autowired
     private ValidacionCliente validacionCliente;
+    @Autowired
+    private ValidacionModerador validacionModerador;
     @Autowired
     private ValidacionNegocio validacionNegocio;
     @Autowired
     ModeradorRepo moderadorRepo;
     @Autowired
+    private ClienteServicioImpl clienteServicio;
+    @Autowired
     private ModeradorServicioImpl moderadorServicio;
     @Autowired
     private NegocioServicioImpl negocioServicio;
+    private List<TipoNegocio> tipoNegocios = new ArrayList<>();
+
+    @BeforeEach
+    void setup() {
+
+        tipoNegocios.add(TipoNegocio.COMIDAS_RAPIDAS);
+        tipoNegocios.add(TipoNegocio.BAR);
+    }
 
     @DisplayName("Test para eliminar la cuenta de un moderador")
     @Test
     public void eliminarCuentaTest() throws Exception {
 
         /*Given - Dado o condicion previa o configuración*/
-        Moderador moderador = validacionCliente.buscarModerador("3");
+        Moderador moderador = validacionModerador.buscarModerador("6618bece184b4b36653f9ada");
 
         /*When - Acción o el comportamiento que se va a probar*/
-        clienteServicio.eliminarCuenta(moderador.getCodigo());
+        moderadorServicio.eliminarCuenta(moderador.getCodigo());
 
         /*Then - Verificar la salida*/
-        assertThrows(ResourceNotFoundException.class, () -> validacionCliente.buscarModerador("3"));
+        assertThrows(ResourceNotFoundException.class, () -> validacionModerador.buscarModerador("3"));
     }
 
     @DisplayName("Test para registrar una revision a un negocio creado")
@@ -64,14 +78,14 @@ public class ModeradorTest {
         HistorialRevisionDTO revisionDTO = new HistorialRevisionDTO(
                 "Su negocio cumple con las normas de la aplicación",
                 EstadoNegocio.APROBADO,
-                "1",
-                "660f7b100dfb28723e03c232"
+                "661aad765a17e523f53fb224",
+                "661ae308bda88567695426c1"
         );
         /*When - Acción o el comportamiento que se va a probar*/
         moderadorServicio.revisarNegocio(revisionDTO);
 
         /*Then - Verificar la salida*/
-        Negocio negocio = validacionNegocio.buscarNegocio("6608438bfd6d342c8005bdc8");
+        Negocio negocio = validacionNegocio.validarNegocioAprobado("661ae308bda88567695426c1");
         System.out.println("negocio = " + negocio);
         assertThat(negocio.getHistorialRevisiones().size()).isGreaterThan(1);
     }
@@ -82,31 +96,30 @@ public class ModeradorTest {
 
         /*Given - Dado o condicion previa o configuración*/
         ItemNegocioDTO negocioDTO = new ItemNegocioDTO(
-                "6608438bfd6d342c8005bdc8",
-                "La Segunda Perrada de Sacha",
-                TipoNegocio.COMIDAS_RAPIDAS
+                "661aacb404561d72bdbf16f2",
+                "La Perrada de Ronnie",
+                tipoNegocios
         );
-
         /*When - Acción o el comportamiento que se va a probar*/
-        Negocio negocio = moderadorServicio.obtenerNegocioAprobado(negocioDTO);
+        DetalleNegocioDTO negocio = moderadorServicio.obtenerNegocioAprobado(negocioDTO);
 
         /*Then - Verificar la salida*/
         System.out.println("negocio = " + negocio);
-        assertThat(negocio).isNotNull();
+        assertThat(negocioDTO).isNotNull();
     }
+
     @DisplayName("Test para buscar y mostrar un negocio que este en estado pendiente para revisión")
     @Test
     public void obtenerNegocioPendienteTest() throws Exception {
 
         /*Given - Dado o condicion previa o configuración*/
         ItemNegocioDTO negocioDTO = new ItemNegocioDTO(
-                "6608438bfd6d342c8005bdc8",
-                "La Segunda Perrada de Sacha",
-                TipoNegocio.COMIDAS_RAPIDAS
+                "6608abf0548f03646c38dbd8",
+                "La Primera Perrada de Ronnie",
+                tipoNegocios
         );
-
         /*When - Acción o el comportamiento que se va a probar*/
-        Negocio negocio = moderadorServicio.obtenerNegocioPendiente(negocioDTO);
+        DetalleNegocioDTO negocio = moderadorServicio.obtenerNegocioPendiente(negocioDTO);
 
         /*Then - Verificar la salida*/
         System.out.println("negocio = " + negocio);
@@ -119,13 +132,13 @@ public class ModeradorTest {
 
         /*Given - Dado o condicion previa o configuración*/
         ItemNegocioDTO negocioDTO = new ItemNegocioDTO(
-                "6608438bfd6d342c8005bdc8",
-                "La Segunda Perrada de Sacha",
-                TipoNegocio.COMIDAS_RAPIDAS
+                "660ee420767f881e7797e463",
+                "La Cuarta Perrada de Ronnie",
+                tipoNegocios
         );
 
         /*When - Acción o el comportamiento que se va a probar*/
-        Negocio negocio = moderadorServicio.obtenerNegocioRechazado(negocioDTO);
+        DetalleNegocioDTO negocio = moderadorServicio.obtenerNegocioRechazado(negocioDTO);
 
         /*Then - Verificar la salida*/
         System.out.println("negocio = " + negocio);
@@ -138,12 +151,12 @@ public class ModeradorTest {
 
         /*Given - Dado o condicion previa o configuración*/
         ItemNegocioDTO negocioDTO = new ItemNegocioDTO(
-                "6608438bfd6d342c8005bdc8",
-                "La Segunda Perrada de Sacha",
-                TipoNegocio.COMIDAS_RAPIDAS
+                "660ee420767f881e7797e463",
+                "La Cuarta Perrada de Ronnie",
+                tipoNegocios
         );
         /*When - Acción o el comportamiento que se va a probar*/
-        Negocio negocio = moderadorServicio.obtenerNegocioEliminado(negocioDTO);
+        DetalleNegocioDTO negocio = moderadorServicio.obtenerNegocioEliminado(negocioDTO);
 
         /*Then - Verificar la salida*/
         System.out.println("negocio = " + negocio);
@@ -169,7 +182,7 @@ public class ModeradorTest {
         List<ItemNegocioDTO> lista = moderadorServicio.listarNegociosPendientes();
 
         /*Then - Verificar la salida*/
-        Assertions.assertEquals(2, lista.size());
+        Assertions.assertEquals(1, lista.size());
     }
 
     @DisplayName("Test crear una lista de los negocios que tienen estado negocio como rechazados")
