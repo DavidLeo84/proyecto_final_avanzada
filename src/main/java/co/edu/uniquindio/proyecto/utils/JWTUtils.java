@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.utils;
 
+
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -11,14 +12,15 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 public class JWTUtils {
 
     @Value("${jwt.secret.key}")
     private String secretKey;
-    @Value("${jwt.time.expiration}")
-    private String timeExpiration;
+
 
     public String generarToken(String email, Map<String, Object> claims) {
         Instant now = Instant.now();
@@ -40,7 +42,7 @@ public class JWTUtils {
 
     private SecretKey getKey() {
 
-        byte[] secretKeyBytes = Decoders.BASE64.decode(secretKey);
+        byte[] secretKeyBytes = secretKey.getBytes();
         return Keys.hmacShaKeyFor(secretKeyBytes);
     }
 }

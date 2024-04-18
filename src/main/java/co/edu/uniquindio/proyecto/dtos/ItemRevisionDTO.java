@@ -7,7 +7,7 @@ public record ItemRevisionDTO(
 
         @NotBlank
         String codigoNegocio,
-        @FutureOrPresent
+        @NotBlank
         String fecha
 ) {
 }

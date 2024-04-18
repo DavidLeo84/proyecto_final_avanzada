@@ -40,7 +40,7 @@ public class ClienteServicioImpl implements IClienteServicio {
     @Override
     public TokenDTO iniciarSesion(LoginDTO loginDTO) throws Exception {
 
-        TokenDTO token = autenticacionServicio.iniciarSesionCliente(loginDTO);
+        TokenDTO token = autenticacionServicio.iniciarSesionCliente(loginDTO);;
         return token;
     }
 

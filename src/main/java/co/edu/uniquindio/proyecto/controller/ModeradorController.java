@@ -5,6 +5,7 @@ import co.edu.uniquindio.proyecto.dtos.*;
 import co.edu.uniquindio.proyecto.enums.EstadoNegocio;
 import co.edu.uniquindio.proyecto.servicios.ModeradorServicioImpl;
 import co.edu.uniquindio.proyecto.servicios.NegocioServicioImpl;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/moderadores")
+@SecurityRequirement(name = "bearerAuth")
 public class ModeradorController {
 
     private final ModeradorServicioImpl moderadorServicio;

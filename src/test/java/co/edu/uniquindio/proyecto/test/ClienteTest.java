@@ -40,10 +40,10 @@ public class ClienteTest {
 
         // Given - Dado o condicion previa o configuración
         RegistroClienteDTO clienteDTO = new RegistroClienteDTO(
-                "Maria Cano",
+                "Pedro Sanchez",
                 "foto1.jpg",
-                "mary",
-                "marycano@gmail.com",
+                "pedrito",
+                "pedrosanchez@gmail.com",
                 "123456",
                 "PEREIRA"
         );

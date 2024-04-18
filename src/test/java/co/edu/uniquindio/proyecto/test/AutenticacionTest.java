@@ -21,7 +21,7 @@ public class AutenticacionTest {
     public void iniciarSesionClienteTest() throws Exception {
 
         // Given - Dado o condicion previa o configuración
-        LoginDTO loginDTO = new LoginDTO("ronnie@gmail.com", "123456");
+        LoginDTO loginDTO = new LoginDTO("mariacano@gmail.com", "123456");
 
         // When - Acción o el comportamiento que se va a probar
         TokenDTO tokenDTO = autenticacionServicio.iniciarSesionCliente(loginDTO);

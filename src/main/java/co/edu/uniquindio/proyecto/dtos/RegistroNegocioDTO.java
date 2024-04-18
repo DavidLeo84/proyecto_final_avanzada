@@ -23,7 +23,7 @@ public record RegistroNegocioDTO(
         String descripcion,
         @NotEmpty
         List<TipoNegocio> tipoNegocios,
-        @NotBlank
+        @NotEmpty
         List<Horario> horarios,
         @Size(max = 10)
         @NotEmpty

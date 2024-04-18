@@ -22,7 +22,7 @@ public interface INegocioServicio {
 
     void eliminarNegocio(String codigoNegocio)throws Exception;
 
-    DetalleNegocioDTO obtenerNegocio(String codigoNegocio, ValorCalificar calificar)throws Exception;
+    DetalleNegocioDTO obtenerNegocio(String codigoNegocio)throws Exception;
 
     List<ItemNegocioDTO> filtrarPorEstado(EstadoNegocio estado)throws Exception;
 
@@ -32,7 +32,7 @@ public interface INegocioServicio {
 
     void guardarRecomendado(String codigoNegocio, String codigoCliente) throws Exception;
 
-    DetalleNegocioDTO obtenerRecomendado(String codigoCliente, ValorCalificar calificar) throws Exception;
+    DetalleNegocioDTO obtenerRecomendado(String codigoCliente) throws Exception;
 
     String eliminarNegocioRecomendado(String codigoNegocio, String codigoCliente) throws Exception;
 
@@ -50,12 +50,16 @@ public interface INegocioServicio {
 
     Set<ItemNegocioDTO> listarFavoritos(String codigoCliente) throws Exception;
 
-    DetalleNegocioDTO obtenerFavorito(String codigoCliente, ValorCalificar calificar) throws Exception;
+    DetalleNegocioDTO obtenerFavorito(String codigoCliente) throws Exception;
 
     String determinarDisponibilidadNegocio(String codigoNegocio) throws Exception;
 
     DetalleNegocioDTO buscarNegocioPorNombre(String nombreNegocio) throws Exception;
 
     List<ItemNegocioDTO> listarNegociosAbiertosPorTipoSegunHora(TipoNegocio tipoNegocio) throws Exception;
+
+    void calificarNegocio(String codigoNegocio, ValorCalificar calificar) throws Exception;
+
+    int calcularPromedioCalificaficaciones(String codigoNegocio) throws Exception;
 
 }

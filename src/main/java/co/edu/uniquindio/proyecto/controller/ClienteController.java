@@ -7,6 +7,7 @@ import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
 import co.edu.uniquindio.proyecto.servicios.ClienteServicioImpl;
 import co.edu.uniquindio.proyecto.servicios.ComentarioServicioImpl;
 import co.edu.uniquindio.proyecto.servicios.NegocioServicioImpl;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.Set;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/clientes")
+@SecurityRequirement(name = "bearerAuth")
 public class ClienteController {
 
     private final ClienteServicioImpl clienteServicio;
@@ -32,21 +34,21 @@ public class ClienteController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "El cliente fue actualizado correctamente"));
     }
 
-    @DeleteMapping("/eliminar/{codigo}")
+    @DeleteMapping("/eliminar-cliente/{codigo}")
     public ResponseEntity<MensajeDTO<String>> eliminarCuenta(@PathVariable String codigo) throws Exception {
 
         clienteServicio.eliminarCuenta(codigo);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "El cliente fue eliminado correctamente"));
     }
 
-    @GetMapping("/obtener/{codigo}")
+    @GetMapping("/obtener-cliente/{codigo}")
     public ResponseEntity<MensajeDTO<DetalleClienteDTO>> obtenerCliente(@PathVariable String codigo) throws Exception {
 
         return ResponseEntity.ok().body(
                 new MensajeDTO<>(false, clienteServicio.obtenerUsuario(codigo)));
     }
 
-    @PutMapping("/cambio-password")
+    @PutMapping("/cambio-password-cliente")
     public ResponseEntity<MensajeDTO<String>> cambiarPassword(@Valid @RequestBody CambioPasswordDTO cambioPasswordDTO) throws Exception {
 
         clienteServicio.cambiarPassword(cambioPasswordDTO);
@@ -75,9 +77,8 @@ public class ClienteController {
     }
 
     @GetMapping("/obtener-negocio/{codigoNegocio}")
-    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> obtenerNegocio(@PathVariable String codigoNegocio,
-                                                                        @Valid @RequestBody ValorCalificar calificacion) throws Exception {
-        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.obtenerNegocio(codigoNegocio, calificacion)));
+    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> obtenerNegocio(@PathVariable String codigoNegocio) throws Exception {
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.obtenerNegocio(codigoNegocio)));
     }
 
     @GetMapping("/negocios-propietario/{codigo}")
@@ -94,9 +95,8 @@ public class ClienteController {
     }
 
     @GetMapping("/obtener-recomendado/{codigoCliente}")
-    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> obtenerRecomendado(@PathVariable String codigoCliente,
-                                                                            @Valid @RequestBody ValorCalificar calificacion) throws Exception {
-        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.obtenerRecomendado(codigoCliente, calificacion)));
+    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> obtenerRecomendado(@PathVariable String codigoCliente) throws Exception {
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.obtenerRecomendado(codigoCliente)));
     }
 
     @DeleteMapping("/borrar-recomendado/{codigoNegocio}/{codigoCliente}")
@@ -120,7 +120,7 @@ public class ClienteController {
     }
 
     @GetMapping("/obtener-revision")
-    public ResponseEntity<MensajeDTO<DetalleRevisionDTO>> obtenerRevision(@Valid @RequestBody
+    public ResponseEntity<MensajeDTO<DetalleRevisionDTO>> obtenerRevision(@Valid
                                                                           ItemRevisionDTO item) throws Exception {
 
         return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.obtenerRevision(item)));
@@ -154,9 +154,8 @@ public class ClienteController {
     }
 
     @GetMapping("/obtener-favorito/{codigoCliente}")
-    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> obtenerFavorito(@PathVariable String codigo,
-                                                                         @Valid @RequestBody ValorCalificar calificacion) throws Exception {
-        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.obtenerFavorito(codigo, calificacion)));
+    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> obtenerFavorito(@PathVariable String codigo) throws Exception {
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.obtenerFavorito(codigo)));
     }
 
     @GetMapping("/esta-disponible/{codigo}")
@@ -212,6 +211,20 @@ public class ClienteController {
                                                                 @PathVariable String codigoCliente) throws Exception {
         comentarioServicio.aprobarComentario(codigoComentario, codigoCliente);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "Te gustó este comentario"));
+    }
+
+    @PutMapping("/calificar-negocio/{codigoNegocio}/{calificar}")
+    public ResponseEntity<MensajeDTO<String>> calificarNegocio(@PathVariable String codigoNegocio,
+                                                               @PathVariable ValorCalificar calificar) throws Exception {
+
+        negocioServicio.calificarNegocio(codigoNegocio, calificar);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, "Has calificado este negocio"));
+    }
+
+    @PutMapping("/calificacion-negocio/{codigo}")
+    public ResponseEntity<MensajeDTO<Integer>> calcularPromedioCalificaficaciones(@PathVariable String codigo) throws Exception {
+
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.calcularPromedioCalificaficaciones(codigo)));
     }
 
 }

@@ -28,5 +28,5 @@ public class Comentario implements Serializable {
     private String respuesta;
     private String fechaMensaje;
     private String fechaRespuesta;
-    private List<Integer> meGusta = new ArrayList<>();
+    private List<Integer> meGusta;
 }

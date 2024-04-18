@@ -1,13 +1,11 @@
 package co.edu.uniquindio.proyecto.controller;
 
-import co.edu.uniquindio.proyecto.dtos.LoginDTO;
-import co.edu.uniquindio.proyecto.dtos.MensajeDTO;
-import co.edu.uniquindio.proyecto.dtos.RegistroClienteDTO;
-import co.edu.uniquindio.proyecto.dtos.TokenDTO;
+import co.edu.uniquindio.proyecto.dtos.*;
 import co.edu.uniquindio.proyecto.servicios.AutenticacionServicioImpl;
 import co.edu.uniquindio.proyecto.servicios.ClienteServicioImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +44,7 @@ public class AutenticacionController {
        TokenDTO token = clienteServicio.enviarLinkRecuperacion(email);
        return ResponseEntity.ok().body(new MensajeDTO<>(false, token));
     }
+
 
 
 
