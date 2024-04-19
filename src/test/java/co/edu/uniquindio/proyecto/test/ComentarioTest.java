@@ -72,9 +72,9 @@ public class ComentarioTest {
                 "661c4a4289852b27687d80a7",
                 "661dd3c07afe983885b1783c",
                 "ese es el mensaje",
-                LocalDateTime.now(),
+                "2024/04/15 09:53:11.000 PM",
                 "este es la respuesta",
-                LocalDateTime.now()
+                "2024/04/15 10:20:34.000 PM"
                 );
 
         // When - Acción o el comportamiento que se va a probar

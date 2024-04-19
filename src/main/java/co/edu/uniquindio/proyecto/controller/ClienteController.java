@@ -164,10 +164,10 @@ public class ClienteController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.determinarDisponibilidadNegocio(codigo)));
     }
 
-    @GetMapping("/buscar-nombre/{codigo}")
-    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> buscarNegocioPorNombre(@PathVariable String codigo) throws Exception {
+    @GetMapping("/buscar-nombre/{nombreNegocio}")
+    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> buscarNegocioPorNombre(@PathVariable String nombreNegocio) throws Exception {
 
-        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.buscarNegocioPorNombre(codigo)));
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.buscarNegocioPorNombre(nombreNegocioG)));
     }
 
     @GetMapping("/lista-negocios-abiertos/{tipo}")

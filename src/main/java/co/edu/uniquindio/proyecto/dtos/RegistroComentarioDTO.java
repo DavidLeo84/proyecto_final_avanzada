@@ -14,16 +14,14 @@ public record RegistroComentarioDTO(
         String codigoNegocio,
         @NotBlank
         @Size(max = 200)
-        @ExistsQuery(value = "false")
-        @Pattern(regexp = "\".*[!@#$%^&*,/\\\\\\\\()¿~_'<>:;+.=?-].*\"")
         String mensaje,
-        @FutureOrPresent
-        LocalDateTime fechaMensaje,
+
+        String fechaMensaje,
         @NotBlank
         @Size(max = 200)
         String respuesta,
-        @FutureOrPresent
-        LocalDateTime fechaRespuesta
+
+        String fechaRespuesta
 
 
 ) {

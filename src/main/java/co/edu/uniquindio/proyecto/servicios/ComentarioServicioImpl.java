@@ -39,7 +39,7 @@ public class ComentarioServicioImpl implements IComentarioServicio {
         Negocio negocio = validacionNegocio.validarNegocioAprobado(comentarioDTO.codigoNegocio());
         Comentario nuevo = Comentario.builder()
                 .codigoCliente(comentarioDTO.codigoCliente()).codigoNegocio(comentarioDTO.codigoNegocio())
-                .mensaje(comentarioDTO.mensaje()).fechaMensaje(validacionModerador.formatearFecha(comentarioDTO.fechaMensaje()))
+                .mensaje(comentarioDTO.mensaje()).fechaMensaje(comentarioDTO.fechaMensaje())
                 .respuesta("").fechaRespuesta("").meGusta(new ArrayList<>()).build();
         comentarioRepo.save(nuevo);
         Cliente dueño  = validacionCliente.buscarCliente(negocio.getCodigoCliente());
@@ -57,8 +57,8 @@ public class ComentarioServicioImpl implements IComentarioServicio {
             Comentario respuesta = Comentario.builder()
                     .codigo(comentarioDTO.codigoComentario()).codigoCliente(comentarioDTO.codigoCliente())
                     .codigoNegocio(comentarioDTO.codigoNegocio()).mensaje(comentarioDTO.mensaje())
-                    .fechaMensaje(validacionModerador.formatearFecha(comentarioDTO.fechaMensaje())).respuesta(comentarioDTO.respuesta())
-                    .fechaRespuesta(validacionModerador.formatearFecha(comentarioDTO.fechaRespuesta()))
+                    .fechaMensaje(comentarioDTO.fechaMensaje()).respuesta(comentarioDTO.respuesta())
+                    .fechaRespuesta(comentarioDTO.fechaRespuesta())
                     .meGusta(new ArrayList<>()).build();
             comentarioRepo.save(respuesta);
             emailServicio.enviarEmail(cliente.getEmail(), "Alguien respondió tu comentario",comentarioDTO.mensaje());
