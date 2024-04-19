@@ -6,6 +6,7 @@ import co.edu.uniquindio.proyecto.enums.RolEnum;
 import co.edu.uniquindio.proyecto.modelo.Rol;
 import co.edu.uniquindio.proyecto.modelo.documentos.Moderador;
 import co.edu.uniquindio.proyecto.repositorios.ModeradorRepo;
+import co.edu.uniquindio.proyecto.servicios.NegocioServicioImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,6 +23,14 @@ public class ProyectoFinalAvanzadaApplication {
     public static void main(String[] args) {
         SpringApplication.run(ProyectoFinalAvanzadaApplication.class, args);
     }
+
+    /*@Bean
+    CommandLineRunner init(NegocioServicioImpl negocioServicio) {
+
+        return args -> {
+            negocioServicio.calcularPromedioCalificaficaciones();
+        };
+    }*/
 
    /* @Bean
     CommandLineRunner init(ModeradorRepo moderadorRepo) {

@@ -7,6 +7,7 @@ import co.edu.uniquindio.proyecto.modelo.HistorialRevision;
 import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
 import co.edu.uniquindio.proyecto.modelo.documentos.Moderador;
 import co.edu.uniquindio.proyecto.modelo.documentos.Negocio;
+import co.edu.uniquindio.proyecto.repositorios.ClienteRepo;
 import co.edu.uniquindio.proyecto.repositorios.ModeradorRepo;
 import co.edu.uniquindio.proyecto.repositorios.NegocioRepo;
 import co.edu.uniquindio.proyecto.servicios.excepciones.*;
@@ -34,6 +35,7 @@ public class ModeradorServicioImpl implements IModeradorServicio {
     private final ValidacionModerador validacionModerador;
     private final NegocioRepo negocioRepo;
     private final ModeradorRepo moderadorRepo;
+    private final ClienteRepo clienteRepo;
     private final EmailServicioImpl emailServicio;
     private final NegocioServicioImpl negocioServicio;
     private final ClienteServicioImpl clienteServicio;
@@ -60,10 +62,23 @@ public class ModeradorServicioImpl implements IModeradorServicio {
     @Override
     public TokenDTO enviarLinkRecuperacion(String email) throws Exception {
 
-        validacionModerador.existeEmail(email);
+        Optional<Cliente> clienteOptional = clienteRepo.findByEmail(email);
+        Cliente cliente = null;
+        if (!clienteOptional.isEmpty()) {
+            cliente = clienteOptional.get();
+        }
+        Optional<Moderador> moderadorOptional = moderadorRepo.findByEmail(email);
+        Moderador moderador = null;
+
+        if (!moderadorOptional.isEmpty()) {
+            moderador = moderadorOptional.get();
+        }
+        if (moderadorOptional.isEmpty() && clienteOptional.isEmpty()) {
+            throw new ResourceNotFoundException("EL correo no existe en el registro");
+        }
         emailServicio.enviarEmail(email, "Recuperar contraseña",
-                "http://localhost:8080/api/moderador/recoPass");
-        TokenDTO token = autenticacionServicio.recuperarPasswordModerador(email);
+                "http://localhost:8080/api/recoPass");
+        TokenDTO token = autenticacionServicio.recuperarPasswordCliente(email);
         return token;
     }
 
@@ -157,6 +172,7 @@ public class ModeradorServicioImpl implements IModeradorServicio {
                 negocio.getTipoNegocios(),
                 negocio.getUbicacion(),
                 negocio.getDescripcion(),
+                negocio.getCalificacion(),
                 negocio.getHorarios(),
                 negocio.getTelefonos(),
                 negocio.getImagenes()
@@ -172,6 +188,7 @@ public class ModeradorServicioImpl implements IModeradorServicio {
                 negocio.getTipoNegocios(),
                 negocio.getUbicacion(),
                 negocio.getDescripcion(),
+                negocio.getCalificacion(),
                 negocio.getHorarios(),
                 negocio.getTelefonos(),
                 negocio.getImagenes()
@@ -188,6 +205,7 @@ public class ModeradorServicioImpl implements IModeradorServicio {
                 negocio.getTipoNegocios(),
                 negocio.getUbicacion(),
                 negocio.getDescripcion(),
+                negocio.getCalificacion(),
                 negocio.getHorarios(),
                 negocio.getTelefonos(),
                 negocio.getImagenes()
@@ -203,6 +221,7 @@ public class ModeradorServicioImpl implements IModeradorServicio {
                 negocio.getTipoNegocios(),
                 negocio.getUbicacion(),
                 negocio.getDescripcion(),
+                negocio.getCalificacion(),
                 negocio.getHorarios(),
                 negocio.getTelefonos(),
                 negocio.getImagenes()
@@ -249,17 +268,4 @@ public class ModeradorServicioImpl implements IModeradorServicio {
         Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
         emailServicio.enviarEmail(cliente.getEmail(), "Respuesta solicitud de negocio", "Su negocio fue " + estado);
     }
-
-    /*private LocalDateTime transformarFecha(String fechaRevision) throws Exception {
-
-        try {
-            String fechaString1 = fechaRevision.replaceAll("/", "-");
-            String fechaString1_1 = fechaString1.replaceAll(" ", "T");
-            DateTimeFormatter formatoFecha = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-            TemporalAccessor fechaFormateada = formatoFecha.parse(fechaString1_1.substring(0, 20));
-            return LocalDateTime.from(fechaFormateada);
-        } catch (Exception ex) {
-            throw new Exception("La fecha no cumple con el formato requerido");
-        }
-    }*/
 }

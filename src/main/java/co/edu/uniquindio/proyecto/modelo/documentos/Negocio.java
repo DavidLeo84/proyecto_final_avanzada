@@ -33,6 +33,7 @@ public class Negocio implements Serializable {
     private Ubicacion ubicacion;
     private String descripcion;
     private EstadoNegocio estadoNegocio;
+    private int calificacion;
     private List<TipoNegocio> tipoNegocios;
     private List<Horario> horarios;
     private Set<String> telefonos;

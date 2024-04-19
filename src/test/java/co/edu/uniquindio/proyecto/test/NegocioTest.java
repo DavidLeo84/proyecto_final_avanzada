@@ -63,7 +63,7 @@ public class NegocioTest {
         tipoNegocios.add(TipoNegocio.COMIDAS_RAPIDAS);
         tipoNegocios.add(TipoNegocio.BAR);
 
-        DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("hh:mm:ss a").withLocale(Locale.ENGLISH);
+        DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm:ss").withLocale(Locale.ENGLISH);
 
         LocalTime horaInicio = LocalTime.of(10, 00, 00);
         String abierto = formatoHora.format(horaInicio);
@@ -83,10 +83,10 @@ public class NegocioTest {
 
         // Given - Dado o condicion previa o configuración
         RegistroNegocioDTO negocioDTO = new RegistroNegocioDTO(
-                "La Segunda Perrada de Ronnie",
-                "661aa62f1434fa40da4a039a",
-                new Ubicacion(144144770, 599865111),
-                "Los mejores perros calientes y hamburguesas de la ciudad",
+                "Cafe Norte Juan Valdez",
+                "661c4b0ea2ece971f83f5a7b",
+                new Ubicacion(832144770, 763943243),
+                "El mejor café del mundo",
                 tipoNegocios,
                 horarios,
                 telefonos,
@@ -139,10 +139,10 @@ public class NegocioTest {
     public void ObtenerNegocioTest() throws Exception {
 
         // Given - Dado o condicion previa o configuración
-        Negocio negocio = validacionNegocio.buscarNegocio("6611f8060d65450fe2d86d4c");
+        Negocio negocio = validacionNegocio.buscarNegocio("661dd3c07afe983885b1783c");
 
         // When - Acción o el comportamiento que se va a probar
-        DetalleNegocioDTO negocioDTO = negocioServicio.obtenerNegocio("6611f8060d65450fe2d86d4c");
+        DetalleNegocioDTO negocioDTO = negocioServicio.obtenerNegocio("661dd3c07afe983885b1783c");
 
         //Then - Verificar la salida
         assertThat(negocioDTO).isNotNull();
@@ -172,23 +172,12 @@ public class NegocioTest {
         Assertions.assertEquals(2, lista.size());
     }
 
-    /*@DisplayName("Test para cambiar el estado de un negocio por parte de un moderador")
-    @Test
-    public void cambiarEstadoTest() throws Exception {
-
-        // When - Acción o el comportamiento que se va a probar
-        negocioServicio.cambiarEstado("6608438bfd6d342c8005bdc8", EstadoNegocio.RECHAZADO);
-
-        //Then - Verificar la salida
-        assertThrows(ResourceNotFoundException.class, () -> validacionNegocio.buscarNegocio("6608438bfd6d342c8005bdc8"));
-    }*/
-
     @DisplayName("Test para guardar en una lista los negocios que recomienda")
     @Test
     public void guardarRecomendadosTest() throws Exception {
 
         // When - Acción o el comportamiento que se va a probar
-        negocioServicio.guardarRecomendados("661aacb404561d72bdbf16f2", "661aa6b492e1d716362980a0");
+        negocioServicio.guardarRecomendado("661aacb404561d72bdbf16f2", "661aa6b492e1d716362980a0");
 
         //Then - Verificar la salida
         Cliente cliente = validacionCliente.buscarCliente("661aa6b492e1d716362980a0");
@@ -200,7 +189,7 @@ public class NegocioTest {
     public void obtenerRecomendadosTest() throws Exception {
 
         // When - Acción o el comportamiento que se va a probar
-        DetalleNegocioDTO negocioDTO = negocioServicio.obtenerRecomendado("660842f2e1f50b64a6376e3c", "6608438bfd6d342c8005bdc8");
+        DetalleNegocioDTO negocioDTO = negocioServicio.obtenerRecomendado("660842f2e1f50b64a6376e3c");
 
         //Then - Verificar la salida
         System.out.println("negocioDTO = " + negocioDTO);
@@ -251,7 +240,7 @@ public class NegocioTest {
     public void obtenerRevisionTest() throws Exception {
 
         // Given - Dado o condicion previa o configuración
-        ItemRevisionDTO item = new ItemRevisionDTO("661aacb404561d72bdbf16f2", "2024/04/13 11:03:00.000 AM");
+        ItemRevisionDTO item = new ItemRevisionDTO("661dd3c07afe983885b1783c", "2024/04/15 08:48:21.000 PM");
         
         // When - Acción o el comportamiento que se va a probar
         DetalleRevisionDTO revision = negocioServicio.obtenerRevision(item);
@@ -326,10 +315,10 @@ public class NegocioTest {
     public void calificarNegocioTest() throws Exception {
 
         /*When - Acción o el comportamiento que se va a probar*/
-        negocioServicio.calificarNegocio("661aacb404561d72bdbf16f2", ValorCalificar.FOUR_STAR);
+        negocioServicio.calificarNegocio("661dd3c07afe983885b1783c", ValorCalificar.FOUR_STAR);
 
         /*Then - Verificar la salida*/
-        Negocio negocio = validacionNegocio.buscarNegocio("661aacb404561d72bdbf16f2");
+        Negocio negocio = validacionNegocio.buscarNegocio("661dd3c07afe983885b1783c");
         Assertions.assertEquals(3, negocio.getCalificaciones().size());
 
     }
@@ -339,11 +328,11 @@ public class NegocioTest {
     public void calcularPromedioCalificacionesTest() throws Exception {
 
         /*When - Acción o el comportamiento que se va a probar*/
-        float valor = negocioServicio.calcularPromedioCalificaficaciones("661aacb404561d72bdbf16f2");
+        int valor = negocioServicio.calcularPromedioCalificaficaciones("661dd3c07afe983885b1783c");
 
         /*Then - Verificar la salida*/
         System.out.println("valor = " + valor);
-        assertThat(valor).isEqualTo(4.0f);
+        assertThat(valor).isEqualTo(4);
     }
 
     @DisplayName("Test que segun la fecha actual indica si un negocio esta abierto o cerrado")

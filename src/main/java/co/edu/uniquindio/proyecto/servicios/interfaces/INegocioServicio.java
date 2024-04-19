@@ -30,9 +30,9 @@ public interface INegocioServicio {
 
     //void cambiarEstado(String codigoNegocio, EstadoNegocio estado)throws Exception;
 
-    void guardarRecomendados(String codigoNegocio, String codigoCliente) throws Exception;
+    void guardarRecomendado(String codigoNegocio, String codigoCliente) throws Exception;
 
-    DetalleNegocioDTO obtenerRecomendado(String codigoCliente, String codigoNegocio) throws Exception;
+    DetalleNegocioDTO obtenerRecomendado(String codigoCliente) throws Exception;
 
     String eliminarNegocioRecomendado(String codigoNegocio, String codigoCliente) throws Exception;
 
@@ -52,14 +52,14 @@ public interface INegocioServicio {
 
     DetalleNegocioDTO obtenerFavorito(String codigoCliente) throws Exception;
 
-    void calificarNegocio(String codigoNegocio, ValorCalificar calificacion) throws Exception;
-
-    float calcularPromedioCalificaficaciones(String codigoNegocio) throws Exception;
-
     String determinarDisponibilidadNegocio(String codigoNegocio) throws Exception;
 
     DetalleNegocioDTO buscarNegocioPorNombre(String nombreNegocio) throws Exception;
 
     List<ItemNegocioDTO> listarNegociosAbiertosPorTipoSegunHora(TipoNegocio tipoNegocio) throws Exception;
+
+    void calificarNegocio(String codigoNegocio, ValorCalificar calificar) throws Exception;
+
+    int calcularPromedioCalificaficaciones(String codigoNegocio) throws Exception;
 
 }

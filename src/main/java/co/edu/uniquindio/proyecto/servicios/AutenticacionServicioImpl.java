@@ -28,6 +28,7 @@ public class AutenticacionServicioImpl implements IAutenticacionServicio {
     private final ModeradorRepo moderadorRepo;
     private final JWTUtils jwtUtils;
 
+
     @Autowired
     private ValidacionCliente validacionCliente;
     @Autowired
@@ -43,7 +44,7 @@ public class AutenticacionServicioImpl implements IAutenticacionServicio {
         }
         Map<String, Object> map = new HashMap<>();
         map.put("rol", "CLIENTE");
-        map.put("nickname", cliente.getNickname());
+        map.put("nombre", cliente.getNombre());
         map.put("id", cliente.getCodigo());
         return new TokenDTO(jwtUtils.generarToken(cliente.getEmail(), map));
     }
@@ -94,5 +95,6 @@ public class AutenticacionServicioImpl implements IAutenticacionServicio {
         map.put("id", moderador.getCodigo());
         return new TokenDTO(jwtUtils.generarToken(moderador.getEmail(), map));
     }
+
 }
 

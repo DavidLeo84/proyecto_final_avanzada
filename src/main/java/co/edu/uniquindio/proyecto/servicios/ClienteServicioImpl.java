@@ -7,6 +7,7 @@ import co.edu.uniquindio.proyecto.enums.PermisoEnum;
 import co.edu.uniquindio.proyecto.enums.RolEnum;
 import co.edu.uniquindio.proyecto.modelo.Rol;
 import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
+import co.edu.uniquindio.proyecto.modelo.documentos.Moderador;
 import co.edu.uniquindio.proyecto.repositorios.ClienteRepo;
 import co.edu.uniquindio.proyecto.repositorios.ModeradorRepo;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ResourceNotFoundException;
@@ -40,7 +41,7 @@ public class ClienteServicioImpl implements IClienteServicio {
     @Override
     public TokenDTO iniciarSesion(LoginDTO loginDTO) throws Exception {
 
-        TokenDTO token = autenticacionServicio.iniciarSesionCliente(loginDTO);
+        TokenDTO token = autenticacionServicio.iniciarSesionCliente(loginDTO);;
         return token;
     }
 
@@ -61,9 +62,22 @@ public class ClienteServicioImpl implements IClienteServicio {
     @Override
     public TokenDTO enviarLinkRecuperacion(String email) throws Exception {
 
-        validacionCliente.existeEmail(email);
+        Optional<Cliente> clienteOptional = clienteRepo.findByEmail(email);
+        Cliente cliente = null;
+        if (!clienteOptional.isEmpty()) {
+            cliente = clienteOptional.get();
+        }
+        Optional<Moderador> moderadorOptional = moderadorRepo.findByEmail(email);
+        Moderador moderador = null;
+
+        if (!moderadorOptional.isEmpty()) {
+            moderador = moderadorOptional.get();
+        }
+        if (moderadorOptional.isEmpty() && clienteOptional.isEmpty()) {
+            throw new ResourceNotFoundException("EL correo no existe en el registro");
+        }
         emailServicio.enviarEmail(email, "Recuperar contraseña",
-                "http://localhost:8080/api/cliente/recoPass");
+                "http://localhost:8080/api/recoPass");
         TokenDTO token = autenticacionServicio.recuperarPasswordCliente(email);
         return token;
     }
@@ -86,12 +100,11 @@ public class ClienteServicioImpl implements IClienteServicio {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String passwordEncriptada = passwordEncoder.encode(clienteDTO.password());
         Cliente nuevo = Cliente.builder()
-                .isEnabled(true).accountNoExpired(true).accountNoLocked(true).credentialNoExpired(true)
                 .email(clienteDTO.email()).password(passwordEncriptada)
                 .estadoRegistro(EstadoRegistro.ACTIVO).rol(Rol.builder().nombreRol(RolEnum.CLIENTE)
                         .permisos(Set.of(PermisoEnum.APROBAR, PermisoEnum.COMENTAR,
                                 PermisoEnum.CALIFICAR, PermisoEnum.BUSCAR)).build())
-                .nickname(clienteDTO.nickname()).nombre(clienteDTO.nombre())
+                .nickname(clienteDTO.nickname()).nombre(clienteDTO.nombre().toLowerCase())
                 .ciudad(clienteDTO.ciudad()).fotoPerfil(clienteDTO.fotoPerfil())
                 .negocios(new ArrayList<>()).favoritos(new HashSet<>())
                 .recomendados(new HashSet<>()).aprobacionesComentarios(new HashSet<>()).build();

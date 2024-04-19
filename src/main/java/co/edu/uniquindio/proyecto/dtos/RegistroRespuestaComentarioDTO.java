@@ -22,7 +22,7 @@ public record RegistroRespuestaComentarioDTO(
         @Pattern(regexp = "\".*[!@#$%^&*,/\\\\\\\\()¿~_'<>:;+.=?-].*\"")
         String mensaje,
         @FutureOrPresent
-        String fechaMensaje,
+        LocalDateTime fechaMensaje,
         @NotBlank
         @Size(max = 200)
         @ExistsQuery(value = "false")

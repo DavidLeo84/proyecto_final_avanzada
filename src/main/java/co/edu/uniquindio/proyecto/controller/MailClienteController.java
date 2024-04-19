@@ -15,16 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController
-@RequestMapping("/api/cliente")
+//@RestController
+//@RequestMapping("/api/clientes/correo")
 public class MailClienteController {
 
 
-    private IEmailServicio emailServicio;
+  /*  private IEmailServicio emailServicio;
     private IClienteServicio clienteServicio;
 
-    @PostMapping("/enviarMensaje")
-    public ResponseEntity<Map> recibirPeticionEmail(@Valid @RequestBody EmailDTO emailDTO) {
+    @PostMapping("/enviar-correo")
+    public ResponseEntity<Map> enviarPeticionEmail(@Valid @RequestBody EmailDTO emailDTO) {
 
         System.out.println("Mensaje recibido " + emailDTO.toString());
 
@@ -35,7 +35,7 @@ public class MailClienteController {
         return ResponseEntity.ok(respuesta);
     }
 
-    @PostMapping("/recopass")
+    @PostMapping("/reco-pass")
     public ResponseEntity<Map> enviarEmailRecuperacion(@Valid @RequestBody String destinatario) throws Exception {
 
         clienteServicio.enviarLinkRecuperacion(destinatario);
@@ -43,5 +43,5 @@ public class MailClienteController {
         respuesta.put("estado", "email enviado");
 
         return ResponseEntity.ok(respuesta);
-    }
+    }*/
 }

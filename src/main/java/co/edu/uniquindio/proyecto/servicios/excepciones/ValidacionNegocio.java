@@ -163,7 +163,7 @@ public class ValidacionNegocio {
     /*Metodo para validar la calificación que se da a un negocio (1 a 5) */
     public void validarCalificacionNegocio(ValorCalificar calificacion) throws Exception {
 
-        if (calificacion.ordinal() < 0 || calificacion.ordinal() > 5) {
+        if (calificacion.ordinal() < -1 || calificacion.ordinal() > 5) {
             throw new Exception("Valor no válido para calificar sitio");
         }
     }
