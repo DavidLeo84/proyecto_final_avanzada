@@ -20,20 +20,10 @@ public class Cuenta implements Serializable {
     private EstadoRegistro estadoRegistro;
     private Rol rol;
 
-    private boolean isEnabled;
-    private boolean accountNoExpired;
-    private boolean accountNoLocked;
-    private boolean credentialNoExpired;
-
-    public Cuenta(String email, String password, EstadoRegistro estadoRegistro, Rol rol, boolean isEnabled,
-                  boolean accountNoExpired, boolean accountNoLocked, boolean credentialNoExpired) {
+    public Cuenta(String email, String password, EstadoRegistro estadoRegistro, Rol rol) {
         this.email = email;
         this.password = password;
         this.estadoRegistro = estadoRegistro;
         this.rol = rol;
-        this.isEnabled = isEnabled;
-        this.accountNoExpired = accountNoExpired;
-        this.accountNoLocked = accountNoLocked;
-        this.credentialNoExpired = credentialNoExpired;
     }
 }

@@ -17,16 +17,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static co.edu.uniquindio.proyecto.enums.RolEnum.CLIENTE;
-
 @Component
-
+@RequiredArgsConstructor
 public class FiltroToken extends OncePerRequestFilter {
 
     private final JWTUtils jwtUtils;
-    public FiltroToken(JWTUtils jwtUtils) {
-        this.jwtUtils = jwtUtils;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -49,6 +44,22 @@ public class FiltroToken extends OncePerRequestFilter {
 //Si la petición es para la ruta /api/clientes se verifica que el token sea correcto y que el rol sea CLIENTE
 
                 if (requestURI.startsWith("/api/clientes")) {
+                    if (token != null) {
+                        Jws<Claims> jws = jwtUtils.parseJwt(token);
+                        if (!jws.getPayload().get("rol").equals("CLIENTE")) {
+                            crearRespuestaError("No tiene permisos para acceder a este recurso",
+                                    HttpServletResponse.SC_FORBIDDEN, response);
+                        } else {
+                            error = false;
+                        }
+                    } else {
+                        crearRespuestaError("No tiene permisos para acceder a este recurso",
+                                HttpServletResponse.SC_FORBIDDEN, response);
+                    }
+                } else {
+                    error = false;
+                }
+                if (requestURI.startsWith("/api/clientes/imagenes")) {
                     if (token != null) {
                         Jws<Claims> jws = jwtUtils.parseJwt(token);
                         if (!jws.getPayload().get("rol").equals("CLIENTE")) {

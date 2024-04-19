@@ -17,12 +17,12 @@ import java.util.Map;
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/imagenes")
+@RequestMapping("/api/clientes/imagenes")
 public class ImagenController {
 
     private final CloudinaryServicioImpl cloudinaryServicio;
 
-    @PostMapping("/subir")
+    @PostMapping("/subir-imagen")
     public ResponseEntity<?> subirImagen(@RequestParam MultipartFile imagen) throws Exception {
 
         BufferedImage bi = ImageIO.read(imagen.getInputStream());
@@ -34,7 +34,7 @@ public class ImagenController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, resultado));
     }
 
-    @PostMapping("/eliminar")
+    @PostMapping("/eliminar-imagen")
     public ResponseEntity<?> eliminarImagen(@RequestBody ImagenDTO imagenDTO) throws Exception {
 
         Map resultado = cloudinaryServicio.eliminarImagen(imagenDTO.id());

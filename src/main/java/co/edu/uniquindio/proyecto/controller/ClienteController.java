@@ -178,7 +178,7 @@ public class ClienteController {
     }
 
 
-    @PostMapping("/crer-comentario")
+    @PostMapping("/crear-comentario")
     public ResponseEntity<MensajeDTO<String>> crearComentario(@Valid @RequestBody
                                                               RegistroComentarioDTO comentarioDTO) throws Exception {
 

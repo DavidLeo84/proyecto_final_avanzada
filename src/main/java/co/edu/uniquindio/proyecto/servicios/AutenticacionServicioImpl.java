@@ -1,6 +1,5 @@
 package co.edu.uniquindio.proyecto.servicios;
 
-import co.edu.uniquindio.proyecto.dtos.AuthResponse;
 import co.edu.uniquindio.proyecto.dtos.TokenDTO;
 import co.edu.uniquindio.proyecto.dtos.LoginDTO;
 import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;

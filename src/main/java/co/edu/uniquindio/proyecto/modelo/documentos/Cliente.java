@@ -35,11 +35,10 @@ public class Cliente extends Cuenta implements Serializable {
 
     @Builder
     public Cliente(String email, String password, EstadoRegistro estadoRegistro, Rol rol,
-                   boolean isEnabled, boolean accountNoExpired, boolean accountNoLocked,
-                   boolean credentialNoExpired, String codigo, String nombre, String nickname,
-                   String ciudad, String fotoPerfil, Set<String> favoritos, List<String> negocios,
+                   String codigo, String nombre, String nickname, String ciudad, String fotoPerfil,
+                   Set<String> favoritos, List<String> negocios,
                    Set<String> recomendados, Set<String> aprobacionesComentarios) {
-        super(email, password, estadoRegistro, rol, isEnabled, accountNoExpired, accountNoLocked, credentialNoExpired);
+        super(email, password, estadoRegistro, rol);
         this.codigo = codigo;
         this.nombre = nombre;
         this.nickname = nickname;

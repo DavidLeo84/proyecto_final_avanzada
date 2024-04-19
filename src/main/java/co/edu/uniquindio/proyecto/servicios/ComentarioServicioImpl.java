@@ -30,6 +30,7 @@ public class ComentarioServicioImpl implements IComentarioServicio {
     private final ValidacionCliente validacionCliente;
     private final ValidacionComentario validacionComentario;
     private final ValidacionModerador validacionModerador;
+    private final EmailServicioImpl emailServicio;
 
     @Override
     public Comentario crearComentario(RegistroComentarioDTO comentarioDTO) throws Exception {
@@ -41,8 +42,9 @@ public class ComentarioServicioImpl implements IComentarioServicio {
                 .mensaje(comentarioDTO.mensaje()).fechaMensaje(validacionModerador.formatearFecha(comentarioDTO.fechaMensaje()))
                 .respuesta("").fechaRespuesta("").meGusta(new ArrayList<>()).build();
         comentarioRepo.save(nuevo);
+        Cliente dueño  = validacionCliente.buscarCliente(negocio.getCodigoCliente());
+        emailServicio.enviarEmail(dueño.getEmail(), "Alguien comento tu negocio",comentarioDTO.mensaje());
         return nuevo;
-
     }
 
     @Override
@@ -59,6 +61,7 @@ public class ComentarioServicioImpl implements IComentarioServicio {
                     .fechaRespuesta(validacionModerador.formatearFecha(comentarioDTO.fechaRespuesta()))
                     .meGusta(new ArrayList<>()).build();
             comentarioRepo.save(respuesta);
+            emailServicio.enviarEmail(cliente.getEmail(), "Alguien respondió tu comentario",comentarioDTO.mensaje());
             return respuesta;
         } catch (RuntimeException ex) {
             throw new RuntimeException("No se puede responder a un comentario que no existe");

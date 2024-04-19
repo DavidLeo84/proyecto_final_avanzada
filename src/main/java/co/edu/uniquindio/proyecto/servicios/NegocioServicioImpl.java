@@ -43,8 +43,8 @@ public class NegocioServicioImpl implements INegocioServicio {
         validacionNegocio.existeCoordenadas(negocioDTO.ubicacion().getLongitud(), negocioDTO.ubicacion().getLatitud());
         Cliente cliente = validacionCliente.buscarCliente(negocioDTO.codigoCliente());
         Negocio nuevo = Negocio.builder().estadoNegocio(EstadoNegocio.PENDIENTE).ubicacion(negocioDTO.ubicacion())
-                .codigoCliente(cliente.getCodigo()).nombre(negocioDTO.nombre())
-                .descripcion(negocioDTO.descripcion()).tipoNegocios(new ArrayList<>(negocioDTO.tipoNegocios()))
+                .codigoCliente(cliente.getCodigo()).nombre(negocioDTO.nombre().toUpperCase())
+                .descripcion(negocioDTO.descripcion().toLowerCase()).tipoNegocios(new ArrayList<>(negocioDTO.tipoNegocios()))
                 .horarios(negocioDTO.horarios()).telefonos(negocioDTO.telefonos())
                 .imagenes(negocioDTO.imagenes()).calificaciones(new ArrayList<String>())
                 .historialRevisiones(new ArrayList<HistorialRevision>()).recomendaciones(new ArrayList<>())
@@ -289,7 +289,7 @@ public class NegocioServicioImpl implements INegocioServicio {
     @Override
     public DetalleNegocioDTO buscarNegocioPorNombre(String nombreNegocio) throws Exception {
 
-        Negocio negocio = validacionNegocio.validarNegocioPorNombre(nombreNegocio);
+        Negocio negocio = validacionNegocio.validarNegocioPorNombre(nombreNegocio.toUpperCase());
         return new DetalleNegocioDTO(
                 negocio.getNombre(),
                 negocio.getTipoNegocios(),

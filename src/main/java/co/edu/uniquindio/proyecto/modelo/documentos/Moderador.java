@@ -22,9 +22,8 @@ public class Moderador extends Cuenta {
 
     @Builder
     public Moderador(String email, String password, EstadoRegistro estadoRegistro, Rol rol,
-                     boolean isEnabled, boolean accountNoExpired, boolean accountNoLocked,
-                     boolean credentialNoExpired, String codigo, String nombre) {
-        super(email, password, estadoRegistro, rol, isEnabled, accountNoExpired, accountNoLocked, credentialNoExpired);
+                     String codigo, String nombre) {
+        super(email, password, estadoRegistro, rol);
         this.codigo = codigo;
         this.nombre = nombre;
     }

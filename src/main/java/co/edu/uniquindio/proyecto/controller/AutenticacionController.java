@@ -38,7 +38,7 @@ public class AutenticacionController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "El cliente fue registrado correctamente"));
     }
 
-    @GetMapping("/recuperar-password/{email}")
+    @GetMapping("/recopass/{email}")
     public ResponseEntity<MensajeDTO<TokenDTO>> enviarLinkRecuperacion(@Valid @PathVariable String email) throws Exception {
 
        TokenDTO token = clienteServicio.enviarLinkRecuperacion(email);

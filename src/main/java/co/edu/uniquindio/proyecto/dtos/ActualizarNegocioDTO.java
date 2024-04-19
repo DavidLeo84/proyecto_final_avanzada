@@ -19,7 +19,7 @@ public record ActualizarNegocioDTO(
         @Size(max = 200)
         String descripcion,
         Ubicacion ubicacion,
-        @NotBlank
+        @NotEmpty
         List<Horario> horarios,
         @Size(max = 10)
         @NotEmpty
