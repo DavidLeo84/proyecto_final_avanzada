@@ -21,13 +21,13 @@ public class EmailServicioImpl implements IEmailServicio {
     public void enviarEmail(String destinatario, String asunto, String mensaje) {
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setFrom(emailUser);
-        //correo electronico del remitente
-        mailMessage.setTo(destinatario);
-        //Asunto del correo
-        mailMessage.setSubject(asunto);
-        //mensaje del correo que se enviará
-        mailMessage.setText(mensaje);
+        mailMessage.setFrom(emailUser);//correo electronico del remitente
+
+        mailMessage.setTo(destinatario);//correo electronico del destinatario
+
+        mailMessage.setSubject(asunto);//Asunto del correo
+
+        mailMessage.setText(mensaje);//mensaje del correo que se enviará
 
         mailSender.send(mailMessage);
     }

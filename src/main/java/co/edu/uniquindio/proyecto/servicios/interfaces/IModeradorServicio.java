@@ -16,15 +16,13 @@ public interface IModeradorServicio extends ICuentaServicio {
 
     void revisarNegocio(HistorialRevisionDTO revisionDTO) throws Exception;
 
-    void eliminarNegocioCaducado(String codigoNegocio) throws Exception;
+    DetalleNegocioDTO obtenerNegocioAprobado(ItemNegocioDTO negocioDTO) throws Exception;
 
-    Negocio obtenerNegocioAprobado(ItemNegocioDTO negocioDTO) throws Exception;
+    DetalleNegocioDTO obtenerNegocioPendiente(ItemNegocioDTO negocioDTO) throws Exception;
 
-    Negocio obtenerNegocioPendiente(ItemNegocioDTO negocioDTO) throws Exception;
+    DetalleNegocioDTO obtenerNegocioRechazado(ItemNegocioDTO negocioDTO) throws Exception;
 
-    Negocio obtenerNegocioRechazado(ItemNegocioDTO negocioDTO) throws Exception;
-
-    Negocio obtenerNegocioEliminado(ItemNegocioDTO negocioDTO) throws Exception;
+    DetalleNegocioDTO obtenerNegocioEliminado(ItemNegocioDTO negocioDTO) throws Exception;
 
     List<ItemNegocioDTO> listarNegociosAprobados() throws Exception;
 

@@ -1,29 +1,26 @@
 package co.edu.uniquindio.proyecto.servicios;
 
-import co.edu.uniquindio.proyecto.dtos.ActualizarNegocioDTO;
-import co.edu.uniquindio.proyecto.dtos.DetalleNegocioDTO;
-import co.edu.uniquindio.proyecto.dtos.ItemNegocioDTO;
-import co.edu.uniquindio.proyecto.dtos.RegistroNegocioDTO;
+import co.edu.uniquindio.proyecto.dtos.*;
 import co.edu.uniquindio.proyecto.enums.EstadoNegocio;
 import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
 import co.edu.uniquindio.proyecto.enums.TipoNegocio;
 import co.edu.uniquindio.proyecto.enums.ValorCalificar;
+import co.edu.uniquindio.proyecto.modelo.Horario;
 import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
 import co.edu.uniquindio.proyecto.modelo.HistorialRevision;
 import co.edu.uniquindio.proyecto.modelo.documentos.Negocio;
 import co.edu.uniquindio.proyecto.repositorios.ClienteRepo;
 import co.edu.uniquindio.proyecto.repositorios.NegocioRepo;
-import co.edu.uniquindio.proyecto.servicios.excepciones.ResourceInvalidException;
-import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionCliente;
-import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionModerador;
-import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionNegocio;
+import co.edu.uniquindio.proyecto.servicios.excepciones.*;
 import co.edu.uniquindio.proyecto.servicios.interfaces.INegocioServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,14 +42,15 @@ public class NegocioServicioImpl implements INegocioServicio {
 
         validacionNegocio.existeCoordenadas(negocioDTO.ubicacion().getLongitud(), negocioDTO.ubicacion().getLatitud());
         Cliente cliente = validacionCliente.buscarCliente(negocioDTO.codigoCliente());
-        Negocio nuevo = Negocio.builder().estadoRegistro(EstadoRegistro.INACTIVO).ubicacion(negocioDTO.ubicacion())
-                .codigoCliente(cliente.getCodigo()).nombre(negocioDTO.nombre())
-                .descripcion(negocioDTO.descripcion()).tipoNegocio(TipoNegocio.valueOf(negocioDTO.tipoNegocio()))
+        Negocio nuevo = Negocio.builder().estadoNegocio(EstadoNegocio.PENDIENTE).ubicacion(negocioDTO.ubicacion())
+                .codigoCliente(cliente.getCodigo()).nombre(negocioDTO.nombre().toUpperCase())
+                .descripcion(negocioDTO.descripcion().toLowerCase()).tipoNegocios(new ArrayList<>(negocioDTO.tipoNegocios()))
                 .horarios(negocioDTO.horarios()).telefonos(negocioDTO.telefonos())
                 .imagenes(negocioDTO.imagenes()).calificaciones(new ArrayList<String>())
-                .historialRevisiones(new ArrayList<HistorialRevision>()).build();
+                .historialRevisiones(new ArrayList<HistorialRevision>()).recomendaciones(new ArrayList<>())
+                .calificacion(0).build();
         nuevo.getHistorialRevisiones().add(new HistorialRevision(
-                "", EstadoNegocio.PENDIENTE.name(), validacionModerador.formatearFecha(LocalDateTime.now()),
+                "", EstadoNegocio.PENDIENTE, validacionModerador.formatearFecha(LocalDateTime.now()),
                 "default", ""));
         negocioRepo.save(nuevo);
         cliente.getNegocios().add(nuevo.getCodigo());
@@ -61,10 +59,11 @@ public class NegocioServicioImpl implements INegocioServicio {
     }
 
     @Override
-    public void actualizarNegocio(ActualizarNegocioDTO negocioDTO, String codigoNegocio) throws Exception {
+    public void actualizarNegocio(ActualizarNegocioDTO negocioDTO) throws Exception {
 
-        Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
+        Negocio negocio = validacionNegocio.buscarNegocio(negocioDTO.codigo());
         negocio.setDescripcion(negocioDTO.descripcion());
+        negocio.setUbicacion(negocioDTO.ubicacion());
         negocio.setHorarios(negocioDTO.horarios());
         negocio.setTelefonos(negocioDTO.telefonos());
         negocio.setImagenes(negocioDTO.imagenes());
@@ -75,81 +74,92 @@ public class NegocioServicioImpl implements INegocioServicio {
     public void eliminarNegocio(String codigoNegocio) throws Exception {
 
         Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
-        negocio.setEstadoRegistro(EstadoRegistro.INACTIVO);
+        negocio.setEstadoNegocio(EstadoNegocio.ELIMINADO);
         negocioRepo.save(negocio);
     }
 
     @Override
-    public DetalleNegocioDTO buscarNegocio(String codigoNegocio) throws Exception {
+    public DetalleNegocioDTO obtenerNegocio(String codigoNegocio) throws Exception {
 
         Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
         return new DetalleNegocioDTO(
-                negocio.getNombre(), negocio.getUbicacion(),
-                negocio.getDescripcion(), negocio.getHorarios(),
+                negocio.getNombre(), negocio.getTipoNegocios(),
+                negocio.getUbicacion(), negocio.getDescripcion(),
+                negocio.getCalificacion(), negocio.getHorarios(),
                 negocio.getTelefonos(), negocio.getImagenes()
         );
     }
 
-    /*Metodo para generar una lista de negocios que tiene estado activo o inactivo*/
     @Override
-    public List<ItemNegocioDTO> filtrarPorEstado(EstadoRegistro estadoRegistro) throws Exception {
+    public List<ItemNegocioDTO> filtrarPorEstado(EstadoNegocio estado) throws Exception {
 
-        validacionNegocio.validarEstadoListaNegocios(estadoRegistro);
-        List<Negocio> negocios = negocioRepo.findAllByEstadoRegistro(estadoRegistro);
+        validacionNegocio.validarEstadoListaNegocios(estado);
+        List<Negocio> negocios = negocioRepo.findAllByEstadoNegocio(estado);
         List<DetalleNegocioDTO> negocioDTOList = new ArrayList<>();
         return negocios.stream()
-                .map(n -> new ItemNegocioDTO(n.getCodigo(), n.getNombre(), n.getTipoNegocio())).collect(Collectors.toList());
+                .map(n -> new ItemNegocioDTO(n.getCodigo(), n.getNombre(), n.getTipoNegocios())).collect(Collectors.toList());
     }
 
+    //preguntar al profe si tambien es funcionalidad del moderador
     @Override
-    public Set<ItemNegocioDTO> listarNegociosPropietario(String codigoCliente) throws Exception {
+    public List<ItemNegocioDTO> listarNegociosPropietario(String codigoCliente) throws Exception {
 
         Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
-        validacionCliente.validarListaNegociosCliente(codigoCliente);
+        validacionCliente.listarNegociosCliente(codigoCliente);
         Set<Negocio> negocios = negocioRepo.findAllByCodigoCliente(codigoCliente);
         Set<ItemNegocioDTO> lista = new HashSet<>();
         return negocios.stream().map(n -> new ItemNegocioDTO(
-                n.getCodigo(), n.getNombre(), n.getTipoNegocio())
-        ).collect(Collectors.toSet());
+                n.getCodigo(), n.getNombre(), n.getTipoNegocios())
+        ).collect(Collectors.toList());
     }
 
     @Override
-    public void cambiarEstado(String codigoNegocio, EstadoRegistro estadoRegistro) throws Exception {
-
-        Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
-        negocio.setEstadoRegistro(estadoRegistro);
-        negocioRepo.save(negocio);
-    }
-
-    @Override
-    public void guardarRecomendados(String codigoNegocio, String codigoCliente) throws Exception {
+    public void guardarRecomendado(String codigoNegocio, String codigoCliente) throws Exception {
 
         Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
         Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
+        negocio.getRecomendaciones().add(1);
         cliente.getRecomendados().add(codigoNegocio);
+        negocioRepo.save(negocio);
         clienteRepo.save(cliente);
     }
 
+    //Metodo para visualizar un negocio recomendado por parte del cliente que lo recomendó
     @Override
-    public DetalleNegocioDTO obtenerRecomendado(String codigoCliente, String codigoNegocio) throws Exception {
+    public DetalleNegocioDTO obtenerRecomendado(String codigoCliente) throws Exception {
 
         Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
         Set<String> lista = validacionCliente.validarListaGenericaCliente(cliente.getRecomendados());
-        for (String s : lista) {
-            Negocio negocio = validacionNegocio.buscarNegocio(s);
+        for (String codigoNegocio : lista) {
+            Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
             negocioDTO = new DetalleNegocioDTO(
-                    negocio.getNombre(),
-                    negocio.getUbicacion(),
-                    negocio.getDescripcion(),
-                    negocio.getHorarios(),
-                    negocio.getTelefonos(),
-                    negocio.getImagenes());
+                    negocio.getNombre(), negocio.getTipoNegocios(),
+                    negocio.getUbicacion(), negocio.getDescripcion(),
+                    negocio.getCalificacion(), negocio.getHorarios(),
+                    negocio.getTelefonos(), negocio.getImagenes());
         }
         return negocioDTO;
     }
 
     @Override
-    public Set<ItemNegocioDTO> listarRecomendados(String codigoCliente) throws Exception {
+    public String eliminarNegocioRecomendado(String codigoNegocio, String codigoCliente) throws Exception {
+
+        String respuesta = "";
+        Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
+        Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
+        for (String codigo : cliente.getRecomendados()) {
+            if (codigo.equals(codigoNegocio)) {
+                cliente.getRecomendados().remove(codigoNegocio);
+                clienteRepo.save(cliente);
+                respuesta = "El negocio fue eliminado de su lista de recomendados con éxito";
+            }
+        }
+        return respuesta;
+    }
+
+    //Metodo para listar los negocios recomendados del cliente
+    @Override
+    public Set<ItemNegocioDTO> listarRecomendadosCliente(String codigoCliente) throws Exception {
 
         Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
         Set<String> recomendados = validacionCliente.validarListaGenericaCliente(cliente.getRecomendados());
@@ -159,9 +169,38 @@ public class NegocioServicioImpl implements INegocioServicio {
             lista.add(new ItemNegocioDTO(
                     negocio.getCodigo(),
                     negocio.getNombre(),
-                    negocio.getTipoNegocio()));
+                    negocio.getTipoNegocios()));
         }
         return lista;
+    }
+
+    //Metodo para listar los negocios mas recomendados por los clientes -funcionalidad adicional del proyecto
+    public List<ItemNegocioDTO> listaNegociosRecomendadosPorClientes() throws Exception {
+
+        List<Negocio> negocios = validacionNegocio.validarListaGenericaNegocios(EstadoNegocio.APROBADO);
+        return negocios.stream().filter(n -> n.getRecomendaciones().size() > 4).map(n -> new ItemNegocioDTO(
+                n.getCodigo(),
+                n.getNombre(),
+                n.getTipoNegocios())).collect(Collectors.toList());
+    }
+
+    //comun para cliente y moderador
+    @Override
+    public DetalleRevisionDTO obtenerRevision(ItemRevisionDTO item) throws Exception {
+
+        HistorialRevision revision = validacionNegocio.buscarRevision(item.codigoNegocio(), item.fecha());
+        return new DetalleRevisionDTO(
+                revision.getDescripcion(),
+                revision.getEstadoNegocio(),
+                revision.getFecha());
+    }
+
+    //comun para cliente y moderador
+    @Override
+    public List<ItemRevisionDTO> listarRevisiones(String codigoNegocio) throws Exception {
+
+        List<HistorialRevision> lista = validacionNegocio.validarListaHistorialRevision(codigoNegocio);
+        return lista.stream().map(hr -> new ItemRevisionDTO(hr.getCodigoNegocio(), hr.getFecha())).collect(Collectors.toList());
     }
 
     @Override
@@ -175,6 +214,22 @@ public class NegocioServicioImpl implements INegocioServicio {
     }
 
     @Override
+    public String eliminarNegocioFavorito(String codigoNegocio, String codigoCliente) throws Exception {
+
+        String respuesta = "";
+        Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
+        Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
+        for (String codigo : cliente.getFavoritos()) {
+            if (codigo.equals(codigoNegocio)) {
+                cliente.getFavoritos().remove(codigo);
+                clienteRepo.save(cliente);
+                respuesta = "El negocio fue eliminado de su lista de favoritos con éxito";
+            }
+        }
+        return respuesta;
+    }
+
+    @Override
     public Set<ItemNegocioDTO> listarFavoritos(String codigoCliente) throws Exception {
 
         Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
@@ -185,8 +240,7 @@ public class NegocioServicioImpl implements INegocioServicio {
             lista.add(new ItemNegocioDTO(
                     negocio.getCodigo(),
                     negocio.getNombre(),
-                    negocio.getTipoNegocio()
-            ));
+                    negocio.getTipoNegocios()));
         }
         return lista;
     }
@@ -196,33 +250,98 @@ public class NegocioServicioImpl implements INegocioServicio {
 
         Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
         Set<String> favoritos = validacionCliente.validarListaGenericaCliente(cliente.getFavoritos());
-        for (String s : favoritos) {
-            Negocio negocio = validacionNegocio.buscarNegocio(s);
+        for (String codigoNegocio : favoritos) {
+            Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
             negocioDTO = new DetalleNegocioDTO(
-                    negocio.getNombre(),
-                    negocio.getUbicacion(),
-                    negocio.getDescripcion(),
-                    negocio.getHorarios(),
-                    negocio.getTelefonos(),
-                    negocio.getImagenes());
+                    negocio.getNombre(), negocio.getTipoNegocios(),
+                    negocio.getUbicacion(), negocio.getDescripcion(),
+                    negocio.getCalificacion(), negocio.getHorarios(),
+                    negocio.getTelefonos(), negocio.getImagenes());
         }
         return negocioDTO;
     }
 
     @Override
-    public void calificarNegocio(String codigoNegocio, ValorCalificar calificacion) throws Exception {
+    public String determinarDisponibilidadNegocio(String codigoNegocio) throws Exception {
 
+        LocalDateTime fechaActualDTO = LocalDateTime.now();
+        LocalTime horaActual = fechaActualDTO.toLocalTime();
+        String estado = "";
         Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
-        validacionNegocio.validarCalificacionNegocio(calificacion);
-        negocio.getCalificaciones().add(calificacion.name());
-        negocioRepo.save(negocio);
+        for (Horario diaNegocio : negocio.getHorarios()) {
+            if (diaNegocio.getDia().equals(fechaActualDTO.getDayOfWeek())) {
+                for (Horario horaNegocio : negocio.getHorarios()) {
+                    if (horaActual.isBefore(transformarHora(horaNegocio.getHoraFin())) &&
+                            horaActual.isAfter(transformarHora(horaNegocio.getHoraInicio()))) {
+                        estado = "Abierto";
+                    } else {
+                        estado = "Cerrado";
+                    }
+                }
+            } else {
+                throw new ResourceNotFoundException("No se puede validar el día");
+            }
+        }
+        return estado;
+    }
+
+    //comun para cliente y moderador
+    @Override
+    public DetalleNegocioDTO buscarNegocioPorNombre(String nombreNegocio) throws Exception {
+
+        Negocio negocio = validacionNegocio.validarNegocioPorNombre(nombreNegocio.toUpperCase());
+        return new DetalleNegocioDTO(
+                negocio.getNombre(),
+                negocio.getTipoNegocios(),
+                negocio.getUbicacion(),
+                negocio.getDescripcion(),
+                negocio.getCalificacion(),
+                negocio.getHorarios(),
+                negocio.getTelefonos(),
+                negocio.getImagenes()
+        );
     }
 
     @Override
-    public float calcularPromedioCalificaficaciones(String codigoNegocio) throws Exception {
+    public List<ItemNegocioDTO> listarNegociosAbiertosPorTipoSegunHora(TipoNegocio tipoNegocio) throws Exception {
+
+        List<Negocio> negocios = validacionNegocio.validarListaNegociosPorTipo(tipoNegocio);
+
+        for (Negocio n : negocios) {
+            String estado = determinarDisponibilidadNegocio(n.getCodigo());
+        }
+        return negocios.stream().map(n -> new ItemNegocioDTO(
+                        n.getCodigo(),
+                        n.getNombre(),
+                        n.getTipoNegocios()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void calificarNegocio(String codigoNegocio, ValorCalificar calificar) throws Exception {
 
         Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
-        int contador = negocio.getCalificaciones().stream()
+        validacionNegocio.validarCalificacionNegocio(calificar);
+        negocio.getCalificaciones().add(calificar.name());
+        /*List<String> listaFiltrada = negocio.getCalificaciones()
+                .stream().filter(n -> !n.equals("DEFAULT"))
+                .collect(Collectors.toList());
+        negocio.setCalificaciones(listaFiltrada);
+        System.out.println("listaFiltrada.toString() = " + listaFiltrada.toString());*/
+        negocioRepo.save(negocio);
+        calcularPromedioCalificaficaciones(codigoNegocio);
+    }
+
+    @Override
+    public int calcularPromedioCalificaficaciones(String codigoNegocio) throws Exception {
+
+        Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
+
+//        List<Negocio> listaNegocios = validacionNegocio.validarListaGenericaNegocios(EstadoNegocio.APROBADO).stream()
+//                .filter(n -> n.getCalificaciones().size() > 0).collect(Collectors.toList());
+//        int suma = 0;
+//        for (Negocio n : listaNegocios) {
+        int suma = negocio.getCalificaciones().stream()
                 .mapToInt(calfn -> {
                     switch (calfn) {
                         case "ONE_STAR":
@@ -235,24 +354,28 @@ public class NegocioServicioImpl implements INegocioServicio {
                             return 4;
                         case "FIVE_STAR":
                             return 5;
-                        default:
+                        case "DEFAULT":
                             return 0;
                     }
+                    return 0;
                 })
                 .sum();
-
-        float resultado = contador / negocio.getCalificaciones().size();
-        return resultado;
+        int total = suma / negocio.getCalificaciones().size();
+        System.out.println("n.getCalificaciones().size() = " + negocio.getCalificaciones().size());
+        negocio.setCalificacion(total);
+        negocioRepo.save(negocio);
+        return total;
     }
 
-    /*private String formatearFecha(LocalDateTime fecha) throws Exception {
+    private LocalTime transformarHora(String hora) throws Exception {
 
-        if (fecha.isAfter(LocalDateTime.now())) {
-            throw new ResourceInvalidException("Fecha no válida");
+        try {
+            DateTimeFormatter formatohora = DateTimeFormatter.ISO_TIME.withLocale(Locale.ENGLISH);
+            TemporalAccessor horaFormateada = formatohora.parse(hora);
+            return LocalTime.from(horaFormateada);
+        } catch (Exception ex) {
+            throw new Exception("La hora no cumple con el formato requerido");
         }
-        DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm.000 a", Locale.ENGLISH);
-        String fechaFormateada = formatoFecha.format(fecha);
-        return fechaFormateada;
     }
-*/
 }
+

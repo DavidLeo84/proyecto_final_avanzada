@@ -2,6 +2,7 @@ package co.edu.uniquindio.proyecto.controller;
 
 import co.edu.uniquindio.proyecto.dtos.EmailDTO;
 import co.edu.uniquindio.proyecto.servicios.ClienteServicioImpl;
+import co.edu.uniquindio.proyecto.servicios.interfaces.IClienteServicio;
 import co.edu.uniquindio.proyecto.servicios.interfaces.IEmailServicio;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,17 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController
-@RequestMapping("/api/cliente")
+//@RestController
+//@RequestMapping("/api/clientes/correo")
 public class MailClienteController {
 
-    @Autowired
-    private IEmailServicio emailServicio;
-    @Autowired
-    private ClienteServicioImpl clienteServicio;
 
-    @PostMapping("/enviarMensaje")
-    public ResponseEntity<Map> recibirPeticionEmail(@Valid @RequestBody EmailDTO emailDTO) {
+  /*  private IEmailServicio emailServicio;
+    private IClienteServicio clienteServicio;
+
+    @PostMapping("/enviar-correo")
+    public ResponseEntity<Map> enviarPeticionEmail(@Valid @RequestBody EmailDTO emailDTO) {
 
         System.out.println("Mensaje recibido " + emailDTO.toString());
 
@@ -35,7 +35,7 @@ public class MailClienteController {
         return ResponseEntity.ok(respuesta);
     }
 
-    @PostMapping("/recopass")
+    @PostMapping("/reco-pass")
     public ResponseEntity<Map> enviarEmailRecuperacion(@Valid @RequestBody String destinatario) throws Exception {
 
         clienteServicio.enviarLinkRecuperacion(destinatario);
@@ -43,5 +43,5 @@ public class MailClienteController {
         respuesta.put("estado", "email enviado");
 
         return ResponseEntity.ok(respuesta);
-    }
+    }*/
 }

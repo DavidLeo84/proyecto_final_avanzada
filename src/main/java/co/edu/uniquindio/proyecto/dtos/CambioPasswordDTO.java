@@ -1,8 +1,13 @@
 package co.edu.uniquindio.proyecto.dtos;
 
+import jakarta.validation.constraints.NotBlank;
+
 public record CambioPasswordDTO(
+
+        @NotBlank
         String passwordNueva,
-        String id,
-        String token
+        @NotBlank
+        String codigo
+        //String token
 ) {
 }

@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.servicios.excepciones;
 
+import co.edu.uniquindio.proyecto.enums.EstadoNegocio;
 import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
 import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
 import co.edu.uniquindio.proyecto.modelo.documentos.Moderador;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -23,14 +25,23 @@ public class ValidacionModerador {
     private final NegocioRepo negocioRepo;
     private final ClienteRepo clienteRepo;
 
-    public String existeEmail(String email) throws Exception {
+    public void existeEmail(String email) throws Exception {
 
         Optional<Moderador> moderadorOptional = moderadorRepo.findByEmail(email);
-        Moderador moderador = moderadorOptional.get();
         if (!moderadorOptional.isPresent()) {
-            throw new Exception("El usuario moderador con email " + email + " no se encuentra registrado");
+            throw new Exception("El correo no se encuentra registrado");
         }
-        return moderador.getEmail();
+
+    }
+
+    public Moderador buscarPorEmail(String email) throws Exception {
+
+        Optional<Moderador> moderadorOptional = moderadorRepo.findByEmail(email);
+        if (moderadorOptional == null) {
+            throw new ResourceNotFoundException("El correo no se encuentra registrado");
+        }
+        Moderador moderador = moderadorOptional.get();
+        return moderador;
     }
 
     public Moderador buscarModerador(String codigoModerador) throws Exception {
@@ -42,7 +53,7 @@ public class ValidacionModerador {
             moderador = buscado.get();
         }
         if (buscado == null || buscado.get().getEstadoRegistro().equals(EstadoRegistro.INACTIVO)) {
-            throw new ResourceNotFoundException("No existe usuario moderador con el codigo " + codigoModerador);
+            throw new ResourceNotFoundException("No existe usuario moderador");
         }
         return moderador;
     }
@@ -51,8 +62,9 @@ public class ValidacionModerador {
 
         Optional<Negocio> buscado = negocioRepo.findByCodigo(codigoNegocio);
 
-        if (buscado == null || buscado.get().getEstadoRegistro().equals(EstadoRegistro.ELIMINADO) ||
-                buscado.get().getEstadoRegistro().equals(EstadoRegistro.ACTIVO)) {
+        if (buscado == null || buscado.get().getEstadoNegocio().equals(EstadoNegocio.ELIMINADO) ||
+                buscado.get().getEstadoNegocio().equals(EstadoNegocio.APROBADO) ||
+                buscado.get().getEstadoNegocio().equals(EstadoNegocio.RECHAZADO)) {
             throw new ResourceNotFoundException("No existe negocio pendiente de aprobar con el codigo " + codigoNegocio);
         }
         Negocio negocio = buscado.get();
@@ -67,5 +79,18 @@ public class ValidacionModerador {
         DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm:ss.000 a", Locale.ENGLISH);
         String fechaFormateada = formatoFecha.format(fecha);
         return fechaFormateada;
+    }
+
+    public LocalDateTime transformarFecha(String fechaRevision) throws Exception {
+
+        try {
+            String fechaString1 = fechaRevision.replaceAll("/", "-");
+            String fechaString1_1 = fechaString1.replaceAll(" ", "T");
+            DateTimeFormatter formatoFecha = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+            TemporalAccessor fechaFormateada = formatoFecha.parse(fechaString1_1.substring(0, 20));
+            return LocalDateTime.from(fechaFormateada);
+        } catch (Exception ex) {
+            throw new Exception("La fecha no cumple con el formato requerido");
+        }
     }
 }

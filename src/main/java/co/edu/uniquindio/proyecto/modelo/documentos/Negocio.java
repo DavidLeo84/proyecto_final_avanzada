@@ -32,11 +32,13 @@ public class Negocio implements Serializable {
     private String nombre;
     private Ubicacion ubicacion;
     private String descripcion;
-    private EstadoRegistro estadoRegistro;
-    private TipoNegocio tipoNegocio;
+    private EstadoNegocio estadoNegocio;
+    private int calificacion;
+    private List<TipoNegocio> tipoNegocios;
     private List<Horario> horarios;
     private Set<String> telefonos;
     private List<HistorialRevision> historialRevisiones;
     private Set<String> imagenes;
     private List<String> calificaciones; // se califica con estrellas que tienen valores enteros
+    private List<Integer> recomendaciones;
 }
