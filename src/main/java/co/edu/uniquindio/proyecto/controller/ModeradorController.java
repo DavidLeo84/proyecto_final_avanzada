@@ -29,7 +29,7 @@ public class ModeradorController {
     }
 
     @GetMapping("/obtener-revision")
-    public ResponseEntity<MensajeDTO<DetalleRevisionDTO>> obtenerRevision(@Valid @RequestBody ItemRevisionDTO item) throws Exception {
+    public ResponseEntity<MensajeDTO<DetalleRevisionDTO>> obtenerRevision(ItemRevisionDTO item) throws Exception {
 
         return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.obtenerRevision(item)));
     }
@@ -61,26 +61,22 @@ public class ModeradorController {
     }
 
     @GetMapping("/obtener-aprobado")
-    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> obtenerNegocioAprobado(@RequestBody
-                                                                                ItemNegocioDTO negocioDTO) throws Exception {
+    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> obtenerNegocioAprobado(ItemNegocioDTO negocioDTO) throws Exception {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, moderadorServicio.obtenerNegocioAprobado(negocioDTO)));
     }
 
     @GetMapping("/obtener-pendiente")
-    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> obtenerNegocioPendiente(@RequestBody
-                                                                                ItemNegocioDTO negocioDTO) throws Exception {
+    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> obtenerNegocioPendiente(ItemNegocioDTO negocioDTO) throws Exception {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, moderadorServicio.obtenerNegocioPendiente(negocioDTO)));
     }
 
     @GetMapping("/obtener-rechazado")
-    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> obtenerNegocioRechazado(@RequestBody
-                                                                                ItemNegocioDTO negocioDTO) throws Exception {
+    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> obtenerNegocioRechazado(ItemNegocioDTO negocioDTO) throws Exception {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, moderadorServicio.obtenerNegocioRechazado(negocioDTO)));
     }
 
     @GetMapping("/obtener-eliminado")
-    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> obtenerNegocioEliminado(@RequestBody
-                                                                                ItemNegocioDTO negocioDTO) throws Exception {
+    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> obtenerNegocioEliminado(ItemNegocioDTO negocioDTO) throws Exception {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, moderadorServicio.obtenerNegocioEliminado(negocioDTO)));
     }
 

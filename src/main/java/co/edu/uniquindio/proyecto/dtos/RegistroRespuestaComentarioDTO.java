@@ -25,7 +25,7 @@ public record RegistroRespuestaComentarioDTO(
         @Size(max = 200)
         String respuesta,
 
-        String fechaRespuesta
+        LocalDateTime fechaRespuesta
 
 ) {
 }

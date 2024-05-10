@@ -24,10 +24,10 @@ public class ValidacionNegocio {
     private final NegocioRepo negocioRepo;
 
     /*Metodo para validar las coordenadas del negocio que se va a crear*/
-    public void existeCoordenadas(int latitud, int longitud) throws Exception {
+    public void existeCoordenadas(Double latitud, Double longitud) throws Exception {
 
-        Optional<Negocio> buscado = negocioRepo.getNegocioByUbicacion(latitud, longitud);
-        if (buscado.isPresent() && buscado.get().getEstadoNegocio().equals(EstadoNegocio.APROBADO)) {
+        List<Negocio> negocioOptional = negocioRepo.getListaNegocioByUbicacion(latitud, longitud);
+        if (negocioOptional.size() > 0) {
             throw new ResourceNotFoundException("Ya existe un local en las coordenadas seleccionadas");
         }
     }
@@ -42,6 +42,19 @@ public class ValidacionNegocio {
         return false;
     }
 
+    public Negocio buscarNegocioRechazadoParaModificar(String codigoNegocio) throws Exception {
+
+        Optional<Negocio> buscado = negocioRepo.findByCodigo(codigoNegocio);
+        Negocio negocio = null;
+        if (buscado.isPresent() && buscado.get().getEstadoNegocio().equals(EstadoNegocio.RECHAZADO)) {
+            negocio = buscado.get();
+        }
+        if (!buscado.isPresent() || !buscado.get().getEstadoNegocio().equals(EstadoNegocio.RECHAZADO)) {
+            throw new ResourceNotFoundException("El negocio buscado no se encuentra como rechazado");
+        }
+        return negocio;
+    }
+
     public Negocio buscarNegocio(String codigoNegocio) throws Exception {
 
         Optional<Negocio> buscado = negocioRepo.findByCodigo(codigoNegocio);
@@ -49,7 +62,8 @@ public class ValidacionNegocio {
         if (!buscado.isEmpty() && buscado.get().getEstadoNegocio().equals(EstadoNegocio.APROBADO)) {
             negocio = buscado.get();
         }
-        if (buscado.isEmpty()) {
+
+        if (buscado.isEmpty() || buscado.get().getEstadoNegocio().equals(EstadoNegocio.ELIMINADO)) {
             throw new ResourceNotFoundException("No existe el negocio");
         }
         return negocio;
@@ -125,7 +139,7 @@ public class ValidacionNegocio {
 
     public List<HistorialRevision> validarListaHistorialRevision(String codigoNegocio) throws Exception {
 
-        Negocio negocio = buscarNegocio(codigoNegocio);
+        Negocio negocio = validarNegocioRechazado(codigoNegocio);
         if (negocio.getHistorialRevisiones().isEmpty()) {
             throw new ResourceNotFoundException("No tiene revisiones procesadas");
         }
@@ -172,7 +186,7 @@ public class ValidacionNegocio {
 
         Optional<Negocio> negocioOptional = negocioRepo.findByNombre(nombreNegocio);
         if (negocioOptional == null) {
-            throw new Exception("Nombre no válido o no existe un negocio con el nombre " + nombreNegocio);
+            throw new ResourceNotFoundException("Nombre no válido o no existe un negocio con el nombre " + nombreNegocio);
         }
         Negocio negocio = negocioOptional.get();
         return negocio;

@@ -19,6 +19,7 @@ import co.edu.uniquindio.proyecto.servicios.interfaces.ICloudinaryServicio;
 import co.edu.uniquindio.proyecto.servicios.interfaces.IEmailServicio;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,22 +27,34 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class ClienteServicioImpl implements IClienteServicio {
 
-    private final ClienteRepo clienteRepo;
-    private final ModeradorRepo moderadorRepo;
-    private final ValidacionCliente validacionCliente;
+    private ClienteRepo clienteRepo;
+    private ModeradorRepo moderadorRepo;
+    private ValidacionCliente validacionCliente;
 
-    private IEmailServicio emailServicio;
-    private ICloudinaryServicio cloudinaryServicio;
-    private IAutenticacionServicio autenticacionServicio;
+
+    private EmailServicioImpl emailServicio;
+    private CloudinaryServicioImpl cloudinaryServicio;
+    private AutenticacionServicioImpl autenticacionServicio;
+
+    public ClienteServicioImpl(ClienteRepo clienteRepo, ModeradorRepo moderadorRepo, ValidacionCliente validacionCliente,
+                               EmailServicioImpl emailServicio, CloudinaryServicioImpl cloudinaryServicio,
+                               AutenticacionServicioImpl autenticacionServicio) {
+        this.clienteRepo = clienteRepo;
+        this.moderadorRepo = moderadorRepo;
+        this.validacionCliente = validacionCliente;
+        this.emailServicio = emailServicio;
+        this.cloudinaryServicio = cloudinaryServicio;
+        this.autenticacionServicio = autenticacionServicio;
+    }
 
     @Override
     public TokenDTO iniciarSesion(LoginDTO loginDTO) throws Exception {
 
-        TokenDTO token = autenticacionServicio.iniciarSesionCliente(loginDTO);;
+        TokenDTO token = autenticacionServicio.iniciarSesionCliente(loginDTO);
+
         return token;
     }
 
@@ -64,21 +77,21 @@ public class ClienteServicioImpl implements IClienteServicio {
 
         Optional<Cliente> clienteOptional = clienteRepo.findByEmail(email);
         Cliente cliente = null;
-        if (!clienteOptional.isEmpty()) {
+        if (clienteOptional.isPresent()) {
             cliente = clienteOptional.get();
         }
         Optional<Moderador> moderadorOptional = moderadorRepo.findByEmail(email);
         Moderador moderador = null;
 
-        if (!moderadorOptional.isEmpty()) {
+        if (moderadorOptional.isPresent()) {
             moderador = moderadorOptional.get();
         }
-        if (moderadorOptional.isEmpty() && clienteOptional.isEmpty()) {
-            throw new ResourceNotFoundException("EL correo no existe en el registro");
+        if (!moderadorOptional.isPresent() && !clienteOptional.isPresent()) {
+            throw new ResourceNotFoundException("El usuario no se encuentra registrado");
         }
         emailServicio.enviarEmail(email, "Recuperar contraseña",
                 "http://localhost:8080/api/recoPass");
-        TokenDTO token = autenticacionServicio.recuperarPasswordCliente(email);
+        TokenDTO token = autenticacionServicio.recuperarPassword(email);
         return token;
     }
 

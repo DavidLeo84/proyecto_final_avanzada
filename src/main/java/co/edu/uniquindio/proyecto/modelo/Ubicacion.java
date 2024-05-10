@@ -10,6 +10,6 @@ import lombok.*;
 @EqualsAndHashCode
 public class Ubicacion {
 
-    private int latitud;
-    private int longitud;
+    private Double latitud;
+    private Double longitud;
 }

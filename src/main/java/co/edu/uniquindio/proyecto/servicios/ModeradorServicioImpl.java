@@ -157,10 +157,10 @@ public class ModeradorServicioImpl implements IModeradorServicio {
                 }
                 actualizados.add(n);
             }
+            return actualizados;
         } catch (Exception ex) {
             throw new Exception("Error al eliminar por caducidad el negocio rechazado");
         }
-        return actualizados;
     }
 
     @Override

@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 public record HistorialRevisionDTO(
         @NotBlank
         String descripcion,
-        @NotBlank
         EstadoNegocio estadoNegocio,
         //LocalDateTime fecha,
         @NotBlank

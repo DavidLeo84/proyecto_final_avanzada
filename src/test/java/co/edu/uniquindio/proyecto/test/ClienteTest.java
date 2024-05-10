@@ -43,9 +43,10 @@ public class ClienteTest {
                 "Pedro Sanchez",
                 "foto1.jpg",
                 "pedrito",
+                "PEREIRA",
                 "pedrosanchez@gmail.com",
-                "123456",
-                "PEREIRA"
+                "123456"
+
         );
         // When - Acción o el comportamiento que se va a probar
         Cliente cliente = clienteServicio.registrarse(clienteDTO);

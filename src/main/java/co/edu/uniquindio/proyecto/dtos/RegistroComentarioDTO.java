@@ -15,13 +15,11 @@ public record RegistroComentarioDTO(
         @NotBlank
         @Size(max = 200)
         String mensaje,
-
-        String fechaMensaje,
-        @NotBlank
+        LocalDateTime fechaMensaje
+        /*@NotBlank
         @Size(max = 200)
         String respuesta,
-
-        String fechaRespuesta
+        LocalDateTime fechaRespuesta*/
 
 
 ) {

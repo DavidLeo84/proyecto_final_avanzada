@@ -6,6 +6,7 @@ import co.edu.uniquindio.proyecto.modelo.documentos.Moderador;
 import co.edu.uniquindio.proyecto.modelo.documentos.Negocio;
 import co.edu.uniquindio.proyecto.repositorios.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,6 +23,8 @@ public class ValidacionCliente {
     private final ModeradorRepo moderadorRepo;
     private final NegocioRepo negocioRepo;
 
+    @Autowired
+    private ValidacionNegocio validacionNegocio;
 
     public void existeEmail(String email) throws Exception {
 
@@ -84,6 +87,40 @@ public class ValidacionCliente {
             throw new ResourceNotFoundException("El cliente no tiene favoritos o recomendados");
         }
         return lista;
+    }
+
+    public String validarNegocioRecomendado(String codigoNegocio, String codigoCliente) throws Exception {
+
+        Cliente cliente = buscarCliente(codigoCliente);
+        Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
+        Set<String> listaNegocios = validarListaGenericaCliente(cliente.getRecomendados());
+        String recomendado = "";
+        for (String codigo : listaNegocios) {
+            if (codigo.equals(codigoNegocio)) {
+                recomendado = codigo;
+            }
+        }
+        if (recomendado == "") {
+             throw new ResourceNotFoundException("No existe este negocio en su lista de recomendados");
+        }
+        return recomendado;
+    }
+
+    public String validarNegocioFavorito(String codigoNegocio, String codigoCliente) throws Exception {
+
+        Cliente cliente = buscarCliente(codigoCliente);
+        Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
+        Set<String> listaNegocios = validarListaGenericaCliente(cliente.getFavoritos());
+        String favorito = "";
+        for (String codigo : listaNegocios) {
+            if (codigo.equals(codigoNegocio)) {
+                favorito = codigo;
+            }
+        }
+        if (favorito == "") {
+            throw new ResourceNotFoundException("No existe este negocio en su lista de favoritos");
+        }
+        return favorito;
     }
 
     //Metodo para obtener el listado de negocios en el estado actual
