@@ -79,13 +79,13 @@ public class ModeradorTest {
                 "Su negocio cumple con las normas de la aplicación",
                 EstadoNegocio.APROBADO,
                 "661ca68e157f5040899baeeb",
-                "661dd6810534cd610ad1beb5"
+                "663d54317a25b95b79e76c96"
         );
         /*When - Acción o el comportamiento que se va a probar*/
         moderadorServicio.revisarNegocio(revisionDTO);
 
         /*Then - Verificar la salida*/
-        Negocio negocio = validacionNegocio.validarNegocioAprobado("661dd6810534cd610ad1beb5");
+        Negocio negocio = validacionNegocio.validarNegocioAprobado("663d54317a25b95b79e76c96");
         System.out.println("negocio = " + negocio);
         assertThat(negocio.getHistorialRevisiones().size()).isGreaterThan(1);
     }

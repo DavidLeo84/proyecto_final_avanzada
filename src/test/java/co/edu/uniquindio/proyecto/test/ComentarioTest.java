@@ -49,12 +49,11 @@ public class ComentarioTest {
 
         // Given - Dado o condicion previa o configuración
         RegistroComentarioDTO comentarioDTO = new RegistroComentarioDTO(
-                "661c4b6c03dc96547afaca75",
-                "661dd6810534cd610ad1beb5",
-                "este es el mensaje",
-                LocalDateTime.now(),
-                "",
-                LocalDateTime.now());
+                "661c4a4289852b27687d80a7",
+                "663d54317a25b95b79e76c96",
+                "este es un comentario",
+                LocalDateTime.now()
+        );
 
         // When - Acción o el comportamiento que se va a probar
         Comentario nuevo = comentarioServicio.crearComentario(comentarioDTO);
@@ -67,13 +66,15 @@ public class ComentarioTest {
     public void responderComentarioTest() throws Exception {
 
         // Given - Dado o condicion previa o configuración
+        Comentario comentario = validacionComentario.validarComentario("663d8552c2315b0e45df1e31");
+
         RegistroRespuestaComentarioDTO respuestaDTO = new RegistroRespuestaComentarioDTO(
-                "661edea9ef7e3a2802665742",
-                "661c4a4289852b27687d80a7",
-                "661dd3c07afe983885b1783c",
-                "ese es el mensaje",
-                LocalDateTime.now(),
-                "este es la respuesta",
+                comentario.getCodigo(),
+                comentario.getCodigoCliente(),
+                comentario.getCodigoNegocio(),
+                comentario.getMensaje(),
+                comentario.getFechaMensaje(),
+                "Esta es la respuesta al comentario",
                 LocalDateTime.now()
                 );
 
@@ -92,7 +93,7 @@ public class ComentarioTest {
         List<ItemComentarioDTO> listaComentarios = comentarioServicio.listarComentariosNegocio("661dd3c07afe983885b1783c");
 
         //Then - Verificar la salida
-        Assertions.assertEquals(2, listaComentarios.size());
+        Assertions.assertEquals(4, listaComentarios.size());
     }
 
 
@@ -101,7 +102,7 @@ public class ComentarioTest {
     public void obtenerComentario() throws Exception {
 
         // When - Acción o el comportamiento que se va a probar
-        DetalleComentarioDTO comentarioDTO = comentarioServicio.obtenerComentarioNegocio("661edea9ef7e3a2802665742");
+        DetalleComentarioDTO comentarioDTO = comentarioServicio.obtenerComentarioNegocio("663d8552c2315b0e45df1e31");
 
         //Then - Verificar la salida
         System.out.println("comentarioDTO = " + comentarioDTO.toString());
@@ -119,14 +120,14 @@ public class ComentarioTest {
         //validacionComentario.validarListaAprobaciones("6608622d7a6bf86424f727d3");
 
         // When - Acción o el comportamiento que se va a probar
-        comentarioServicio.aprobarComentario("661edea9ef7e3a2802665742", "661c4a4289852b27687d80a7");
+        comentarioServicio.aprobarComentario("663d8552c2315b0e45df1e31", "661c4b0ea2ece971f83f5a7b");
 
         //Then - Verificar la salida
-        Cliente cliente = validacionCliente.buscarCliente("661c4a4289852b27687d80a7");
-        Comentario comentario = validacionComentario.validarComentario("661edea9ef7e3a2802665742");
+        Cliente cliente = validacionCliente.buscarCliente("661c4b0ea2ece971f83f5a7b");
+        Comentario comentario = validacionComentario.validarComentario("663d8552c2315b0e45df1e31");
 
         Assertions.assertEquals(1, cliente.getAprobacionesComentarios().size()); //cantidad de codigos de comentarios que ha aprobado el cliente
-        Assertions.assertEquals(1, comentario.getMeGusta().size()); // cantidad de megusta que tiene el comentario
+        Assertions.assertEquals(2, comentario.getMeGusta().size()); // cantidad de megusta que tiene el comentario
     }
 
     /*@DisplayName("Test para calcular la cantidad de meGusta que le han dado a un comentario")

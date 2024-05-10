@@ -17,14 +17,16 @@ public record RegistroClienteDTO(
         @NotBlank
         String nickname,
         @NotBlank
+
+        @Length(max = 30)
+        String ciudad,
+        @NotBlank
         @Email
         @Length(max = 30)
         String email,
         @NotBlank
-        String password,
-        @NotBlank
-        @Length(max = 30)
-        String ciudad
+        String password
+
 
 ) {
 }

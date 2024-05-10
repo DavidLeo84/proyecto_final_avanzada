@@ -34,18 +34,18 @@ public class ClienteController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "El cliente fue actualizado correctamente"));
     }
 
-    @DeleteMapping("/eliminar-cliente/{codigo}")
-    public ResponseEntity<MensajeDTO<String>> eliminarCuenta(@PathVariable String codigo) throws Exception {
+    @DeleteMapping("/eliminar-cliente/{codigoCliente}")
+    public ResponseEntity<MensajeDTO<String>> eliminarCuenta(@PathVariable String codigoCliente) throws Exception {
 
-        clienteServicio.eliminarCuenta(codigo);
+        clienteServicio.eliminarCuenta(codigoCliente);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "El cliente fue eliminado correctamente"));
     }
 
-    @GetMapping("/obtener-cliente/{codigo}")
-    public ResponseEntity<MensajeDTO<DetalleClienteDTO>> obtenerCliente(@PathVariable String codigo) throws Exception {
+    @GetMapping("/obtener-cliente/{codigoCliente}")
+    public ResponseEntity<MensajeDTO<DetalleClienteDTO>> obtenerCliente(@PathVariable String codigoCliente) throws Exception {
 
         return ResponseEntity.ok().body(
-                new MensajeDTO<>(false, clienteServicio.obtenerUsuario(codigo)));
+                new MensajeDTO<>(false, clienteServicio.obtenerUsuario(codigoCliente)));
     }
 
     @PutMapping("/cambio-password-cliente")
@@ -69,10 +69,10 @@ public class ClienteController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "Se ha actualizado el negocio correctamente"));
     }
 
-    @DeleteMapping("/eliminar-negocio/{codigo}")
-    public ResponseEntity<MensajeDTO<String>> eliminarNegocio(@PathVariable String codigo) throws Exception {
+    @DeleteMapping("/eliminar-negocio/{codigoNegocio}")
+    public ResponseEntity<MensajeDTO<String>> eliminarNegocio(@PathVariable String codigoNegocio) throws Exception {
 
-        negocioServicio.eliminarNegocio(codigo);
+        negocioServicio.eliminarNegocio(codigoNegocio);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "Se ha eliminado el negocio correctamente"));
     }
 
@@ -81,10 +81,10 @@ public class ClienteController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.obtenerNegocio(codigoNegocio)));
     }
 
-    @GetMapping("/negocios-propietario/{codigo}")
-    public ResponseEntity<MensajeDTO<List<ItemNegocioDTO>>> listarNegociosPropietario(@PathVariable String codigo) throws Exception {
+    @GetMapping("/negocios-propietario/{codigoCliente}")
+    public ResponseEntity<MensajeDTO<List<ItemNegocioDTO>>> listarNegociosPropietario(@PathVariable String codigoCliente) throws Exception {
 
-        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.listarNegociosPropietario(codigo)));
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.listarNegociosPropietario(codigoCliente)));
     }
 
     @PutMapping("/guardar-recomendado/{codigoNegocio}/{codigoCliente}")
@@ -94,12 +94,13 @@ public class ClienteController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "Has recomendado este negocio"));
     }
 
-    @GetMapping("/obtener-recomendado/{codigoCliente}")
-    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> obtenerRecomendado(@PathVariable String codigoCliente) throws Exception {
-        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.obtenerRecomendado(codigoCliente)));
+    @GetMapping("/obtener-recomendado/{codigoNegocio}/{codigoCliente}")
+    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> obtenerRecomendado(@PathVariable String codigoNegocio,
+                                                                            @PathVariable String codigoCliente) throws Exception {
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.obtenerRecomendado(codigoNegocio,codigoCliente)));
     }
 
-    @DeleteMapping("/borrar-recomendado/{codigoNegocio}/{codigoCliente}")
+    @DeleteMapping("/eliminar-recomendado/{codigoNegocio}/{codigoCliente}")
     public ResponseEntity<MensajeDTO<String>> eliminarRecomendado(@PathVariable String codigoNegocio,
                                                                   @PathVariable String codigoCliente) throws Exception {
         negocioServicio.eliminarNegocioRecomendado(codigoNegocio, codigoCliente);
@@ -107,10 +108,10 @@ public class ClienteController {
                 "El negocio fue eliminado de su lista de recomendados con éxito"));
     }
 
-    @GetMapping("/listar-recomendados-cliente/{codigo}")
-    public ResponseEntity<MensajeDTO<Set<ItemNegocioDTO>>> listarRecomendadosCliente(@PathVariable String codigo) throws Exception {
+    @GetMapping("/listar-recomendados-cliente/{codigoNegocio}")
+    public ResponseEntity<MensajeDTO<Set<ItemNegocioDTO>>> listarRecomendadosCliente(@PathVariable String codigoNegocio) throws Exception {
 
-        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.listarRecomendadosCliente(codigo)));
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.listarRecomendadosCliente(codigoNegocio)));
     }
 
     @GetMapping("/listar-recomendados")
@@ -126,10 +127,10 @@ public class ClienteController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.obtenerRevision(item)));
     }
 
-    @GetMapping("/listar-revisiones/{codigo}")
-    public ResponseEntity<MensajeDTO<List<ItemRevisionDTO>>> listarRevisiones(@PathVariable String codigo) throws Exception {
+    @GetMapping("/listar-revisiones/{codigoNegocio}")
+    public ResponseEntity<MensajeDTO<List<ItemRevisionDTO>>> listarRevisiones(@PathVariable String codigoNegocio) throws Exception {
 
-        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.listarRevisiones(codigo)));
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.listarRevisiones(codigoNegocio)));
     }
 
     @PutMapping("/guardar-favorito/{codigoNegocio}/{codigoCliente}")
@@ -139,7 +140,7 @@ public class ClienteController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "Has guardado este negocio entre tus favoritos"));
     }
 
-    @DeleteMapping("/borrar-favorito/{codigoNegocio}/{codigoCliente}")
+    @DeleteMapping("/eliminar-favorito/{codigoNegocio}/{codigoCliente}")
     public ResponseEntity<MensajeDTO<String>> eliminarFavorito(@PathVariable String codigoNegocio,
                                                                @PathVariable String codigoCliente) throws Exception {
         negocioServicio.eliminarNegocioFavorito(codigoNegocio, codigoCliente);
@@ -147,15 +148,16 @@ public class ClienteController {
                 "El negocio fue eliminado de su lista de favoritos con éxito"));
     }
 
-    @GetMapping("/listar-favoritos-cliente/{codigo}")
-    public ResponseEntity<MensajeDTO<Set<ItemNegocioDTO>>> listarFavoritos(@PathVariable String codigo) throws Exception {
+    @GetMapping("/listar-favoritos-cliente/{codigoCliente}")
+    public ResponseEntity<MensajeDTO<Set<ItemNegocioDTO>>> listarFavoritos(@PathVariable String codigoCliente) throws Exception {
 
-        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.listarFavoritos(codigo)));
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.listarFavoritos(codigoCliente)));
     }
 
-    @GetMapping("/obtener-favorito/{codigoCliente}")
-    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> obtenerFavorito(@PathVariable String codigo) throws Exception {
-        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.obtenerFavorito(codigo)));
+    @GetMapping("/obtener-favorito/{codigoNegocio}/{codigoCliente}")
+    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> obtenerFavorito(@PathVariable String codigoNegocio,
+                                                                         @PathVariable String codigoCliente) throws Exception {
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.obtenerFavorito(codigoNegocio, codigoCliente)));
     }
 
     @GetMapping("/esta-disponible/{codigo}")
@@ -164,10 +166,10 @@ public class ClienteController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.determinarDisponibilidadNegocio(codigo)));
     }
 
-    @GetMapping("/buscar-nombre/{codigo}")
-    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> buscarNegocioPorNombre(@PathVariable String codigo) throws Exception {
+    @GetMapping("/buscar-nombre/{nombreNegocio}")
+    public ResponseEntity<MensajeDTO<DetalleNegocioDTO>> buscarNegocioPorNombre(@PathVariable String nombreNegocio) throws Exception {
 
-        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.buscarNegocioPorNombre(codigo)));
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.buscarNegocioPorNombre(nombreNegocio)));
     }
 
     @GetMapping("/lista-negocios-abiertos/{tipo}")

@@ -16,10 +16,10 @@ public interface NegocioRepo extends MongoRepository<Negocio, String> {
 
     //proyecto> db.negocios.find({ubicacion:{"latitud":123456789,"longitud":987654321}})
     @Query("{ubicacion:{latitud:?0,longitud:?1}}")
-    Optional<Negocio> getNegocioByUbicacion(int latitud, int longitud) throws Exception;
+    Optional<Negocio> getNegocioByUbicacion(Double latitud, Double longitud) throws Exception;
 
     @Query("{ubicacion:{latitud:?0,longitud:?1}}")
-    List<Negocio> getListaNegocioByUbicacion(int latitud, int longitud) throws Exception;
+    List<Negocio> getListaNegocioByUbicacion(Double latitud, Double longitud) throws Exception;
 
     Optional<Negocio> findByCodigo(String codigo) throws Exception;
 

@@ -32,7 +32,7 @@ public interface INegocioServicio {
 
     void guardarRecomendado(String codigoNegocio, String codigoCliente) throws Exception;
 
-    DetalleNegocioDTO obtenerRecomendado(String codigoCliente) throws Exception;
+    DetalleNegocioDTO obtenerRecomendado(String codigoNegocio, String codigoCliente) throws Exception;
 
     String eliminarNegocioRecomendado(String codigoNegocio, String codigoCliente) throws Exception;
 
@@ -50,7 +50,7 @@ public interface INegocioServicio {
 
     Set<ItemNegocioDTO> listarFavoritos(String codigoCliente) throws Exception;
 
-    DetalleNegocioDTO obtenerFavorito(String codigoCliente) throws Exception;
+    DetalleNegocioDTO obtenerFavorito(String codigoNegocio, String codigoCliente) throws Exception;
 
     String determinarDisponibilidadNegocio(String codigoNegocio) throws Exception;
 

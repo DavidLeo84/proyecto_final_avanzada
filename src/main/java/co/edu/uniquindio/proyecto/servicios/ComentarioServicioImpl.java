@@ -40,10 +40,12 @@ public class ComentarioServicioImpl implements IComentarioServicio {
         Comentario nuevo = Comentario.builder()
                 .codigoCliente(comentarioDTO.codigoCliente()).codigoNegocio(comentarioDTO.codigoNegocio())
                 .mensaje(comentarioDTO.mensaje()).fechaMensaje(validacionModerador.formatearFecha(comentarioDTO.fechaMensaje()))
-                .respuesta("").fechaRespuesta("").meGusta(new ArrayList<>()).build();
+                //.respuesta("").fechaRespuesta(validacionModerador.formatearFecha(comentarioDTO.fechaRespuesta()))
+                .meGusta(new ArrayList<>())
+                .build();
         comentarioRepo.save(nuevo);
-        Cliente dueño  = validacionCliente.buscarCliente(negocio.getCodigoCliente());
-        emailServicio.enviarEmail(dueño.getEmail(), "Alguien comento tu negocio",comentarioDTO.mensaje());
+        Cliente dueño = validacionCliente.buscarCliente(negocio.getCodigoCliente());
+        emailServicio.enviarEmail(dueño.getEmail(), "Alguien comentó tu negocio", comentarioDTO.mensaje());
         return nuevo;
     }
 
@@ -51,17 +53,18 @@ public class ComentarioServicioImpl implements IComentarioServicio {
     public Comentario responderComentario(RegistroRespuestaComentarioDTO comentarioDTO) throws Exception {
 
         try {
-            Cliente cliente = validacionCliente.buscarCliente(comentarioDTO.codigoCliente());
-            Negocio negocio = validacionNegocio.validarNegocioAprobado(comentarioDTO.codigoNegocio());
+              Cliente cliente = validacionCliente.buscarCliente(comentarioDTO.codigoCliente());
+//            Negocio negocio = validacionNegocio.validarNegocioAprobado(comentarioDTO.codigoNegocio());
             Comentario comentario = validacionComentario.validarComentario(comentarioDTO.codigoComentario());
             Comentario respuesta = Comentario.builder()
-                    .codigo(comentarioDTO.codigoComentario()).codigoCliente(comentarioDTO.codigoCliente())
-                    .codigoNegocio(comentarioDTO.codigoNegocio()).mensaje(comentarioDTO.mensaje())
-                    .fechaMensaje(validacionModerador.formatearFecha(comentarioDTO.fechaMensaje())).respuesta(comentarioDTO.respuesta())
-                    .fechaRespuesta(validacionModerador.formatearFecha(comentarioDTO.fechaRespuesta()))
-                    .meGusta(new ArrayList<>()).build();
+                    .codigo(comentarioDTO.codigoComentario())
+                    .codigoCliente(comentarioDTO.codigoCliente()).codigoNegocio(comentarioDTO.codigoNegocio())
+                    .mensaje(comentarioDTO.mensaje()).fechaMensaje(comentarioDTO.fechaMensaje())
+                    .respuesta(comentarioDTO.respuesta()).fechaRespuesta(validacionModerador.formatearFecha(comentarioDTO.fechaRespuesta()))
+                    .meGusta(comentario.getMeGusta())
+                    .build();
             comentarioRepo.save(respuesta);
-            emailServicio.enviarEmail(cliente.getEmail(), "Alguien respondió tu comentario",comentarioDTO.mensaje());
+            emailServicio.enviarEmail(cliente.getEmail(), "Alguien respondió a tu comentario", comentarioDTO.respuesta());
             return respuesta;
         } catch (RuntimeException ex) {
             throw new RuntimeException("No se puede responder a un comentario que no existe");

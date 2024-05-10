@@ -2,6 +2,8 @@ package co.edu.uniquindio.proyecto.test;
 
 import co.edu.uniquindio.proyecto.dtos.LoginDTO;
 import co.edu.uniquindio.proyecto.dtos.TokenDTO;
+import co.edu.uniquindio.proyecto.servicios.AutenticacionServicioImpl;
+import co.edu.uniquindio.proyecto.servicios.ClienteServicioImpl;
 import co.edu.uniquindio.proyecto.servicios.interfaces.IAutenticacionServicio;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +16,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AutenticacionTest {
 
     @Autowired
-    private IAutenticacionServicio autenticacionServicio;
+    private AutenticacionServicioImpl autenticacionServicio;
+    @Autowired
+    private ClienteServicioImpl clienteServicio;
 
     @DisplayName("Test para validar e iniciar sesion con los datos validos de un cliente")
     @Test
@@ -44,5 +48,19 @@ public class AutenticacionTest {
         //Then - Verificar la salida
         System.out.println("tokenDTO.toString() = " + tokenDTO.toString());
         assertThat(tokenDTO).isNotNull();
+    }
+
+
+    @DisplayName("Test para validar e iniciar sesion con los datos validos de un cliente")
+    @Test
+    public void enviarLinkRecuperacionTest() throws Exception {
+
+        // When - Acción o el comportamiento que se va a probar
+        TokenDTO tokenDTO = clienteServicio.enviarLinkRecuperacion("leoromero141@gmail.com");
+
+        //Then - Verificar la salida
+        System.out.println("tokenDTO.toString() = " + tokenDTO.toString());
+        assertThat(tokenDTO).isNotNull();
+
     }
 }

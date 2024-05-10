@@ -28,7 +28,6 @@ public class AutenticacionServicioImpl implements IAutenticacionServicio {
     private final ModeradorRepo moderadorRepo;
     private final JWTUtils jwtUtils;
 
-
     @Autowired
     private ValidacionCliente validacionCliente;
     @Autowired
@@ -74,7 +73,7 @@ public class AutenticacionServicioImpl implements IAutenticacionServicio {
         return new TokenDTO(jwtUtils.generarToken(cliente.getEmail(), map));
     }*/
 
-    public TokenDTO recuperarPasswordCliente(String email) throws Exception {
+    public TokenDTO recuperarPassword(String email) throws Exception {
 
         Cliente cliente = validacionCliente.buscarPorEmail(email);
 
@@ -85,7 +84,7 @@ public class AutenticacionServicioImpl implements IAutenticacionServicio {
         return new TokenDTO(jwtUtils.generarToken(cliente.getEmail(), map));
     }
 
-    public TokenDTO recuperarPasswordModerador(String email) throws Exception {
+    /*public TokenDTO recuperarPasswordModerador(String email) throws Exception {
 
         Moderador moderador = validacionModerador.buscarPorEmail(email);
 
@@ -94,7 +93,7 @@ public class AutenticacionServicioImpl implements IAutenticacionServicio {
         map.put("nombre", moderador.getNombre());
         map.put("id", moderador.getCodigo());
         return new TokenDTO(jwtUtils.generarToken(moderador.getEmail(), map));
-    }
+    }*/
 
 }
 
