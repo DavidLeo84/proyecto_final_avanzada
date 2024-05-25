@@ -59,22 +59,7 @@ public class FiltroToken extends OncePerRequestFilter {
                 } else {
                     error = false;
                 }
-                if (requestURI.startsWith("/api/clientes/imagenes")) {
-                    if (token != null) {
-                        Jws<Claims> jws = jwtUtils.parseJwt(token);
-                        if (!jws.getPayload().get("rol").equals("CLIENTE")) {
-                            crearRespuestaError("No tiene permisos para acceder a este recurso",
-                                    HttpServletResponse.SC_FORBIDDEN, response);
-                        } else {
-                            error = false;
-                        }
-                    } else {
-                        crearRespuestaError("No tiene permisos para acceder a este recurso",
-                                HttpServletResponse.SC_FORBIDDEN, response);
-                    }
-                } else {
-                    error = false;
-                }
+
                 if (requestURI.startsWith("/api/moderadores")) {
                     if (token != null) {
                         Jws<Claims> jws = jwtUtils.parseJwt(token);
@@ -91,8 +76,65 @@ public class FiltroToken extends OncePerRequestFilter {
                 } else {
                     error = false;
                 }
+                /*if (requestURI.startsWith("/api/negocios")) {
+                    if (token != null) {
+                        Jws<Claims> jws = jwtUtils.parseJwt(token);
+                        if (!jws.getPayload().get("rol").equals("CLIENTE")) {
+                            crearRespuestaError("No tiene permisos para acceder a este recurso",
+                                    HttpServletResponse.SC_FORBIDDEN, response);
+                        } else {
+                            error = false;
+                        }
+                    } else {
+                        crearRespuestaError("No tiene permisos para acceder a este recurso",
+                                HttpServletResponse.SC_FORBIDDEN, response);
+                    }
+                } else {
+                    error = false;
+                }*/
+
+                if (requestURI.startsWith("/api/comentarios")) {
+                    if (token != null) {
+                        Jws<Claims> jws = jwtUtils.parseJwt(token);
+                        if (!jws.getPayload().get("rol").equals("CLIENTE")) {
+                            crearRespuestaError("No tiene permisos para acceder a este recurso",
+                                    HttpServletResponse.SC_FORBIDDEN, response);
+                        } else {
+
+                            error = false;
+                            System.out.println("variable error tiene valor de  =" +  error );
+                        }
+                    } else {
+                        crearRespuestaError("No tiene permisos para acceder a este recurso",
+                                HttpServletResponse.SC_FORBIDDEN, response);
+                    }
+                } else {
+                    error = false;
+                }
 
                 if (requestURI.startsWith("/api/auth")) {
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+
+                if (requestURI.startsWith("/api/publico")) {
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+
+                if (requestURI.startsWith("/api/negocios")) {
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+
+
+
+                if (requestURI.startsWith("/api/comentarios")) {
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+
+                if (requestURI.startsWith("/api/imagenes")) {
                     filterChain.doFilter(request, response);
                     return;
                 }
@@ -110,7 +152,6 @@ public class FiltroToken extends OncePerRequestFilter {
             } catch (Exception e) {
                 crearRespuestaError(e.getMessage(),
                         HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response);
-
             }
             if (!error) {
                 filterChain.doFilter(request, response);
@@ -129,7 +170,7 @@ public class FiltroToken extends OncePerRequestFilter {
     private void crearRespuestaError(String mensaje, int codigoError, HttpServletResponse
             response) throws IOException {
         MensajeDTO<String> dto = new MensajeDTO<>(true, mensaje);
-        response.setContentType("application/json");
+        response.setContentType("*/*");
         response.setStatus(codigoError);
         response.getWriter().write(new ObjectMapper().writeValueAsString(dto));
         response.getWriter().flush();

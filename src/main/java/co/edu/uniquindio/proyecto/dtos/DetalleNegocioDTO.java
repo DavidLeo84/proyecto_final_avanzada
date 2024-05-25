@@ -4,21 +4,21 @@ import co.edu.uniquindio.proyecto.enums.TipoNegocio;
 import co.edu.uniquindio.proyecto.enums.ValorCalificar;
 import co.edu.uniquindio.proyecto.modelo.Horario;
 import co.edu.uniquindio.proyecto.modelo.Ubicacion;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.util.List;
 import java.util.Set;
 
 public record DetalleNegocioDTO(
 
+        @NotNull
+        String codigo,
         @NotBlank
         @Size(max = 30)
         String nombre,
         @NotBlank
-        List<TipoNegocio> tipoNegocios,
+//        List<String> tipoNegocios,
+        String tipoNegocios,
         @NotBlank
         Ubicacion ubicacion,
         @NotBlank

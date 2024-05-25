@@ -14,14 +14,11 @@ import co.edu.uniquindio.proyecto.servicios.excepciones.*;
 import co.edu.uniquindio.proyecto.servicios.interfaces.*;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -64,28 +61,28 @@ public class ModeradorServicioImpl implements IModeradorServicio {
 
         Optional<Cliente> clienteOptional = clienteRepo.findByEmail(email);
         Cliente cliente = null;
-        if (!clienteOptional.isEmpty()) {
+        if (clienteOptional.isEmpty()) {
             cliente = clienteOptional.get();
         }
         Optional<Moderador> moderadorOptional = moderadorRepo.findByEmail(email);
         Moderador moderador = null;
 
-        if (!moderadorOptional.isEmpty()) {
+        if (moderadorOptional.isPresent()) {
             moderador = moderadorOptional.get();
         }
-        if (moderadorOptional.isEmpty() && clienteOptional.isEmpty()) {
-            throw new ResourceNotFoundException("EL correo no existe en el registro");
+        if (!moderadorOptional.isPresent() && !clienteOptional.isPresent()) {
+            throw new ResourceNotFoundException("El usuario no se encuentra registrado");
         }
         emailServicio.enviarEmail(email, "Recuperar contraseña",
                 "http://localhost:8080/api/recoPass");
-        TokenDTO token = autenticacionServicio.recuperarPasswordCliente(email);
+        TokenDTO token = autenticacionServicio.recuperarPasswordModerador(email);
         return token;
     }
 
     @Override
     public String cambiarPassword(CambioPasswordDTO cambioPasswordDTO) throws Exception {
 
-        Moderador moderador = validacionModerador.buscarModerador(cambioPasswordDTO.codigo());
+        Moderador moderador = validacionModerador.buscarModerador(cambioPasswordDTO.codigoUsuario());
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String nuevaPassword = passwordEncoder.encode(cambioPasswordDTO.passwordNueva());
         moderador.setPassword(nuevaPassword);
@@ -168,6 +165,7 @@ public class ModeradorServicioImpl implements IModeradorServicio {
 
         Negocio negocio = validacionNegocio.validarNegocioAprobado(negocioDTO.codigo());
         return new DetalleNegocioDTO(
+                negocio.getCodigo(),
                 negocio.getNombre(),
                 negocio.getTipoNegocios(),
                 negocio.getUbicacion(),
@@ -184,6 +182,7 @@ public class ModeradorServicioImpl implements IModeradorServicio {
 
         Negocio negocio = validacionNegocio.validarNegocioPendiente(negocioDTO.codigo());
         return new DetalleNegocioDTO(
+                negocio.getCodigo(),
                 negocio.getNombre(),
                 negocio.getTipoNegocios(),
                 negocio.getUbicacion(),
@@ -201,6 +200,7 @@ public class ModeradorServicioImpl implements IModeradorServicio {
 
         Negocio negocio = validacionNegocio.validarNegocioRechazado(negocioDTO.codigo());
         return new DetalleNegocioDTO(
+                negocio.getCodigo(),
                 negocio.getNombre(),
                 negocio.getTipoNegocios(),
                 negocio.getUbicacion(),
@@ -217,6 +217,7 @@ public class ModeradorServicioImpl implements IModeradorServicio {
 
         Negocio negocio = validacionNegocio.validarNegocioEliminado(negocioDTO.codigo());
         return new DetalleNegocioDTO(
+                negocio.getCodigo(),
                 negocio.getNombre(),
                 negocio.getTipoNegocios(),
                 negocio.getUbicacion(),
@@ -231,16 +232,26 @@ public class ModeradorServicioImpl implements IModeradorServicio {
     @Override
     public List<ItemNegocioDTO> listarNegociosAprobados() throws Exception {
         List<Negocio> aprobados = validacionNegocio.validarListaGenericaNegocios(EstadoNegocio.APROBADO);
-        return aprobados.stream()
-                .map(n -> new ItemNegocioDTO(n.getCodigo(), n.getNombre(), n.getTipoNegocios()))
+        return aprobados
+                .stream()
+                .map(n -> new ItemNegocioDTO(
+                        n.getCodigo(),
+                        n.getNombre(),
+                        n.getTipoNegocios(),
+                        n.getUbicacion()))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<ItemNegocioDTO> listarNegociosPendientes() throws Exception {
         List<Negocio> pendientes = validacionNegocio.validarListaGenericaNegocios(EstadoNegocio.PENDIENTE);
-        return pendientes.stream()
-                .map(n -> new ItemNegocioDTO(n.getCodigo(), n.getNombre(), n.getTipoNegocios()))
+        return pendientes
+                .stream()
+                .map(n -> new ItemNegocioDTO(
+                        n.getCodigo(),
+                        n.getNombre(),
+                        n.getTipoNegocios(),
+                        n.getUbicacion()))
                 .collect(Collectors.toList());
     }
 
@@ -250,16 +261,26 @@ public class ModeradorServicioImpl implements IModeradorServicio {
         List<Negocio> rechazados = validacionNegocio.validarListaGenericaNegocios(EstadoNegocio.RECHAZADO);
         List<Negocio> lista = eliminarNegocioCaducado(rechazados);
         List<Negocio> actualizados = validacionNegocio.validarListaGenericaNegocios(EstadoNegocio.RECHAZADO);
-        return actualizados.stream()
-                .map(n -> new ItemNegocioDTO(n.getCodigo(), n.getNombre(), n.getTipoNegocios()))
+        return actualizados
+                .stream()
+                .map(n -> new ItemNegocioDTO(
+                        n.getCodigo(),
+                        n.getNombre(),
+                        n.getTipoNegocios(),
+                        n.getUbicacion()))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<ItemNegocioDTO> listarNegociosEliminados() throws Exception {
         List<Negocio> eliminados = validacionNegocio.validarListaGenericaNegocios(EstadoNegocio.ELIMINADO);
-        return eliminados.stream()
-                .map(n -> new ItemNegocioDTO(n.getCodigo(), n.getNombre(), n.getTipoNegocios()))
+        return eliminados
+                .stream()
+                .map(n -> new ItemNegocioDTO(
+                        n.getCodigo(),
+                        n.getNombre(),
+                        n.getTipoNegocios(),
+                        n.getUbicacion()))
                 .collect(Collectors.toList());
     }
 

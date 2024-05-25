@@ -1,12 +1,16 @@
 package co.edu.uniquindio.proyecto.dtos;
 
-import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-public record ValidacionDTO(
+@Getter
+@Setter
+@AllArgsConstructor
+public class ValidacionDTO{
 
-        @NotBlank
-        String campo,
-        @NotBlank
-        String error
-) {
+        private String campo;
+
+        private String error;
+
 }

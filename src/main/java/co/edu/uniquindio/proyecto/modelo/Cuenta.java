@@ -19,11 +19,13 @@ public class Cuenta implements Serializable {
     private String password;
     private EstadoRegistro estadoRegistro;
     private Rol rol;
+    private String nombre;
 
-    public Cuenta(String email, String password, EstadoRegistro estadoRegistro, Rol rol) {
+    public Cuenta(String email, String password, EstadoRegistro estadoRegistro, Rol rol, String nombre) {
         this.email = email;
         this.password = password;
         this.estadoRegistro = estadoRegistro;
         this.rol = rol;
+        this.nombre = nombre;
     }
 }

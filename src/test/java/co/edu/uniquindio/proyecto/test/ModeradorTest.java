@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.test;
 
+import co.edu.uniquindio.proyecto.dtos.CambioPasswordDTO;
 import co.edu.uniquindio.proyecto.dtos.DetalleNegocioDTO;
 import co.edu.uniquindio.proyecto.dtos.HistorialRevisionDTO;
 import co.edu.uniquindio.proyecto.dtos.ItemNegocioDTO;
@@ -205,5 +206,22 @@ public class ModeradorTest {
 
         /*Then - Verificar la salida*/
         Assertions.assertEquals(1, lista.size());
+    }
+
+    @DisplayName("Test para cambiar el password de un moderador")
+    @Test
+    public void cambiarPasswordTest() throws Exception {
+
+        // Given - Dado o condicion previa o configuración
+        CambioPasswordDTO passwordDTO = new CambioPasswordDTO(
+                "1234",
+                "661ca68e157f5040899baeeb"
+        );
+
+        // When - Acción o el comportamiento que se va a probar
+        String cambio = moderadorServicio.cambiarPassword(passwordDTO);
+
+        //Then - Verificar la salida
+        assertThat(cambio).isEqualTo("El password fue cambiado con éxito");
     }
 }

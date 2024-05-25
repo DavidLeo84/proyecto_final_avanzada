@@ -25,7 +25,7 @@ public interface NegocioRepo extends MongoRepository<Negocio, String> {
 
     List<Negocio> findAllByEstadoNegocio(EstadoNegocio estado) throws Exception;
 
-    Set<Negocio> findAllByCodigoCliente(String codigo) throws Exception;
+    List<Negocio> findAllByCodigoCliente(String codigo) throws Exception;
 
     @Query("{estadoNegocio:?0},{historialRevisiones:{$elemMatch:{estadoNegocio:?0}}}")
     List<Negocio> getListaRevisiones(String codigoNegocio) throws Exception;
@@ -35,6 +35,7 @@ public interface NegocioRepo extends MongoRepository<Negocio, String> {
 
     Optional<Negocio> findByNombre(String nombre) throws Exception;
 
+    List<Negocio> findByNombreContainingIgnoreCase(String palabra) throws Exception;
 
 
 }

@@ -62,18 +62,7 @@ public class AutenticacionServicioImpl implements IAutenticacionServicio {
         return new TokenDTO(jwtUtils.generarToken(moderador.getEmail(), map));
     }
 
-    /*public TokenDTO validarPassword(String codigoCliente) throws Exception {
-
-        Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("rolEnum", "CLIENTE");
-        map.put("nombre", cliente.getNombre());
-        map.put("id", cliente.getCodigo());
-        return new TokenDTO(jwtUtils.generarToken(cliente.getEmail(), map));
-    }*/
-
-    public TokenDTO recuperarPassword(String email) throws Exception {
+    public TokenDTO recuperarPasswordCliente(String email) throws Exception {
 
         Cliente cliente = validacionCliente.buscarPorEmail(email);
 
@@ -84,7 +73,7 @@ public class AutenticacionServicioImpl implements IAutenticacionServicio {
         return new TokenDTO(jwtUtils.generarToken(cliente.getEmail(), map));
     }
 
-    /*public TokenDTO recuperarPasswordModerador(String email) throws Exception {
+    public TokenDTO recuperarPasswordModerador(String email) throws Exception {
 
         Moderador moderador = validacionModerador.buscarPorEmail(email);
 
@@ -93,7 +82,7 @@ public class AutenticacionServicioImpl implements IAutenticacionServicio {
         map.put("nombre", moderador.getNombre());
         map.put("id", moderador.getCodigo());
         return new TokenDTO(jwtUtils.generarToken(moderador.getEmail(), map));
-    }*/
+    }
 
 }
 

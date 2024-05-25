@@ -58,8 +58,12 @@ public interface INegocioServicio {
 
     List<ItemNegocioDTO> listarNegociosAbiertosPorTipoSegunHora(TipoNegocio tipoNegocio) throws Exception;
 
+    List<String> listarTiposNegocio() throws Exception;
+
     void calificarNegocio(String codigoNegocio, ValorCalificar calificar) throws Exception;
 
     int calcularPromedioCalificaficaciones(String codigoNegocio) throws Exception;
+
+    List<ItemNegocioDTO> listarNegociosPorPalabraComun(String palabra) throws Exception;
 
 }

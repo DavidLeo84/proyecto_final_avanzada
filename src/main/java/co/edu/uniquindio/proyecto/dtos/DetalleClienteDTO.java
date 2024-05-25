@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.dtos;
 
+import co.edu.uniquindio.proyecto.enums.CiudadEnum;
 import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -14,8 +15,6 @@ public record DetalleClienteDTO(
         @Email
         @NotBlank
         String email,
-        @NotBlank
-        @Size(max = 20)
         String ciudad,
         @NotBlank
         String fotoPerfil

@@ -1,12 +1,15 @@
 package co.edu.uniquindio.proyecto.test;
 
 import co.edu.uniquindio.proyecto.dtos.ActualizarClienteDTO;
+import co.edu.uniquindio.proyecto.dtos.CambioPasswordDTO;
 import co.edu.uniquindio.proyecto.dtos.DetalleClienteDTO;
 import co.edu.uniquindio.proyecto.dtos.RegistroClienteDTO;
+import co.edu.uniquindio.proyecto.enums.CiudadEnum;
 import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
 import co.edu.uniquindio.proyecto.repositorios.ClienteRepo;
 import co.edu.uniquindio.proyecto.repositorios.ModeradorRepo;
 import co.edu.uniquindio.proyecto.servicios.ClienteServicioImpl;
+import co.edu.uniquindio.proyecto.servicios.NegocioServicioImpl;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ResourceInvalidException;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ResourceNotFoundException;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionCliente;
@@ -21,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @SpringBootTest
 public class ClienteTest {
@@ -33,6 +37,8 @@ public class ClienteTest {
     private ClienteServicioImpl clienteServicio;
     @Autowired
     private ValidacionCliente validacion;
+    @Autowired
+    private NegocioServicioImpl negocioServicioImpl;
 
     @Test
     @DisplayName("Test para guardar o registrar un cliente")
@@ -43,7 +49,7 @@ public class ClienteTest {
                 "Pedro Sanchez",
                 "foto1.jpg",
                 "pedrito",
-                "PEREIRA",
+                CiudadEnum.ARMENIA,
                 "pedrosanchez@gmail.com",
                 "123456"
 
@@ -64,9 +70,9 @@ public class ClienteTest {
 
                 "661c48abd36eeb64ed610953",
                 "Maria Cano",
+                "foto1.jpg",
                 "marycano@gmail.com",
-                "RISARALDA",
-                "foto1.jpg"
+                CiudadEnum.PEREIRA
         );
         // When - Acción o el comportamiento que se va a probar
         Cliente actualizado = clienteServicio.actualizarCliente(clienteDTO);
@@ -103,5 +109,35 @@ public class ClienteTest {
         //Then - Verificar la salida
         assertThat(detalleClienteDTO).isNotNull();
         System.out.println("detalleClienteDTO.toString() = " + detalleClienteDTO.toString());
+    }
+
+    @DisplayName("Test para cambiar el password de un cliente")
+    @Test
+    public void cambiarPasswordTest() throws Exception {
+
+        // Given - Dado o condicion previa o configuración
+        CambioPasswordDTO passwordDTO = new CambioPasswordDTO(
+                "654321",
+                "661aa51d50a424787193f372"
+        );
+
+        // When - Acción o el comportamiento que se va a probar
+        String cambio = clienteServicio.cambiarPassword(passwordDTO);
+
+        //Then - Verificar la salida
+        assertThat(cambio).isEqualTo("El password fue cambiado con éxito");
+    }
+
+    @DisplayName("Test para listar las ciudades donde hayan negocios registrados segun los clientes dueños")
+    @Test
+    public void listarCiudadesTest() throws Exception {
+
+        // Given - Dado o condicion previa o configuración
+
+        // When - Acción o el comportamiento que se va a probar
+        List<String> listaCiudades = clienteServicio.listarCiudades();
+
+        //Then - Verificar la salida
+        assertThat(listaCiudades.size()).isEqualTo(2);
     }
 }

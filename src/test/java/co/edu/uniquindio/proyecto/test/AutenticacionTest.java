@@ -51,7 +51,7 @@ public class AutenticacionTest {
     }
 
 
-    @DisplayName("Test para validar e iniciar sesion con los datos validos de un cliente")
+    @DisplayName("Test para enviar enlace por email para recuperar password")
     @Test
     public void enviarLinkRecuperacionTest() throws Exception {
 

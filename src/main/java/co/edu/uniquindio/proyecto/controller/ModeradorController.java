@@ -104,13 +104,10 @@ public class ModeradorController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, moderadorServicio.listarNegociosEliminados()));
     }
 
+    @PutMapping("/cambio-password")
+    public ResponseEntity<MensajeDTO<String>> cambiarPassword(@Valid @RequestBody CambioPasswordDTO cambioPasswordDTO) throws Exception {
 
-
-
-
-
-
-
-
-
+        moderadorServicio.cambiarPassword(cambioPasswordDTO);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, "El password se cambio con éxito"));
+    }
 }
