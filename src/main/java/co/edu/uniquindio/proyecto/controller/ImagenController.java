@@ -17,7 +17,7 @@ import java.util.Map;
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/clientes/imagenes")
+@RequestMapping("/api/imagenes")
 public class ImagenController {
 
     private final CloudinaryServicioImpl cloudinaryServicio;
@@ -30,15 +30,13 @@ public class ImagenController {
             return new ResponseEntity(new MensajeDTO(false,"imagen no valida"), HttpStatus.BAD_REQUEST);
         }
         Map resultado = cloudinaryServicio.subirImagen(imagen);
-        //return new ResponseEntity(resultado, HttpStatus.OK);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, resultado));
     }
 
-    @PostMapping("/eliminar-imagen")
+    @DeleteMapping("/eliminar-imagen")
     public ResponseEntity<?> eliminarImagen(@RequestBody ImagenDTO imagenDTO) throws Exception {
 
         Map resultado = cloudinaryServicio.eliminarImagen(imagenDTO.id());
-        //return new ResponseEntity(resultado, HttpStatus.OK);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, resultado));
     }
 

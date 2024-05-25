@@ -15,7 +15,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 public class Horario implements Serializable {
 
-    private DiaSemana dia;
+    private String dia;
     private String horaInicio;
     private String horaFin;
 }

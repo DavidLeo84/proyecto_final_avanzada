@@ -2,6 +2,7 @@ package co.edu.uniquindio.proyecto.servicios;
 
 import co.edu.uniquindio.proyecto.dtos.*;
 
+import co.edu.uniquindio.proyecto.enums.CiudadEnum;
 import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
 import co.edu.uniquindio.proyecto.enums.PermisoEnum;
 import co.edu.uniquindio.proyecto.enums.RolEnum;
@@ -91,14 +92,14 @@ public class ClienteServicioImpl implements IClienteServicio {
         }
         emailServicio.enviarEmail(email, "Recuperar contraseña",
                 "http://localhost:8080/api/recoPass");
-        TokenDTO token = autenticacionServicio.recuperarPassword(email);
+        TokenDTO token = autenticacionServicio.recuperarPasswordCliente(email);
         return token;
     }
 
     @Override
     public String cambiarPassword(CambioPasswordDTO cambioPasswordDTO) throws Exception {
 
-        Cliente cliente = validacionCliente.buscarCliente(cambioPasswordDTO.codigo());
+        Cliente cliente = validacionCliente.buscarCliente(cambioPasswordDTO.codigoUsuario());
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String nuevaPassword = passwordEncoder.encode(cambioPasswordDTO.passwordNueva());
         cliente.setPassword(nuevaPassword);
@@ -118,7 +119,7 @@ public class ClienteServicioImpl implements IClienteServicio {
                         .permisos(Set.of(PermisoEnum.APROBAR, PermisoEnum.COMENTAR,
                                 PermisoEnum.CALIFICAR, PermisoEnum.BUSCAR)).build())
                 .nickname(clienteDTO.nickname()).nombre(clienteDTO.nombre().toLowerCase())
-                .ciudad(clienteDTO.ciudad()).fotoPerfil(clienteDTO.fotoPerfil())
+                .ciudad(clienteDTO.ciudad().name()).fotoPerfil(clienteDTO.fotoPerfil())
                 .negocios(new ArrayList<>()).favoritos(new HashSet<>())
                 .recomendados(new HashSet<>()).aprobacionesComentarios(new HashSet<>()).build();
         clienteRepo.save(nuevo);
@@ -131,7 +132,7 @@ public class ClienteServicioImpl implements IClienteServicio {
         validacionCliente.validarEmail(clienteDTO.email());
         Cliente cliente = validacionCliente.buscarCliente(clienteDTO.codigo());
         cliente.setNombre(clienteDTO.nombre());
-        cliente.setCiudad(clienteDTO.ciudad());
+        cliente.setCiudad(clienteDTO.ciudad().name());
         cliente.setEmail(clienteDTO.email());
         cliente.setFotoPerfil(clienteDTO.fotoPerfil());
         clienteRepo.save(cliente);
@@ -148,5 +149,16 @@ public class ClienteServicioImpl implements IClienteServicio {
                 cliente.getCiudad(),
                 cliente.getFotoPerfil()
         );
+    }
+
+    @Override
+    public List<String> listarCiudades() throws Exception {
+
+        List<String> listaCiudades = new ArrayList<>();
+        for (CiudadEnum ciudad : CiudadEnum.values()) {
+
+            listaCiudades.add(ciudad.name());
+        }
+        return listaCiudades;
     }
 }

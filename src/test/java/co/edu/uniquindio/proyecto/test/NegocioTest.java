@@ -46,7 +46,7 @@ public class NegocioTest {
     private ValidacionCliente validacionCliente;
 
     private List<Horario> horarios = new ArrayList<>();
-    private List<TipoNegocio> tipoNegocios = new ArrayList<>();
+    private List<String> tipoNegocios = new ArrayList<>();
     private Set<String> telefonos = new HashSet<>();
     private Set<String> imagenes = new HashSet<>();
 
@@ -60,8 +60,8 @@ public class NegocioTest {
         imagenes.add("cloudinary_1.com");
         imagenes.add("cloudinary_2.com");
 
-        tipoNegocios.add(TipoNegocio.COMIDAS_RAPIDAS);
-        tipoNegocios.add(TipoNegocio.BAR);
+        tipoNegocios.add(TipoNegocio.COMIDAS_RAPIDAS.name());
+        tipoNegocios.add(TipoNegocio.BAR.name());
 
         DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -73,7 +73,7 @@ public class NegocioTest {
 
         //String dia = LocalDate.now().getDayOfWeek().name();
 
-        horarios.add(new Horario(DiaSemana.MONDAY, abierto, cierre));
+        horarios.add(new Horario(DiaSemana.MONDAY.name(), abierto, cierre));
 
     }
 
@@ -87,7 +87,7 @@ public class NegocioTest {
                 "661c4b6c03dc96547afaca75",
                  new Ubicacion(-23.49732, 25.49943),
                 "herramientas...",
-                tipoNegocios,
+                TipoNegocio.OTRO.name(),
                 horarios,
                 telefonos,
                 imagenes
@@ -370,5 +370,27 @@ public class NegocioTest {
 
         /*Then - Verificar la salida*/
         Assertions.assertEquals(5, lista.size());
+    }
+
+    @DisplayName("Test listar todos los tipos de negocios que esten registrados")
+    @Test
+    public void listarTiposNegocioTest() throws Exception {
+
+        /*When - Acción o el comportamiento que se va a probar*/
+        List<String> listaNegocios = negocioServicio.listarTiposNegocio();
+
+        /*Then - Verificar la salida*/
+        assertThat(listaNegocios.size()).isEqualTo(12);
+    }
+
+    @DisplayName("Test listar los negocios que tengan una palabra en común en el nombre")
+    @Test
+    public void listarNegociosPorPalabraComunTest() throws Exception {
+
+        /*When - Acción o el comportamiento que se va a probar*/
+        List<ItemNegocioDTO> listaNegocios = negocioServicio.listarNegociosPorPalabraComun("supermercado");
+
+        /*Then - Verificar la salida*/
+        assertThat(listaNegocios.size()).isEqualTo(2);
     }
 }

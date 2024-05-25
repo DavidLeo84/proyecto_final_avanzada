@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.modelo.documentos;
 
+import co.edu.uniquindio.proyecto.enums.CiudadEnum;
 import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
 import co.edu.uniquindio.proyecto.enums.RolEnum;
 import co.edu.uniquindio.proyecto.modelo.Cuenta;
@@ -23,7 +24,6 @@ public class Cliente extends Cuenta implements Serializable {
     @Id
     @EqualsAndHashCode.Include
     private String codigo;
-    private String nombre;
     private String nickname;
     private String ciudad;
     private String fotoPerfil;
@@ -34,13 +34,12 @@ public class Cliente extends Cuenta implements Serializable {
 
 
     @Builder
-    public Cliente(String email, String password, EstadoRegistro estadoRegistro, Rol rol,
-                   String codigo, String nombre, String nickname, String ciudad, String fotoPerfil,
+    public Cliente(String email, String password, EstadoRegistro estadoRegistro, Rol rol, String nombre,
+                   String codigo, String nickname, String ciudad, String fotoPerfil,
                    Set<String> favoritos, List<String> negocios,
                    Set<String> recomendados, Set<String> aprobacionesComentarios) {
-        super(email, password, estadoRegistro, rol);
+        super(email, password, estadoRegistro, rol, nombre);
         this.codigo = codigo;
-        this.nombre = nombre;
         this.nickname = nickname;
         this.ciudad = ciudad;
         this.fotoPerfil = fotoPerfil;

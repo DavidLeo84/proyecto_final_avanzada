@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.dtos;
 
+import co.edu.uniquindio.proyecto.enums.CiudadEnum;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -16,8 +17,6 @@ public record ActualizarClienteDTO(
         @NotBlank
         @Email
         String email,
-        @NotBlank
-        @Size(max = 30)
-        String ciudad
+        CiudadEnum ciudad
 ) {
 }

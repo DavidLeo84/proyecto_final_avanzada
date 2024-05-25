@@ -83,7 +83,7 @@ public class ValidacionNegocio {
 
         try {
             Optional<Negocio> negocioOptional = negocioRepo.findByCodigo(codigoNegocio);
-            if (!negocioOptional.get().getEstadoNegocio().equals(EstadoNegocio.APROBADO) || negocioOptional == null) {
+            if (!negocioOptional.get().getEstadoNegocio().equals(EstadoNegocio.APROBADO) || !negocioOptional.isPresent()) {
                 throw new ResourceNotFoundException("No existe el negocio solicitado como " + EstadoNegocio.APROBADO.name());
             }
             Negocio negocio = negocioOptional.get();
@@ -98,7 +98,7 @@ public class ValidacionNegocio {
 
         try {
             Optional<Negocio> negocioOptional = negocioRepo.findByCodigo(codigoNegocio);
-            if (!negocioOptional.get().getEstadoNegocio().equals(EstadoNegocio.PENDIENTE) || negocioOptional == null) {
+            if (!negocioOptional.get().getEstadoNegocio().equals(EstadoNegocio.PENDIENTE) || !negocioOptional.isPresent()) {
                 throw new ResourceNotFoundException("No existe el negocio solicitado como " + EstadoNegocio.PENDIENTE.name());
             }
             Negocio negocio = negocioOptional.get();
@@ -113,7 +113,7 @@ public class ValidacionNegocio {
 
         try {
             Optional<Negocio> negocioOptional = negocioRepo.findByCodigo(codigoNegocio);
-            if (!negocioOptional.get().getEstadoNegocio().equals(EstadoNegocio.RECHAZADO) || negocioOptional == null) {
+            if (!negocioOptional.get().getEstadoNegocio().equals(EstadoNegocio.RECHAZADO) || !negocioOptional.isPresent()) {
                 throw new ResourceNotFoundException("No existe el negocio solicitado como " + EstadoNegocio.RECHAZADO.name());
             }
             Negocio negocio = negocioOptional.get();
@@ -127,7 +127,7 @@ public class ValidacionNegocio {
 
         try {
             Optional<Negocio> negocioOptional = negocioRepo.findByCodigo(codigoNegocio);
-            if (!negocioOptional.get().getEstadoNegocio().equals(EstadoNegocio.ELIMINADO) || negocioOptional == null) {
+            if (!negocioOptional.get().getEstadoNegocio().equals(EstadoNegocio.ELIMINADO) || !negocioOptional.isPresent()) {
                 throw new ResourceNotFoundException("No existe el negocio solicitado como " + EstadoNegocio.ELIMINADO.name());
             }
             Negocio negocio = negocioOptional.get();
@@ -197,14 +197,12 @@ public class ValidacionNegocio {
         List<Negocio> listaNegocios = negocioRepo.findAllByEstadoNegocio(EstadoNegocio.APROBADO);
         List<Negocio> listaNegociosTipo = new ArrayList<>();
         for (Negocio n : listaNegocios) {
-            for (TipoNegocio tipo : n.getTipoNegocios()) {
-                if (tipo.equals(tipoNegocio)) {
-                    listaNegociosTipo.add(n);
-                }
+            if (n.getTipoNegocios().equals(tipoNegocio.name())) {
+                listaNegociosTipo.add(n);
             }
-            if (listaNegociosTipo.size() == 0) {
-                throw new ResourceNotFoundException("No hay negocios registrados de ese tipo");
-            }
+        }
+        if (listaNegociosTipo.size() == 0) {
+            throw new ResourceNotFoundException("No hay negocios registrados de ese tipo");
         }
         return listaNegociosTipo;
     }

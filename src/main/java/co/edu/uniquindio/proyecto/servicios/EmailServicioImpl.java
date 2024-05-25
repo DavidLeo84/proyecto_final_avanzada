@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,6 +20,7 @@ public class EmailServicioImpl implements IEmailServicio {
     @Autowired
     private JavaMailSender mailSender;
     @Override
+//    @Async
     public void enviarEmail(String destinatario, String asunto, String mensaje) {
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();

@@ -12,11 +12,9 @@ import co.edu.uniquindio.proyecto.servicios.interfaces.IComentarioServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,9 +38,7 @@ public class ComentarioServicioImpl implements IComentarioServicio {
         Comentario nuevo = Comentario.builder()
                 .codigoCliente(comentarioDTO.codigoCliente()).codigoNegocio(comentarioDTO.codigoNegocio())
                 .mensaje(comentarioDTO.mensaje()).fechaMensaje(validacionModerador.formatearFecha(comentarioDTO.fechaMensaje()))
-                //.respuesta("").fechaRespuesta(validacionModerador.formatearFecha(comentarioDTO.fechaRespuesta()))
-                .meGusta(new ArrayList<>())
-                .build();
+                .meGusta(new ArrayList<>()).build();
         comentarioRepo.save(nuevo);
         Cliente dueño = validacionCliente.buscarCliente(negocio.getCodigoCliente());
         emailServicio.enviarEmail(dueño.getEmail(), "Alguien comentó tu negocio", comentarioDTO.mensaje());
@@ -54,15 +50,13 @@ public class ComentarioServicioImpl implements IComentarioServicio {
 
         try {
               Cliente cliente = validacionCliente.buscarCliente(comentarioDTO.codigoCliente());
-//            Negocio negocio = validacionNegocio.validarNegocioAprobado(comentarioDTO.codigoNegocio());
             Comentario comentario = validacionComentario.validarComentario(comentarioDTO.codigoComentario());
             Comentario respuesta = Comentario.builder()
                     .codigo(comentarioDTO.codigoComentario())
                     .codigoCliente(comentarioDTO.codigoCliente()).codigoNegocio(comentarioDTO.codigoNegocio())
                     .mensaje(comentarioDTO.mensaje()).fechaMensaje(comentarioDTO.fechaMensaje())
                     .respuesta(comentarioDTO.respuesta()).fechaRespuesta(validacionModerador.formatearFecha(comentarioDTO.fechaRespuesta()))
-                    .meGusta(comentario.getMeGusta())
-                    .build();
+                    .meGusta(comentario.getMeGusta()).build();
             comentarioRepo.save(respuesta);
             emailServicio.enviarEmail(cliente.getEmail(), "Alguien respondió a tu comentario", comentarioDTO.respuesta());
             return respuesta;
@@ -103,11 +97,4 @@ public class ComentarioServicioImpl implements IComentarioServicio {
         clienteRepo.save(cliente);
 
     }
-
-    /*@Override
-    public int calcularCantidadMegusta(String codigoComentario) throws Exception {
-
-        Comentario comentario = validacionComentario.validarComentario(codigoComentario);
-        return comentario.getMeGusta().size();
-    }*/
 }

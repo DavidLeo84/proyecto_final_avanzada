@@ -7,7 +7,7 @@ public record CambioPasswordDTO(
         @NotBlank
         String passwordNueva,
         @NotBlank
-        String codigo
+        String codigoUsuario
         //String token
 ) {
 }
