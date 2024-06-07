@@ -9,10 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
-@ToString
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
 public class Cuenta implements Serializable {
 
     private String email;

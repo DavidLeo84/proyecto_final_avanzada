@@ -37,8 +37,8 @@ public class ValidacionModerador {
     public Moderador buscarPorEmail(String email) throws Exception {
 
         Optional<Moderador> moderadorOptional = moderadorRepo.findByEmail(email);
-        if (moderadorOptional == null) {
-            throw new ResourceNotFoundException("El correo no se encuentra registrado");
+        if (moderadorOptional.isEmpty()) {
+            throw new Exception("El correo no se encuentra registrado");
         }
         Moderador moderador = moderadorOptional.get();
         return moderador;
@@ -49,10 +49,10 @@ public class ValidacionModerador {
         Optional<Moderador> buscado = moderadorRepo.findByCodigo(codigoModerador);
         Moderador moderador = null;
 
-        if (buscado != null && buscado.get().getEstadoRegistro().equals(EstadoRegistro.ACTIVO)) {
+        if (buscado.isPresent() && buscado.get().getEstadoRegistro().equals(EstadoRegistro.ACTIVO)) {
             moderador = buscado.get();
         }
-        if (buscado == null || buscado.get().getEstadoRegistro().equals(EstadoRegistro.INACTIVO)) {
+        if (buscado.isEmpty() || buscado.get().getEstadoRegistro().equals(EstadoRegistro.INACTIVO)) {
             throw new ResourceNotFoundException("No existe usuario moderador");
         }
         return moderador;
@@ -62,9 +62,8 @@ public class ValidacionModerador {
 
         Optional<Negocio> buscado = negocioRepo.findByCodigo(codigoNegocio);
 
-        if (buscado == null || buscado.get().getEstadoNegocio().equals(EstadoNegocio.ELIMINADO) ||
-                buscado.get().getEstadoNegocio().equals(EstadoNegocio.APROBADO) ||
-                buscado.get().getEstadoNegocio().equals(EstadoNegocio.RECHAZADO)) {
+        if (
+                buscado.get().getEstadoNegocio().equals(EstadoNegocio.PENDIENTE)) {
             throw new ResourceNotFoundException("No existe negocio pendiente de aprobar con el codigo " + codigoNegocio);
         }
         Negocio negocio = buscado.get();

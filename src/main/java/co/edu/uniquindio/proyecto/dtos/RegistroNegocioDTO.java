@@ -18,12 +18,13 @@ public record RegistroNegocioDTO(
         @NotBlank
         String codigoCliente,
         Ubicacion ubicacion,
+        @Size(max = 10)
+        String local,
         @NotBlank
         @Size(max = 200)
         String descripcion,
         @NotEmpty
-//        List<String> tipoNegocios,
-        String tipoNegocios,
+        List<String> tipoNegocios,
         @NotEmpty
         List<Horario> horarios,
         @Size(max = 10)

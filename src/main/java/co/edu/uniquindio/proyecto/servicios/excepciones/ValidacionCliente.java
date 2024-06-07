@@ -1,17 +1,19 @@
 package co.edu.uniquindio.proyecto.servicios.excepciones;
 
+import co.edu.uniquindio.proyecto.enums.EstadoNegocio;
 import co.edu.uniquindio.proyecto.enums.EstadoRegistro;
 import co.edu.uniquindio.proyecto.modelo.documentos.Cliente;
-import co.edu.uniquindio.proyecto.modelo.documentos.Moderador;
 import co.edu.uniquindio.proyecto.modelo.documentos.Negocio;
 import co.edu.uniquindio.proyecto.repositorios.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import java.util.NoSuchElementException;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
 
 @Component
 @RequiredArgsConstructor
@@ -29,28 +31,34 @@ public class ValidacionCliente {
     public void existeEmail(String email) throws Exception {
 
         Optional<Cliente> clienteOptional = clienteRepo.findByEmail(email);
-        if (clienteOptional == null)
-            throw new Exception("El correo no se encuentra registado");
+
+
+        if (!clienteOptional.get().getEmail().equals(email)) {
+
+        }
+        throw new Exception("El correo no se encuentra registrado");
     }
 
-    public void validarEmail(String email) throws Exception {
+    public void validarEmail(String email, String codigoCliente) throws Exception {
 
         Optional<Cliente> clienteOptional = clienteRepo.findByEmail(email);
-        if (clienteOptional.isPresent())
-            throw new Exception("El correo ya se encuentra registado");
+        if (!clienteOptional.get().getCodigo().equals(codigoCliente)) {
+            throw new NoSuchElementException("El correo ya se encuentra registrado");
+        }
     }
 
     public Cliente buscarPorEmail(String email) throws Exception {
 
         Optional<Cliente> clienteOptional = clienteRepo.findByEmail(email);
-        if (clienteOptional == null) {
-            throw new ResourceNotFoundException("El correo no se encuentra registrado");
+        if (clienteOptional.isEmpty()) {
+            throw new Exception("El correo no se encuentra registrado");
         }
         Cliente cliente = clienteOptional.get();
         return cliente;
     }
 
     public void validarUnicos(String email, String nickname) throws Exception {
+
         if (estaRepetidoEmail(email)) {
             throw new ResourceNotFoundException("El email " + email + " ya esta en uso");
         }
@@ -70,14 +78,18 @@ public class ValidacionCliente {
     }
 
 
-    //Metodo para listar y mostrar los negocios de un cliente
-    public List<String> listarNegociosCliente(String codigoCliente) throws Exception {
+    //Metodo para validar si la lista no tiene negocios aprobados y es apta para eliminar la cuenta del cliente
+    public boolean validarListaNegociosCliente(String codigoCliente) throws Exception {
+        boolean respuesta = true;
         Cliente cliente = buscarCliente(codigoCliente);
         List<String> lista = cliente.getNegocios();
-        if (lista.isEmpty()) {
-            throw new ResourceNotFoundException("No existe negocios asociados al cliente");
+        for (String codigo : lista) {
+            Optional<Negocio> optional = negocioRepo.findByCodigo(codigo);
+            if (optional.get().getEstadoNegocio().equals(EstadoNegocio.APROBADO.name())) {
+                throw new ResourceInvalidException("Error! Hay negocios asociados que impiden eliminar la cuenta");
+            }
         }
-        return lista;
+        return respuesta;
     }
 
     //Metodo para listar los negocios favoritos o recomendados que tenga un cliente
@@ -89,19 +101,17 @@ public class ValidacionCliente {
         return lista;
     }
 
-    public String validarNegocioRecomendado(String codigoNegocio, String codigoCliente) throws Exception {
+    public String validarNegocioRecomendado(Negocio negocio, Cliente cliente) throws Exception {
 
-        Cliente cliente = buscarCliente(codigoCliente);
-        Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
         Set<String> listaNegocios = validarListaGenericaCliente(cliente.getRecomendados());
         String recomendado = "";
         for (String codigo : listaNegocios) {
-            if (codigo.equals(codigoNegocio)) {
+            if (codigo.equals(negocio.getCodigo())) {
                 recomendado = codigo;
             }
         }
         if (recomendado == "") {
-             throw new ResourceNotFoundException("No existe este negocio en su lista de recomendados");
+            throw new ResourceNotFoundException("No existe este negocio en su lista de recomendados");
         }
         return recomendado;
     }
@@ -142,4 +152,4 @@ public class ValidacionCliente {
     private boolean estaRepetidoNickname(String nickname) throws Exception {
         return clienteRepo.findByNickname(nickname).isPresent();
     }
-} 
+}

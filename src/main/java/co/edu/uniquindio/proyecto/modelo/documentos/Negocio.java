@@ -31,15 +31,15 @@ public class Negocio implements Serializable {
     private String codigoCliente;
     private String nombre;
     private Ubicacion ubicacion;
+    private String local;
     private String descripcion;
-    private EstadoNegocio estadoNegocio;
+    private String estadoNegocio;
     private int calificacion;
-    //    private List<String> tipoNegocios;
-    private String tipoNegocios;
+    private List<String> tipoNegocios;
     private List<Horario> horarios;
     private Set<String> telefonos;
     private List<HistorialRevision> historialRevisiones;
     private Set<String> imagenes;
     private List<String> calificaciones; // se califica con estrellas que tienen valores enteros
-    private List<Integer> recomendaciones;
+    private int recomendaciones;
 }

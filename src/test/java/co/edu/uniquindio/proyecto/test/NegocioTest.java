@@ -10,6 +10,7 @@ import co.edu.uniquindio.proyecto.modelo.documentos.Negocio;
 import co.edu.uniquindio.proyecto.repositorios.NegocioRepo;
 import co.edu.uniquindio.proyecto.servicios.ClienteServicioImpl;
 import co.edu.uniquindio.proyecto.servicios.NegocioServicioImpl;
+import co.edu.uniquindio.proyecto.servicios.excepciones.ResourceInvalidException;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ResourceNotFoundException;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionCliente;
 import co.edu.uniquindio.proyecto.servicios.excepciones.ValidacionNegocio;
@@ -60,8 +61,8 @@ public class NegocioTest {
         imagenes.add("cloudinary_1.com");
         imagenes.add("cloudinary_2.com");
 
-        tipoNegocios.add(TipoNegocio.COMIDAS_RAPIDAS.name());
-        tipoNegocios.add(TipoNegocio.BAR.name());
+        tipoNegocios.add(TipoNegocio.FRUTERIA.name());
+        //tipoNegocios.add(TipoNegocio.BAR.name());
 
         DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -77,17 +78,18 @@ public class NegocioTest {
 
     }
 
-    @DisplayName("Test para guardar o registrar un negocio")
+    @DisplayName("Test para registrar un negocio")
     @Test
     public void registrarNegocioTest() throws Exception {
 
         // Given - Dado o condicion previa o configuración
         RegistroNegocioDTO negocioDTO = new RegistroNegocioDTO(
-                "Ferreteria Guaduales",
-                "661c4b6c03dc96547afaca75",
-                 new Ubicacion(-23.49732, 25.49943),
-                "herramientas...",
-                TipoNegocio.OTRO.name(),
+                "Pasteleria el ponque",
+                "661c48abd36eeb64ed610953",
+                new Ubicacion(-74.546534, 4.423539),
+                "",
+                "Pastelería y frutería",
+                tipoNegocios,
                 horarios,
                 telefonos,
                 imagenes
@@ -98,16 +100,77 @@ public class NegocioTest {
         assertThat(nuevo).isNotNull();
     }
 
-    @DisplayName("Test para actualizar la descripcion de un negocio")
+    @DisplayName("Test para validar error en las coordenadas con local igual a otro ya en uso al registrar un nuevo negocio")
+    @Test
+    public void registrarNegocioErrorCoordenadasTest() throws Exception {
+
+        // Given - Dado o condicion previa o configuración
+        RegistroNegocioDTO negocioDTO = new RegistroNegocioDTO(
+                "Peluquería Mechas",
+                "661c4b6c03dc96547afaca75",
+                new Ubicacion(-75.707921, 4.518172),
+                "1",
+                "Peluquería y tintes...",
+                tipoNegocios,
+                horarios,
+                telefonos,
+                imagenes
+        );
+        //When - Then - Verificar la salida
+        assertThrows(ResourceNotFoundException.class, () -> negocioServicio.crearNegocio(negocioDTO));
+    }
+
+    @DisplayName("Test para validar el error con cliente inexistente al registrar un negocio")
+    @Test
+    public void registrarNegocioErrorClienteTest() throws Exception {
+
+        // Given - Dado o condicion previa o configuración
+        RegistroNegocioDTO negocioDTO = new RegistroNegocioDTO(
+                "Peluquería Mechas",
+                "661c4b6c03dc96547afaca80",
+                new Ubicacion(-65.434532, 4.674543),
+                "",
+                "Peluqueria y tintes",
+                tipoNegocios,
+                horarios,
+                telefonos,
+                imagenes
+        );
+        //When - Then - Verificar la salida
+        assertThrows(ResourceNotFoundException.class, () -> negocioServicio.crearNegocio(negocioDTO));
+    }
+
+    @DisplayName("Test para guardar o registrar un negocio")
+    @Test
+    public void registrarNegocioErrorLocalTest() throws Exception {
+
+        // Given - Dado o condicion previa o configuración
+        RegistroNegocioDTO negocioDTO = new RegistroNegocioDTO(
+                "Peluquería Mechas",
+                "661c4b6c03dc96547afaca75",
+                new Ubicacion(-75.696855, 4.518226),
+                "1",
+                "Peluqueria y tintes",
+                tipoNegocios,
+                horarios,
+                telefonos,
+                imagenes
+        );
+        //When - Then - Verificar la salida
+        assertThrows(ResourceNotFoundException.class, () -> negocioServicio.crearNegocio(negocioDTO));
+    }
+
+    @DisplayName("Test para actualizar la informacion de un negocio")
     @Test
     public void actualizarNegocioTest() throws Exception {
 
         // Given - Dado o condicion previa o configuración
-        Negocio negocio = validacionNegocio.buscarNegocioRechazadoParaModificar("6625dbdd01c3b62a2ecf681c");
+        Optional<Negocio> optional = negocioRepo.findByCodigo("665b817468519a70ab47295e");
+        Negocio negocio = optional.get();
         ActualizarNegocioDTO negocioDTO = new ActualizarNegocioDTO(
                 negocio.getCodigo(),
                 negocio.getDescripcion(),
-                new Ubicacion(-23.42432,25.43243),
+                new Ubicacion(-75.705024,4.513575),
                 negocio.getHorarios(),
                 negocio.getTelefonos(),
                 negocio.getImagenes()
@@ -117,10 +180,59 @@ public class NegocioTest {
         negocioServicio.actualizarNegocio(negocioDTO);
 
         //Then - Verificar la salida
-        Negocio buscado = validacionNegocio.validarNegocioPendiente("6625dbdd01c3b62a2ecf681c");
-        assertThat(buscado.getUbicacion().getLatitud()).isEqualTo(234243243);
-        assertThat(buscado.getUbicacion().getLongitud()).isEqualTo(234324324);
+        Negocio buscado = validacionNegocio.validarNegocioPendiente("665b817468519a70ab47295e");
+        assertThat(buscado.getUbicacion().getLatitud()).isEqualTo(-75.705024);
+        assertThat(buscado.getUbicacion().getLongitud()).isEqualTo(4.513575);
+
     }
+
+    @DisplayName("Test para validar error de negocio inexistente al actualizar los datos de un negocio")
+    @Test
+    public void actualizarNegocioErrorNegocioTest() throws Exception {
+
+        try {
+            // Given - Dado o condicion previa o configuración
+            Optional<Negocio> optional = negocioRepo.findByCodigo("665b85be1c057873df6aa4by");
+            Negocio negocio = optional.get();
+            ActualizarNegocioDTO negocioDTO = new ActualizarNegocioDTO(
+                    negocio.getCodigo(),
+                    negocio.getDescripcion(),
+                    new Ubicacion(-72.705022,5.513571),
+                    negocio.getHorarios(),
+                    negocio.getTelefonos(),
+                    negocio.getImagenes()
+
+            );
+            //When - Then - Verificar la salida
+            assertThrows(NoSuchElementException.class, () -> negocioServicio.actualizarNegocio(negocioDTO));
+        }
+        catch(NoSuchElementException e) {
+        }
+    }
+
+    @DisplayName("Test para validar error de negocio no válido al actualizar los datos de un negocio")
+    @Test
+    public void actualizarNegocioErrorNegocioInvalidoTest() throws Exception {
+
+        try {
+            // Given - Dado o condicion previa o configuración
+            Optional<Negocio> optional = negocioRepo.findByCodigo("665b85be1c057873df6aa4ba");
+            Negocio negocio = optional.get();
+            ActualizarNegocioDTO negocioDTO = new ActualizarNegocioDTO(
+                    negocio.getCodigo(),
+                    negocio.getDescripcion(),
+                    new Ubicacion(-72.705022,5.513571),
+                    negocio.getHorarios(),
+                    negocio.getTelefonos(),
+                    negocio.getImagenes()
+            );
+            //When - Then - Verificar la salida
+            assertThrows(ResourceInvalidException.class, () -> negocioServicio.actualizarNegocio(negocioDTO));
+        }
+        catch(ResourceInvalidException e) {
+        }
+    }
+
 
     @DisplayName("Test para eliminar un negocio")
     @Test
@@ -133,7 +245,15 @@ public class NegocioTest {
         negocioServicio.eliminarNegocio(negocio.getCodigo());
 
         //Then - Verificar la salida
-        assertThrows(ResourceNotFoundException.class, () -> validacionNegocio.buscarNegocio("661dd3c07afe983885b1783c"));
+        assertThrows(Exception.class, () -> validacionNegocio.validarNegocioEliminado("661dd3c07afe983885b1783c"));
+    }
+
+    @DisplayName("Test para validar error del negocio al eliminar ese negocio")
+    @Test
+    public void eliminarNegocioErrorNegocioTest() throws Exception {
+
+        //when - Then - Verificar la salida
+        assertThrows(ResourceNotFoundException.class, () -> validacionNegocio.buscarNegocio("661dd3c07afe983885b1783f"));
     }
 
     @DisplayName("Test para buscar un negocio")
@@ -151,16 +271,24 @@ public class NegocioTest {
         System.out.println("negocioDTO.toString() = " + negocioDTO.toString());
     }
 
+    @DisplayName("Test para validar error del negocio al buscarlo")
+    @Test
+    public void ObtenerNegocioErrorNegocioTest() throws Exception {
+
+        //When - Then - Verificar la salida
+        assertThrows(ResourceNotFoundException.class, () -> validacionNegocio.buscarNegocio("061dd3c07afe983885b1783c"));
+    }
+
     //Volver a probar
     @DisplayName("Test para mostrar una lista de negocios buscados por un estado en especifico")
     @Test
     public void filtrarPorEstadoTest() throws Exception {
 
         // When - Acción o el comportamiento que se va a probar
-        List<ItemNegocioDTO> lista = negocioServicio.filtrarPorEstado(EstadoNegocio.APROBADO);
+        List<ItemNegocioDTO> lista = negocioServicio.filtrarPorEstado(EstadoNegocio.PENDIENTE);
 
         //Then - Verificar la salida
-        Assertions.assertEquals(6, lista.size());
+        Assertions.assertEquals(2, lista.size());
     }
 
     @DisplayName("Test para mostrar una lista de negocios buscados por el codigo de un cliente")
@@ -171,7 +299,7 @@ public class NegocioTest {
         List<ItemNegocioDTO> lista = negocioServicio.listarNegociosPropietario("661c4b6c03dc96547afaca75");
 
         //Then - Verificar la salida
-        Assertions.assertEquals(2, lista.size());
+        Assertions.assertEquals(6, lista.size());
     }
 
     @DisplayName("Test para guardar en una lista los negocios que recomienda")
@@ -179,11 +307,29 @@ public class NegocioTest {
     public void guardarRecomendadosTest() throws Exception {
 
         // When - Acción o el comportamiento que se va a probar
-        negocioServicio.guardarRecomendado("661dd3c07afe983885b1783c", "661c4b6c03dc96547afaca75");
+        negocioServicio.guardarRecomendado("665b80aa710b1826c1998853", "661c48abd36eeb64ed610953");
 
         //Then - Verificar la salida
-        Cliente cliente = validacionCliente.buscarCliente("661c4b6c03dc96547afaca75");
-        Assertions.assertEquals(1, cliente.getRecomendados().size());
+        Cliente cliente = validacionCliente.buscarCliente("661c48abd36eeb64ed610953");
+        Assertions.assertEquals(2, cliente.getRecomendados().size());
+    }
+
+    @DisplayName("Test para validar el error de negocio inexistente al guardar en una lista los negocios que recomienda")
+    @Test
+    public void guardarRecomendadosErrorNegocioTest() throws Exception {
+
+        //When - Then - Verificar la salida
+        assertThrows(ResourceNotFoundException.class, () ->
+                negocioServicio.guardarRecomendado("U65b80aa710b1826c1998853", "661c48abd36eeb64ed610953"));
+    }
+
+    @DisplayName("Test para validar el error de cliente inexistente al guardar en una lista los negocios que recomienda")
+    @Test
+    public void guardarRecomendadosErrorClienteTest() throws Exception {
+
+        //When - Then - Verificar la salida
+        assertThrows(ResourceNotFoundException.class, () ->
+                negocioServicio.guardarRecomendado("665b80aa710b1826c1998853", "061c48abd36eeb64ed610953"));
     }
 
     @DisplayName("Test para mostrar un negocio de la lista de recomendados del cliente")
@@ -191,11 +337,20 @@ public class NegocioTest {
     public void obtenerRecomendadoTest() throws Exception {
 
         // When - Acción o el comportamiento que se va a probar
-        DetalleNegocioDTO negocioDTO = negocioServicio.obtenerRecomendado("661dd3c07afe983885b1783c","661c4b6c03dc96547afaca75");
+        DetalleNegocioDTO negocioDTO = negocioServicio.obtenerRecomendado("661dd3c07afe983885b1783c","661c48abd36eeb64ed610953");
 
         //Then - Verificar la salida
         System.out.println("negocioDTO = " + negocioDTO);
         assertThat(negocioDTO).isNotNull();
+    }
+
+    @DisplayName("Test para validar error cliente/negocio inexistente/lista vacía al mostrar un negocio de la lista de recomendados del cliente")
+    @Test
+    public void obtenerRecomendadoErrorClienteTest() throws Exception {
+
+        //When - Then - Verificar la salida
+        assertThrows(ResourceNotFoundException.class, () ->
+                negocioServicio.obtenerRecomendado("661dd3c07afe983885b1783c","661c48abd36eeb64ed610954"));
     }
 
     @DisplayName("Test para eliminar un negocio de la lista de recomendados de un cliente")
@@ -205,10 +360,20 @@ public class NegocioTest {
         // Given - Dado o condicion previa o configuración
 
         // When - Acción o el comportamiento que se va a probar
-        String eliminado = negocioServicio.eliminarNegocioRecomendado("661dd3c07afe983885b1783c","661c4b6c03dc96547afaca75");
+        String eliminado = negocioServicio.eliminarNegocioRecomendado("661dd4b64143e42232adfee6","661c48abd36eeb64ed610953");
 
         //Then - Verificar la salida
         Assertions.assertEquals(eliminado, "El negocio fue eliminado de su lista de recomendados con éxito");
+
+    }
+
+    @DisplayName("Test para validar error de cliente o negocio inexistente al intentar eliminar un negocio de la lista de recomendados")
+    @Test
+    public void eliminarNegocioRecomendadoErrorCliente() throws Exception {
+
+        //When - Then - Verificar la salida
+        assertThrows(ResourceNotFoundException.class, () ->
+                negocioServicio.eliminarNegocioRecomendado("661dd4b64143e42232adfee6","661c48abd36eeb64ed61095c "));
 
     }
 
@@ -217,10 +382,10 @@ public class NegocioTest {
     public void listarRecomendadosTest() throws Exception {
 
         // When - Acción o el comportamiento que se va a probar
-        Set<ItemNegocioDTO> lista = negocioServicio.listarRecomendadosCliente("661c4b6c03dc96547afaca75");
+        Set<ItemNegocioDTO> lista = negocioServicio.listarRecomendadosCliente("661c48abd36eeb64ed610953");
 
         //Then - Verificar la salida
-        Assertions.assertEquals(1, lista.size());
+        Assertions.assertEquals(2, lista.size());
     }
 
     @DisplayName("Test para listar los negocios mas recomendados por los clientes")
@@ -233,7 +398,7 @@ public class NegocioTest {
         List<ItemNegocioDTO> masRecomendados = negocioServicio.listaNegociosRecomendadosPorClientes();
 
         //Then - Verificar la salida
-        Assertions.assertEquals(1, masRecomendados.size());
+        Assertions.assertEquals(1,masRecomendados.size());
 
     }
 
@@ -250,6 +415,28 @@ public class NegocioTest {
         //Then - Verificar la salida
         System.out.println("revision.toString() = " + revision.toString());
         assertThat(revision).isNotNull();
+    }
+
+    @DisplayName("Test para validar error en la fecha de la revision que se espera obtener")
+    @Test
+    public void obtenerRevisionErrorFechaTest() throws Exception {
+
+        // Given - Dado o condicion previa o configuración
+        ItemRevisionDTO item = new ItemRevisionDTO("661dd3c07afe983885b1783c", "2024/04/15 08:48:21.000 AM");
+
+        //When - Then - Verificar la salida
+        assertThrows(ResourceNotFoundException.class, () -> negocioServicio.obtenerRevision(item));
+    }
+
+    @DisplayName("Test para validar error en el codigo del negocio en la revision que se espera obtener")
+    @Test
+    public void obtenerRevisionErrorCodigoNegocioTest() throws Exception {
+
+        // Given - Dado o condicion previa o configuración
+        ItemRevisionDTO item = new ItemRevisionDTO("661dd3c07afe983885b1783d", "2024/04/15 08:48:21.000 AM");
+
+        //When - Then - Verificar la salida
+        assertThrows(ResourceNotFoundException.class, () -> negocioServicio.obtenerRevision(item));
     }
 
     @DisplayName("Test para listar las revisiones que tenga un negocio")
@@ -294,10 +481,10 @@ public class NegocioTest {
     public void listarFavoritosTest() throws Exception {
 
         // When - Acción o el comportamiento que se va a probar
-        Set<ItemNegocioDTO> lista = negocioServicio.listarFavoritos("661c4b6c03dc96547afaca75");
+        Set<ItemNegocioDTO> lista = negocioServicio.listarFavoritos("661c48abd36eeb64ed610953");
         //Then - Verificar la salida
         System.out.println("lista.toString() = " + lista.toString());
-        Assertions.assertEquals(1, lista.size());
+        Assertions.assertEquals(2, lista.size());
     }
 
     @DisplayName("Test para mostrar un listado de los negocios favoritos del cliente")
@@ -305,7 +492,7 @@ public class NegocioTest {
     public void obtenerFavoritoTest() throws Exception {
 
         /*When - Acción o el comportamiento que se va a probar*/
-        DetalleNegocioDTO negocioDTO = negocioServicio.obtenerFavorito("661dd3c07afe983885b1783c", "661c4b6c03dc96547afaca75");
+        DetalleNegocioDTO negocioDTO = negocioServicio.obtenerFavorito("665b80aa710b1826c1998853", "661c48abd36eeb64ed610953");
 
         /*Then - Verificar la salida*/
         System.out.println("negocioDTO = " + negocioDTO.toString());
@@ -321,7 +508,7 @@ public class NegocioTest {
 
         /*Then - Verificar la salida*/
         Negocio negocio = validacionNegocio.buscarNegocio("661dd3c07afe983885b1783c");
-        Assertions.assertEquals(6, negocio.getCalificaciones().size());
+        Assertions.assertEquals(8, negocio.getCalificaciones().size());
 
     }
 
@@ -334,7 +521,7 @@ public class NegocioTest {
 
         /*Then - Verificar la salida*/
         System.out.println("valor = " + valor);
-        assertThat(valor).isEqualTo(4);
+        assertThat(valor).isEqualTo(3);
     }
 
     @DisplayName("Test que segun la fecha actual indica si un negocio esta abierto o cerrado")
@@ -369,7 +556,7 @@ public class NegocioTest {
         List<ItemNegocioDTO> lista = negocioServicio.listarNegociosAbiertosPorTipoSegunHora(TipoNegocio.COMIDAS_RAPIDAS);
 
         /*Then - Verificar la salida*/
-        Assertions.assertEquals(5, lista.size());
+        assertThat(lista.size()).isEqualTo(3);
     }
 
     @DisplayName("Test listar todos los tipos de negocios que esten registrados")

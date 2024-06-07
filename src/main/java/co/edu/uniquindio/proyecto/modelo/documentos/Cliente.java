@@ -13,10 +13,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-
 @Data
-@ToString
-@NoArgsConstructor
 @Document(collection = "clientes")
 @EqualsAndHashCode(callSuper = false)
 public class Cliente extends Cuenta implements Serializable {

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public interface ICuentaServicio {
 
     TokenDTO iniciarSesion(LoginDTO loginDTO)throws Exception;
-    void eliminarCuenta(String codigo)throws Exception;
-    TokenDTO enviarLinkRecuperacion(String destinatario)throws Exception;
-    String cambiarPassword(CambioPasswordDTO cambioPasswordDTO)throws Exception;
+//    void eliminarCuenta(String codigo)throws Exception;
+    TokenDTO enviarLinkRecuperacion(String email)throws Exception;
+//    String cambiarPassword(CambioPasswordDTO cambioPasswordDTO)throws Exception;
 }

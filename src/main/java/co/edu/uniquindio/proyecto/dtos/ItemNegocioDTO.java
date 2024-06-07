@@ -15,8 +15,7 @@ public record ItemNegocioDTO(
         @Size(max = 30)
         String nombre,
         @NotEmpty
-//        List<String> tiposNegocios,
-        String tipoNegocios,
+        List<String> tipoNegocios,
         Ubicacion ubicacion
 ) {
 }

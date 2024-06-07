@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.servicios.interfaces;
 
+import co.edu.uniquindio.proyecto.dtos.CambioPasswordDTO;
 import co.edu.uniquindio.proyecto.dtos.DetalleNegocioDTO;
 import co.edu.uniquindio.proyecto.dtos.HistorialRevisionDTO;
 import co.edu.uniquindio.proyecto.dtos.ItemNegocioDTO;
@@ -11,8 +12,12 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public interface IModeradorServicio extends ICuentaServicio {
+public interface IModeradorServicio {
 
+
+    void eliminarCuenta(String codigoCliente) throws Exception;
+
+    String cambiarPassword(CambioPasswordDTO cambioPasswordDTO) throws Exception;
 
     void revisarNegocio(HistorialRevisionDTO revisionDTO) throws Exception;
 

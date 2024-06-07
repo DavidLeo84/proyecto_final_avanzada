@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,13 +40,6 @@ public class ModeradorServicioImpl implements IModeradorServicio {
     private final AutenticacionServicioImpl autenticacionServicio;
 
     @Override
-    public TokenDTO iniciarSesion(LoginDTO loginDTO) throws Exception {
-
-        TokenDTO token = autenticacionServicio.iniciarSesionModerador(loginDTO);
-        return token;
-    }
-
-    @Override
     public void eliminarCuenta(String codigoModerador) throws Exception {
         try {
             Moderador moderador = validacionModerador.buscarModerador(codigoModerador);
@@ -57,33 +51,13 @@ public class ModeradorServicioImpl implements IModeradorServicio {
     }
 
     @Override
-    public TokenDTO enviarLinkRecuperacion(String email) throws Exception {
-
-        Optional<Cliente> clienteOptional = clienteRepo.findByEmail(email);
-        Cliente cliente = null;
-        if (clienteOptional.isEmpty()) {
-            cliente = clienteOptional.get();
-        }
-        Optional<Moderador> moderadorOptional = moderadorRepo.findByEmail(email);
-        Moderador moderador = null;
-
-        if (moderadorOptional.isPresent()) {
-            moderador = moderadorOptional.get();
-        }
-        if (!moderadorOptional.isPresent() && !clienteOptional.isPresent()) {
-            throw new ResourceNotFoundException("El usuario no se encuentra registrado");
-        }
-        emailServicio.enviarEmail(email, "Recuperar contraseña",
-                "http://localhost:8080/api/recoPass");
-        TokenDTO token = autenticacionServicio.recuperarPasswordModerador(email);
-        return token;
-    }
-
-    @Override
     public String cambiarPassword(CambioPasswordDTO cambioPasswordDTO) throws Exception {
 
         Moderador moderador = validacionModerador.buscarModerador(cambioPasswordDTO.codigoUsuario());
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if (!passwordEncoder.matches(cambioPasswordDTO.passwordActual(), moderador.getPassword())) {
+            throw new NoSuchElementException("La contraseña es incorrecta");
+        }
         String nuevaPassword = passwordEncoder.encode(cambioPasswordDTO.passwordNueva());
         moderador.setPassword(nuevaPassword);
         moderadorRepo.save(moderador);
@@ -95,69 +69,68 @@ public class ModeradorServicioImpl implements IModeradorServicio {
         try {
             Negocio negocio = validacionModerador.buscarNegocioPendiente(revisionDTO.codigoNegocio());
             Cliente cliente = validacionCliente.buscarCliente(negocio.getCodigoCliente());
-            if (validacionNegocio.validarCoordenadas(negocio.getUbicacion())) {
-                HistorialRevision revision = HistorialRevision.builder()
+
+            if (validacionNegocio.validarCoordenadas(negocio.getUbicacion(), negocio.getLocal())) {
+
+                HistorialRevision revision2 = HistorialRevision.builder()
                         .descripcion("La ubicación propuesta coincide con un establecimiento ya vigente")
-                        .estadoNegocio(EstadoNegocio.RECHAZADO).fecha(validacionModerador.formatearFecha(LocalDateTime.now()))
+                        .estadoNegocio(EstadoNegocio.RECHAZADO.name()).fecha(validacionModerador.formatearFecha(LocalDateTime.now()))
                         .codigoModerador(revisionDTO.codigoModerador()).codigoNegocio(revisionDTO.codigoNegocio()).build();
-                negocio.setEstadoNegocio(EstadoNegocio.RECHAZADO);
-                negocio.getHistorialRevisiones().add(revision);
+                negocio.setEstadoNegocio(EstadoNegocio.RECHAZADO.name());
+                negocio.getHistorialRevisiones().add(revision2);
                 negocioRepo.save(negocio);
                 enviarEmail(EstadoNegocio.RECHAZADO.name(), negocio.getCodigoCliente());
-            } else {
-                HistorialRevision revision = HistorialRevision.builder()
-                        .descripcion(revisionDTO.descripcion()).estadoNegocio(revisionDTO.estadoNegocio())
-                        .fecha(validacionModerador.formatearFecha(LocalDateTime.now())).codigoModerador(revisionDTO.codigoModerador())
-                        .codigoNegocio(revisionDTO.codigoNegocio()).build();
-                switch (revisionDTO.estadoNegocio()) {
-                    case APROBADO:
-                        negocio.setEstadoNegocio(EstadoNegocio.APROBADO);
-                        break;
-                    case PENDIENTE:
-                        negocio.setEstadoNegocio(EstadoNegocio.PENDIENTE);
-                        break;
-                    case RECHAZADO:
-                        negocio.setEstadoNegocio(EstadoNegocio.RECHAZADO);
-                        break;
-                    default:
-                        negocio.setEstadoNegocio(EstadoNegocio.ELIMINADO);
-                        break;
-                }
-                negocio.getHistorialRevisiones().add(revision);
-                negocioRepo.save(negocio);
-                enviarEmail(revisionDTO.estadoNegocio().name(), negocio.getCodigoCliente());
+                throw new ResourceNotFoundException("Ya existe un negocio en el local");
             }
+            HistorialRevision revision1 = HistorialRevision.builder()
+                    .descripcion(revisionDTO.descripcion()).estadoNegocio(revisionDTO.estadoNegocio().name())
+                    .fecha(validacionModerador.formatearFecha(LocalDateTime.now())).codigoModerador(revisionDTO.codigoModerador())
+                    .codigoNegocio(revisionDTO.codigoNegocio()).build();
+
+            negocio.setEstadoNegocio(revisionDTO.estadoNegocio().name());
+            negocio.getHistorialRevisiones().add(revision1);
+            negocioRepo.save(negocio);
+            enviarEmail(negocio.getEstadoNegocio(), negocio.getCodigoCliente());
+
+
         } catch (
                 IncorrectResultSizeDataAccessException e) {
             new IncorrectResultSizeDataAccessException("ubicacion invalida");
         }
     }
 
-    private List<Negocio> eliminarNegocioCaducado(List<Negocio> rechazados) throws Exception {
+    @Override
+    public List<ItemNegocioDTO> listarNegociosRechazados() throws Exception {
 
-        List<Negocio> actualizados = new ArrayList<>();
-        try {
-            LocalDateTime fechaActual = LocalDateTime.now();
-            for (Negocio n : rechazados) {
-                List<HistorialRevision> lista = validacionNegocio.validarListaHistorialRevision(n.getCodigo());
-                HistorialRevision masReciente = lista.get(0);
-                for (HistorialRevision hr : lista) {
-                    LocalDateTime fecha1 = validacionModerador.transformarFecha(masReciente.getFecha());
-                    LocalDateTime fecha2 = validacionModerador.transformarFecha(hr.getFecha());
-                    if (fecha2.isAfter(fecha1)) {
-                        masReciente = hr;
-                    }
+        List<Negocio> rechazados = validacionNegocio.validarListaGenericaNegocios(EstadoNegocio.RECHAZADO);
+        LocalDateTime fechaActual = LocalDateTime.now();
+        for (Negocio n : rechazados) {
+            List<HistorialRevision> lista = validacionNegocio.validarListaHistorialRevision(n.getCodigo());
+            HistorialRevision masReciente = lista.get(0);
+            for (HistorialRevision hr : lista) {
+                LocalDateTime fecha1 = validacionModerador.transformarFecha(masReciente.getFecha());
+                LocalDateTime fecha2 = validacionModerador.transformarFecha(hr.getFecha());
+                if (fecha2.isAfter(fecha1)) {
+                    masReciente = hr;
                 }
-                if (validacionModerador.transformarFecha(masReciente.getFecha()).plusDays(5).isBefore(fechaActual)) {
-                    n.setEstadoNegocio(EstadoNegocio.ELIMINADO);
-                    negocioRepo.save(n);
-                }
-                actualizados.add(n);
             }
-            return actualizados;
-        } catch (Exception ex) {
-            throw new Exception("Error al eliminar por caducidad el negocio rechazado");
+            if (validacionModerador.transformarFecha(masReciente.getFecha()).plusDays(5).isBefore(fechaActual)) {
+                n.setEstadoNegocio(EstadoNegocio.ELIMINADO.name());
+                negocioRepo.save(n);
+            }
         }
+        List<Negocio> actualizados = validacionNegocio.validarListaGenericaNegocios(EstadoNegocio.RECHAZADO);
+        if (actualizados.size() == 0) {
+            throw new Exception("No hay negocios con estado rechazados para mostrar");
+        }
+        return actualizados
+                .stream()
+                .map(n -> new ItemNegocioDTO(
+                        n.getCodigo(),
+                        n.getNombre(),
+                        n.getTipoNegocios(),
+                        n.getUbicacion()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -255,11 +228,12 @@ public class ModeradorServicioImpl implements IModeradorServicio {
                 .collect(Collectors.toList());
     }
 
-    @Override
+    /*@Override
     public List<ItemNegocioDTO> listarNegociosRechazados() throws Exception {
 
         List<Negocio> rechazados = validacionNegocio.validarListaGenericaNegocios(EstadoNegocio.RECHAZADO);
         List<Negocio> lista = eliminarNegocioCaducado(rechazados);
+        Thread.sleep(5000);
         List<Negocio> actualizados = validacionNegocio.validarListaGenericaNegocios(EstadoNegocio.RECHAZADO);
         return actualizados
                 .stream()
@@ -269,7 +243,7 @@ public class ModeradorServicioImpl implements IModeradorServicio {
                         n.getTipoNegocios(),
                         n.getUbicacion()))
                 .collect(Collectors.toList());
-    }
+    }*/
 
     @Override
     public List<ItemNegocioDTO> listarNegociosEliminados() throws Exception {

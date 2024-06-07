@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 
@@ -36,7 +37,7 @@ public class ValidacionComentario {
 
         Optional<Comentario> comentarioOptional = comentarioRepo.findByCodigo(codigoComentario);
         if (comentarioOptional == null) {
-            throw new ResourceNotFoundException("No existe el comentario");
+            throw new Exception("No existe el comentario");
         }
         return comentarioOptional.get();
     }
