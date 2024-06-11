@@ -31,10 +31,10 @@ public class NegocioController {
     }
 
     @PutMapping("/actualizar-negocio")
-    public ResponseEntity<MensajeDTO<String>> actualizarNegocio(@Valid @RequestBody
+    public ResponseEntity<MensajeDTO<ActualizarNegocioDTO>> actualizarNegocio(@Valid @RequestBody
                                                                 ActualizarNegocioDTO negocioDTO) throws Exception {
-        negocioServicio.actualizarNegocio(negocioDTO);
-        return ResponseEntity.ok().body(new MensajeDTO<>(false, "Se ha actualizado el negocio correctamente"));
+        ActualizarNegocioDTO negocio = negocioServicio.actualizarNegocio(negocioDTO);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocio));
     }
 
     @DeleteMapping("/eliminar-negocio/{codigoNegocio}")
@@ -63,10 +63,10 @@ public class NegocioController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "Has calificado este negocio"));
     }
 
-    @PutMapping("/calificacion-negocio/{codigo}")
-    public ResponseEntity<MensajeDTO<Integer>> calcularPromedioCalificaficaciones(@PathVariable String codigo) throws Exception {
+    @PutMapping("/calificacion-negocio/{codigoNegocio}")
+    public ResponseEntity<MensajeDTO<Integer>> calcularPromedioCalificaficaciones(@PathVariable String codigoNegocio) throws Exception {
 
-        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.calcularPromedioCalificaficaciones(codigo)));
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.calcularPromedioCalificaficaciones(codigoNegocio)));
     }
 
     /*@GetMapping("/buscar-nombre/{nombreNegocio}")
@@ -165,6 +165,12 @@ public class NegocioController {
     public ResponseEntity<MensajeDTO<List<String>>> listarTiposNegocio() throws Exception {
 
         return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.listarTiposNegocio()));
+    }
+
+    @GetMapping("/listar-dias")
+    public ResponseEntity<MensajeDTO<List<String>>> listarDias() throws Exception {
+
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, negocioServicio.listarDias()));
     }
 
 

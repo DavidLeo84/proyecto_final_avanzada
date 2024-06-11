@@ -1,6 +1,7 @@
 package co.edu.uniquindio.proyecto.servicios;
 
 import co.edu.uniquindio.proyecto.dtos.*;
+import co.edu.uniquindio.proyecto.enums.DiaSemana;
 import co.edu.uniquindio.proyecto.enums.EstadoNegocio;
 import co.edu.uniquindio.proyecto.enums.TipoNegocio;
 import co.edu.uniquindio.proyecto.enums.ValorCalificar;
@@ -51,15 +52,15 @@ public class NegocioServicioImpl implements INegocioServicio {
                 "", EstadoNegocio.PENDIENTE.name(), validacionModerador.formatearFecha(LocalDateTime.now()),
                 "default", ""));
         negocioRepo.save(nuevo);
-        cliente.getNegocios().add(nuevo.getCodigo());
+        cliente.getNegocios().add(nuevo.getCodigoNegocio());
         clienteRepo.save(cliente);
         return nuevo;
     }
 
     @Override
-    public void actualizarNegocio(ActualizarNegocioDTO negocioDTO) throws Exception {
+    public ActualizarNegocioDTO actualizarNegocio(ActualizarNegocioDTO negocioDTO) throws Exception {
 
-        Negocio negocio = validacionNegocio.buscarNegocioRechazadoParaModificar(negocioDTO.codigo());
+        Negocio negocio = validacionNegocio.buscarNegocioRechazadoParaModificar(negocioDTO.codigoNegocio());
         negocio.setDescripcion(negocioDTO.descripcion());
         negocio.setUbicacion(negocioDTO.ubicacion());
         negocio.setHorarios(negocioDTO.horarios());
@@ -67,6 +68,15 @@ public class NegocioServicioImpl implements INegocioServicio {
         negocio.setImagenes(negocioDTO.imagenes());
         negocio.setEstadoNegocio(EstadoNegocio.PENDIENTE.name());
         negocioRepo.save(negocio);
+        return new ActualizarNegocioDTO(
+                negocio.getCodigoNegocio(),
+                negocio.getDescripcion(),
+                negocio.getUbicacion(),
+                negocio.getLocal(),
+                negocio.getHorarios(),
+                negocio.getTelefonos(),
+                negocio.getImagenes()
+        );
     }
 
     @Override
@@ -87,12 +97,12 @@ public class NegocioServicioImpl implements INegocioServicio {
     public DetalleNegocioDTO obtenerNegocio(String codigoNegocio) throws Exception {
 
         Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
-        return new DetalleNegocioDTO(negocio.getCodigo(),
-                negocio.getNombre(), negocio.getTipoNegocios(),
-                negocio.getUbicacion(), negocio.getDescripcion(),
+        return new DetalleNegocioDTO(
+                negocio.getCodigoNegocio(), negocio.getNombre(),
+                negocio.getTipoNegocios(), negocio.getUbicacion(),
+                negocio.getLocal(), negocio.getDescripcion(),
                 negocio.getCalificacion(), negocio.getHorarios(),
-                negocio.getTelefonos(), negocio.getImagenes()
-        );
+                negocio.getTelefonos(), negocio.getImagenes());
     }
 
     @Override
@@ -101,10 +111,11 @@ public class NegocioServicioImpl implements INegocioServicio {
         return negocioRepo.findAllByEstadoNegocio(estado.name())
                 .stream()
                 .map(n -> new ItemNegocioDTO(
-                        n.getCodigo(),
+                        n.getCodigoNegocio(),
                         n.getNombre(),
                         n.getTipoNegocios(),
-                        n.getUbicacion()
+                        n.getUbicacion(),
+                        n.getImagenes()
                 )).toList();
     }
 
@@ -113,11 +124,13 @@ public class NegocioServicioImpl implements INegocioServicio {
     public List<ItemNegocioDTO> listarNegociosPropietario(String codigoCliente) throws Exception {
 
         return negocioRepo.findAllByCodigoCliente(codigoCliente).stream()
+                .filter(n -> n.getEstadoNegocio().equals(EstadoNegocio.APROBADO.name()))
                 .map(n -> new ItemNegocioDTO(
-                        n.getCodigo(),
+                        n.getCodigoNegocio(),
                         n.getNombre(),
                         n.getTipoNegocios(),
-                        n.getUbicacion()
+                        n.getUbicacion(),
+                        n.getImagenes()
                 )).toList();
     }
 
@@ -142,9 +155,9 @@ public class NegocioServicioImpl implements INegocioServicio {
         for (String codigo : lista) {
             if (codigoNegocio.equals(codigo)) {
                 Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
-                negocioDTO = new DetalleNegocioDTO(negocio.getCodigo(),
+                negocioDTO = new DetalleNegocioDTO(negocio.getCodigoNegocio(),
                         negocio.getNombre(), negocio.getTipoNegocios(),
-                        negocio.getUbicacion(), negocio.getDescripcion(),
+                        negocio.getUbicacion(), negocio.getLocal(), negocio.getDescripcion(),
                         negocio.getCalificacion(), negocio.getHorarios(),
                         negocio.getTelefonos(), negocio.getImagenes());
             }
@@ -175,10 +188,11 @@ public class NegocioServicioImpl implements INegocioServicio {
         for (String codigoRecomendado : recomendados) {
             Negocio negocio = validacionNegocio.buscarNegocio(codigoRecomendado);
             lista.add(new ItemNegocioDTO(
-                    negocio.getCodigo(),
+                    negocio.getCodigoNegocio(),
                     negocio.getNombre(),
                     negocio.getTipoNegocios(),
-                    negocio.getUbicacion()));
+                    negocio.getUbicacion(),
+                    negocio.getImagenes()));
         }
         return lista;
     }
@@ -190,10 +204,11 @@ public class NegocioServicioImpl implements INegocioServicio {
                 .stream()
                 .filter(n -> n.getRecomendaciones() > 4)
                 .map(n -> new ItemNegocioDTO(
-                        n.getCodigo(),
+                        n.getCodigoNegocio(),
                         n.getNombre(),
                         n.getTipoNegocios(),
-                        n.getUbicacion()
+                        n.getUbicacion(),
+                        n.getImagenes()
                 )).collect(Collectors.toList());
     }
 
@@ -227,7 +242,7 @@ public class NegocioServicioImpl implements INegocioServicio {
         Negocio negocio = validacionNegocio.buscarNegocio(codigoNegocio);
         Cliente cliente = validacionCliente.buscarCliente(codigoCliente);
         Set<String> lista = cliente.getFavoritos();
-        lista.add(negocio.getCodigo());
+        lista.add(negocio.getCodigoNegocio());
         clienteRepo.save(cliente);
     }
 
@@ -251,10 +266,11 @@ public class NegocioServicioImpl implements INegocioServicio {
         for (String s : favoritos) {
             Negocio negocio = validacionNegocio.buscarNegocio(s);
             lista.add(new ItemNegocioDTO(
-                    negocio.getCodigo(),
+                    negocio.getCodigoNegocio(),
                     negocio.getNombre(),
                     negocio.getTipoNegocios(),
-                    negocio.getUbicacion()));
+                    negocio.getUbicacion(),
+                    negocio.getImagenes()));
         }
         return lista;
     }
@@ -267,13 +283,12 @@ public class NegocioServicioImpl implements INegocioServicio {
         Set<String> lista = validacionCliente.validarListaGenericaCliente(cliente.getRecomendados());
         for (String codigo : lista) {
             if (codigoNegocio.equals(codigo)) {
-                negocioDTO = new DetalleNegocioDTO(negocio.getCodigo(),
+                negocioDTO = new DetalleNegocioDTO(negocio.getCodigoNegocio(),
                         negocio.getNombre(), negocio.getTipoNegocios(),
-                        negocio.getUbicacion(), negocio.getDescripcion(),
+                        negocio.getUbicacion(), negocio.getLocal(), negocio.getDescripcion(),
                         negocio.getCalificacion(), negocio.getHorarios(),
                         negocio.getTelefonos(), negocio.getImagenes());
             }
-
         }
         return negocioDTO;
     }
@@ -309,15 +324,11 @@ public class NegocioServicioImpl implements INegocioServicio {
 
         Negocio negocio = validacionNegocio.validarNegocioPorNombre(nombreNegocio.toLowerCase());
         return new DetalleNegocioDTO(
-                negocio.getCodigo(),
-                negocio.getNombre(),
-                negocio.getTipoNegocios(),
-                negocio.getUbicacion(),
-                negocio.getDescripcion(),
-                negocio.getCalificacion(),
-                negocio.getHorarios(),
-                negocio.getTelefonos(),
-                negocio.getImagenes()
+                negocio.getCodigoNegocio(), negocio.getNombre(),
+                negocio.getTipoNegocios(), negocio.getUbicacion(),
+                negocio.getLocal(), negocio.getDescripcion(),
+                negocio.getCalificacion(), negocio.getHorarios(),
+                negocio.getTelefonos(), negocio.getImagenes()
         );
     }
 
@@ -343,10 +354,11 @@ public class NegocioServicioImpl implements INegocioServicio {
                         horaHoy.isBefore(transformarHora(h.getHoraFin())) &&
                         horaHoy.isAfter(transformarHora(h.getHoraInicio()))) {
                     ItemNegocioDTO item = new ItemNegocioDTO(
-                            n.getCodigo(),
+                            n.getCodigoNegocio(),
                             n.getNombre(),
                             n.getTipoNegocios(),
-                            n.getUbicacion()
+                            n.getUbicacion(),
+                            n.getImagenes()
                     );
                     negociosAbiertos.add(item);
                 }
@@ -416,11 +428,21 @@ public class NegocioServicioImpl implements INegocioServicio {
         return listaNegocios
                 .stream()
                 .map(n -> new ItemNegocioDTO(
-                        n.getCodigo(),
+                        n.getCodigoNegocio(),
                         n.getNombre(),
                         n.getTipoNegocios(),
-                        n.getUbicacion()))
+                        n.getUbicacion(),
+                        n.getImagenes()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> listarDias() throws Exception {
+        List<String> listaDias = new ArrayList<>();
+        for (DiaSemana dia : DiaSemana.values()) {
+            listaDias.add(dia.name());
+        }
+        return listaDias;
     }
 
     private LocalTime transformarHora(String hora) throws Exception {

@@ -60,7 +60,7 @@ public class ValidacionModerador {
 
     public Negocio buscarNegocioPendiente(String codigoNegocio) throws Exception {
 
-        Optional<Negocio> buscado = negocioRepo.findByCodigo(codigoNegocio);
+        Optional<Negocio> buscado = negocioRepo.findByCodigoNegocio(codigoNegocio);
 
         if (
                 buscado.get().getEstadoNegocio().equals(EstadoNegocio.PENDIENTE)) {

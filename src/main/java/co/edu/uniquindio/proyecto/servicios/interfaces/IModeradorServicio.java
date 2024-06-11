@@ -4,6 +4,7 @@ import co.edu.uniquindio.proyecto.dtos.CambioPasswordDTO;
 import co.edu.uniquindio.proyecto.dtos.DetalleNegocioDTO;
 import co.edu.uniquindio.proyecto.dtos.HistorialRevisionDTO;
 import co.edu.uniquindio.proyecto.dtos.ItemNegocioDTO;
+import co.edu.uniquindio.proyecto.enums.DiaSemana;
 import co.edu.uniquindio.proyecto.modelo.HistorialRevision;
 import co.edu.uniquindio.proyecto.modelo.documentos.Negocio;
 import org.springframework.stereotype.Service;

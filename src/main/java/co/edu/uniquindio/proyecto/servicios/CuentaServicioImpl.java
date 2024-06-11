@@ -34,7 +34,7 @@ public class CuentaServicioImpl implements ICuentaServicio {
         this.autenticacionServicio = autenticacionServicio;
     }
 
-    @Override
+    /*@Override
     public TokenDTO iniciarSesion(LoginDTO loginDTO) throws Exception {
 
         TokenDTO token = null;
@@ -57,9 +57,45 @@ public class CuentaServicioImpl implements ICuentaServicio {
             throw new ResourceNotFoundException("El usuario no se encuentra registrado");
         }
         return token;
-    }
+    }*/
 
     @Override
+    public TokenDTO iniciarSesion(LoginDTO loginDTO) throws Exception {
+        TokenDTO token = null;
+        Optional<Cliente> clienteEncontrado = clienteRepo.findByEmail(loginDTO.email());
+        Optional<Moderador> moderadorEncontrado = moderadorRepo.findByEmail(loginDTO.email());
+        if (clienteEncontrado.isPresent()) {
+            token = autenticacionServicio.iniciarSesionCliente(loginDTO);
+        } else if (moderadorEncontrado.isPresent()) {
+            token = autenticacionServicio.iniciarSesionModerador(loginDTO);
+        } else {
+            throw new ResourceNotFoundException("El usuario no se encuentra registrado");
+        }
+        return token;
+    }
+
+
+    @Override
+    public TokenDTO enviarLinkRecuperacion(String email) throws Exception {
+        TokenDTO token = null;
+        Optional<Cliente> clienteEncontrado = clienteRepo.findByEmail(email);
+        Optional<Moderador> moderadorEncontrado = moderadorRepo.findByEmail(email);
+
+        if (clienteEncontrado.isPresent()) {
+            Cliente cliente = clienteEncontrado.get();
+            token = autenticacionServicio.recuperarPasswordCliente(cliente.getEmail());
+        } else if (moderadorEncontrado.isPresent()) {
+            Moderador moderador = moderadorEncontrado.get();
+            token = autenticacionServicio.recuperarPasswordModerador(moderador.getEmail());
+        } else {
+            throw new ResourceNotFoundException("El usuario no se encuentra registrado");
+        }
+        emailServicio.enviarEmail(email, "Recuperar contraseña", "http://localhost:8080/api/auth/recoPass");
+        return token;
+    }
+
+
+    /*@Override
     public TokenDTO enviarLinkRecuperacion(String email) throws Exception {
 
         TokenDTO token = null;
@@ -85,7 +121,6 @@ public class CuentaServicioImpl implements ICuentaServicio {
         if (!moderadorOptional.isPresent() && !clienteOptional.isPresent()) {
             throw new ResourceNotFoundException("El usuario no se encuentra registrado");
         }
-
         return token;
-    }
+    }*/
 }

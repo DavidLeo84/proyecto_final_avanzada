@@ -50,15 +50,15 @@ public class ValidacionNegocio {
     }
 
     public Negocio buscarNegocioRechazadoParaModificar(String codigoNegocio) throws Exception {
-        return negocioRepo.findByCodigo(codigoNegocio)
-                .filter(negocio -> negocio.getEstadoNegocio().equals(EstadoNegocio.RECHAZADO) ||
-                        negocio.getEstadoNegocio().equals(EstadoNegocio.APROBADO))
+        return negocioRepo.findByCodigoNegocio(codigoNegocio)
+                .filter(negocio -> negocio.getEstadoNegocio().equals(EstadoNegocio.RECHAZADO.name()) ||
+                        negocio.getEstadoNegocio().equals(EstadoNegocio.APROBADO.name()))
                 .orElseThrow(() -> new ResourceInvalidException("El negocio buscado no se encuentra como rechazado"));
     }
 
 
     public Negocio buscarNegocio(String codigoNegocio) throws Exception {
-        return negocioRepo.findByCodigo(codigoNegocio)
+        return negocioRepo.findByCodigoNegocio(codigoNegocio)
 //                .filter(negocio -> negocio.getEstadoNegocio().equals(EstadoNegocio.APROBADO))
                 .orElseThrow(() -> new ResourceNotFoundException("No existe el negocio"));
     }
@@ -76,7 +76,7 @@ public class ValidacionNegocio {
     /*Metodo que valida la existencia de un negocio que tenga como estadoNegocio aprobado*/
     public Negocio validarNegocioAprobado(String codigoNegocio) throws Exception {
 
-        return negocioRepo.findByCodigo(codigoNegocio).
+        return negocioRepo.findByCodigoNegocio(codigoNegocio).
                 filter(negocio -> negocio.getEstadoNegocio().equals(EstadoNegocio.APROBADO.name()))
                 .orElseThrow(() -> new ResourceNotFoundException("El negocio buscado no se encuentra como Aprobado"));
     }
@@ -84,7 +84,7 @@ public class ValidacionNegocio {
     /*Metodo que valida la existencia de un negocio que tenga como estadoNegocio igual a pendiente*/
     public Negocio validarNegocioPendiente(String codigoNegocio) throws Exception {
 
-        return negocioRepo.findByCodigo(codigoNegocio).
+        return negocioRepo.findByCodigoNegocio(codigoNegocio).
                 filter(negocio -> negocio.getEstadoNegocio().equals(EstadoNegocio.PENDIENTE.name()))
                 .orElseThrow(() -> new ResourceNotFoundException("El negocio buscado no se encuentra como pendiente"));
     }
@@ -92,14 +92,14 @@ public class ValidacionNegocio {
     /*Metodo que valida la existencia de un negocio que tenga como estadoNegocio igual a rechazado*/
     public Negocio validarNegocioRechazado(String codigoNegocio) throws Exception {
 
-        return negocioRepo.findByCodigo(codigoNegocio).
+        return negocioRepo.findByCodigoNegocio(codigoNegocio).
                 filter(negocio -> negocio.getEstadoNegocio().equals(EstadoNegocio.RECHAZADO.name()))
                 .orElseThrow(() -> new ResourceNotFoundException("El negocio buscado no se encuentra como Rechazado"));
     }
 
     public Negocio validarNegocioEliminado(String codigoNegocio) throws Exception {
 
-        return negocioRepo.findByCodigo(codigoNegocio).
+        return negocioRepo.findByCodigoNegocio(codigoNegocio).
                 filter(negocio -> negocio.getEstadoNegocio().equals(EstadoNegocio.ELIMINADO.name()))
                 .orElseThrow(() -> new ResourceNotFoundException("El negocio buscado no se encuentra como Eliminado"));
     }
@@ -116,7 +116,7 @@ public class ValidacionNegocio {
     public HistorialRevision buscarRevision(String codigoNegocio, String fecha) throws Exception {
 
         try {
-            Optional<Negocio> optional = negocioRepo.findByCodigo(codigoNegocio);
+            Optional<Negocio> optional = negocioRepo.findByCodigoNegocio(codigoNegocio);
             if (optional.isEmpty()) {
                 throw new ResourceNotFoundException("No existe el negocio");
             }

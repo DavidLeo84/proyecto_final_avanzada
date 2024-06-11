@@ -105,7 +105,7 @@ public class ModeradorServicioImpl implements IModeradorServicio {
         List<Negocio> rechazados = validacionNegocio.validarListaGenericaNegocios(EstadoNegocio.RECHAZADO);
         LocalDateTime fechaActual = LocalDateTime.now();
         for (Negocio n : rechazados) {
-            List<HistorialRevision> lista = validacionNegocio.validarListaHistorialRevision(n.getCodigo());
+            List<HistorialRevision> lista = validacionNegocio.validarListaHistorialRevision(n.getCodigoNegocio());
             HistorialRevision masReciente = lista.get(0);
             for (HistorialRevision hr : lista) {
                 LocalDateTime fecha1 = validacionModerador.transformarFecha(masReciente.getFecha());
@@ -126,44 +126,36 @@ public class ModeradorServicioImpl implements IModeradorServicio {
         return actualizados
                 .stream()
                 .map(n -> new ItemNegocioDTO(
-                        n.getCodigo(),
+                        n.getCodigoNegocio(),
                         n.getNombre(),
                         n.getTipoNegocios(),
-                        n.getUbicacion()))
+                        n.getUbicacion(),
+                        n.getImagenes()))
                 .collect(Collectors.toList());
     }
 
     @Override
     public DetalleNegocioDTO obtenerNegocioAprobado(ItemNegocioDTO negocioDTO) throws Exception {
 
-        Negocio negocio = validacionNegocio.validarNegocioAprobado(negocioDTO.codigo());
+        Negocio negocio = validacionNegocio.validarNegocioAprobado(negocioDTO.codigoNegocio());
         return new DetalleNegocioDTO(
-                negocio.getCodigo(),
-                negocio.getNombre(),
-                negocio.getTipoNegocios(),
-                negocio.getUbicacion(),
-                negocio.getDescripcion(),
-                negocio.getCalificacion(),
-                negocio.getHorarios(),
-                negocio.getTelefonos(),
-                negocio.getImagenes()
-        );
+                negocio.getCodigoNegocio(), negocio.getNombre(),
+                negocio.getTipoNegocios(), negocio.getUbicacion(),
+                negocio.getLocal(), negocio.getDescripcion(),
+                negocio.getCalificacion(), negocio.getHorarios(),
+                negocio.getTelefonos(), negocio.getImagenes());
     }
 
     @Override
     public DetalleNegocioDTO obtenerNegocioPendiente(ItemNegocioDTO negocioDTO) throws Exception {
 
-        Negocio negocio = validacionNegocio.validarNegocioPendiente(negocioDTO.codigo());
+        Negocio negocio = validacionNegocio.validarNegocioPendiente(negocioDTO.codigoNegocio());
         return new DetalleNegocioDTO(
-                negocio.getCodigo(),
-                negocio.getNombre(),
-                negocio.getTipoNegocios(),
-                negocio.getUbicacion(),
-                negocio.getDescripcion(),
-                negocio.getCalificacion(),
-                negocio.getHorarios(),
-                negocio.getTelefonos(),
-                negocio.getImagenes()
+                negocio.getCodigoNegocio(), negocio.getNombre(),
+                negocio.getTipoNegocios(), negocio.getUbicacion(),
+                negocio.getLocal(), negocio.getDescripcion(),
+                negocio.getCalificacion(), negocio.getHorarios(),
+                negocio.getTelefonos(), negocio.getImagenes()
         );
     }
 
@@ -171,35 +163,26 @@ public class ModeradorServicioImpl implements IModeradorServicio {
     @Override
     public DetalleNegocioDTO obtenerNegocioRechazado(ItemNegocioDTO negocioDTO) throws Exception {
 
-        Negocio negocio = validacionNegocio.validarNegocioRechazado(negocioDTO.codigo());
+        Negocio negocio = validacionNegocio.validarNegocioRechazado(negocioDTO.codigoNegocio());
         return new DetalleNegocioDTO(
-                negocio.getCodigo(),
-                negocio.getNombre(),
-                negocio.getTipoNegocios(),
-                negocio.getUbicacion(),
-                negocio.getDescripcion(),
-                negocio.getCalificacion(),
-                negocio.getHorarios(),
-                negocio.getTelefonos(),
-                negocio.getImagenes()
+                negocio.getCodigoNegocio(), negocio.getNombre(),
+                negocio.getTipoNegocios(), negocio.getUbicacion(),
+                negocio.getLocal(), negocio.getDescripcion(),
+                negocio.getCalificacion(), negocio.getHorarios(),
+                negocio.getTelefonos(), negocio.getImagenes()
         );
     }
 
     @Override
     public DetalleNegocioDTO obtenerNegocioEliminado(ItemNegocioDTO negocioDTO) throws Exception {
 
-        Negocio negocio = validacionNegocio.validarNegocioEliminado(negocioDTO.codigo());
+        Negocio negocio = validacionNegocio.validarNegocioEliminado(negocioDTO.codigoNegocio());
         return new DetalleNegocioDTO(
-                negocio.getCodigo(),
-                negocio.getNombre(),
-                negocio.getTipoNegocios(),
-                negocio.getUbicacion(),
-                negocio.getDescripcion(),
-                negocio.getCalificacion(),
-                negocio.getHorarios(),
-                negocio.getTelefonos(),
-                negocio.getImagenes()
-        );
+                negocio.getCodigoNegocio(), negocio.getNombre(),
+                negocio.getTipoNegocios(), negocio.getUbicacion(),
+                negocio.getLocal(), negocio.getDescripcion(),
+                negocio.getCalificacion(), negocio.getHorarios(),
+                negocio.getTelefonos(), negocio.getImagenes());
     }
 
     @Override
@@ -208,10 +191,11 @@ public class ModeradorServicioImpl implements IModeradorServicio {
         return aprobados
                 .stream()
                 .map(n -> new ItemNegocioDTO(
-                        n.getCodigo(),
+                        n.getCodigoNegocio(),
                         n.getNombre(),
                         n.getTipoNegocios(),
-                        n.getUbicacion()))
+                        n.getUbicacion(),
+                        n.getImagenes()))
                 .collect(Collectors.toList());
     }
 
@@ -221,29 +205,13 @@ public class ModeradorServicioImpl implements IModeradorServicio {
         return pendientes
                 .stream()
                 .map(n -> new ItemNegocioDTO(
-                        n.getCodigo(),
+                        n.getCodigoNegocio(),
                         n.getNombre(),
                         n.getTipoNegocios(),
-                        n.getUbicacion()))
+                        n.getUbicacion(),
+                        n.getImagenes()))
                 .collect(Collectors.toList());
     }
-
-    /*@Override
-    public List<ItemNegocioDTO> listarNegociosRechazados() throws Exception {
-
-        List<Negocio> rechazados = validacionNegocio.validarListaGenericaNegocios(EstadoNegocio.RECHAZADO);
-        List<Negocio> lista = eliminarNegocioCaducado(rechazados);
-        Thread.sleep(5000);
-        List<Negocio> actualizados = validacionNegocio.validarListaGenericaNegocios(EstadoNegocio.RECHAZADO);
-        return actualizados
-                .stream()
-                .map(n -> new ItemNegocioDTO(
-                        n.getCodigo(),
-                        n.getNombre(),
-                        n.getTipoNegocios(),
-                        n.getUbicacion()))
-                .collect(Collectors.toList());
-    }*/
 
     @Override
     public List<ItemNegocioDTO> listarNegociosEliminados() throws Exception {
@@ -251,12 +219,15 @@ public class ModeradorServicioImpl implements IModeradorServicio {
         return eliminados
                 .stream()
                 .map(n -> new ItemNegocioDTO(
-                        n.getCodigo(),
+                        n.getCodigoNegocio(),
                         n.getNombre(),
                         n.getTipoNegocios(),
-                        n.getUbicacion()))
+                        n.getUbicacion(),
+                        n.getImagenes()))
                 .collect(Collectors.toList());
     }
+
+
 
     private void enviarEmail(String estado, String codigoCliente) throws Exception {
 

@@ -70,7 +70,7 @@ public class AutenticacionTest {
     public void enviarLinkRecuperacionTest() throws Exception {
 
         // When - Acción o el comportamiento que se va a probar
-        TokenDTO tokenDTO = cuentaServicio.enviarLinkRecuperacion("leoromero141@gmail.com");
+        TokenDTO tokenDTO = cuentaServicio.enviarLinkRecuperacion("marycano@gmail.com");
 
         //Then - Verificar la salida
         System.out.println("tokenDTO.toString() = " + tokenDTO.toString());
@@ -83,6 +83,6 @@ public class AutenticacionTest {
     public void enviarLinkRecuperacionErrorEmailTest() throws Exception {
 
         //When - Then - Verificar la salida
-        assertThrows(ResourceNotFoundException.class, () -> cuentaServicio.enviarLinkRecuperacion("marycano@gmail.com"));
+        assertThrows(ResourceNotFoundException.class, () -> cuentaServicio.enviarLinkRecuperacion("maricano@gmail.com"));
     }
 }

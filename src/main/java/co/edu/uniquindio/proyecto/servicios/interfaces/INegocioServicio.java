@@ -18,7 +18,7 @@ public interface INegocioServicio {
 
     Negocio crearNegocio(RegistroNegocioDTO registroNegocioDTO)throws Exception;
 
-    void actualizarNegocio(ActualizarNegocioDTO negocioDTO)throws Exception;
+    ActualizarNegocioDTO actualizarNegocio(ActualizarNegocioDTO negocioDTO)throws Exception;
 
     void eliminarNegocio(String codigoNegocio)throws Exception;
 
@@ -65,5 +65,7 @@ public interface INegocioServicio {
     int calcularPromedioCalificaficaciones(String codigoNegocio) throws Exception;
 
     List<ItemNegocioDTO> listarNegociosPorPalabraComun(String palabra) throws Exception;
+
+    List<String> listarDias() throws Exception;
 
 }

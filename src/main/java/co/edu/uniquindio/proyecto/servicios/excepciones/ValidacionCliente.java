@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-
 @Component
 @RequiredArgsConstructor
 public class ValidacionCliente {
@@ -31,12 +30,9 @@ public class ValidacionCliente {
     public void existeEmail(String email) throws Exception {
 
         Optional<Cliente> clienteOptional = clienteRepo.findByEmail(email);
-
-
         if (!clienteOptional.get().getEmail().equals(email)) {
-
+            throw new Exception("El correo no se encuentra registrado");
         }
-        throw new Exception("El correo no se encuentra registrado");
     }
 
     public void validarEmail(String email, String codigoCliente) throws Exception {
@@ -84,7 +80,7 @@ public class ValidacionCliente {
         Cliente cliente = buscarCliente(codigoCliente);
         List<String> lista = cliente.getNegocios();
         for (String codigo : lista) {
-            Optional<Negocio> optional = negocioRepo.findByCodigo(codigo);
+            Optional<Negocio> optional = negocioRepo.findByCodigoNegocio(codigo);
             if (optional.get().getEstadoNegocio().equals(EstadoNegocio.APROBADO.name())) {
                 throw new ResourceInvalidException("Error! Hay negocios asociados que impiden eliminar la cuenta");
             }
@@ -106,7 +102,7 @@ public class ValidacionCliente {
         Set<String> listaNegocios = validarListaGenericaCliente(cliente.getRecomendados());
         String recomendado = "";
         for (String codigo : listaNegocios) {
-            if (codigo.equals(negocio.getCodigo())) {
+            if (codigo.equals(negocio.getCodigoNegocio())) {
                 recomendado = codigo;
             }
         }

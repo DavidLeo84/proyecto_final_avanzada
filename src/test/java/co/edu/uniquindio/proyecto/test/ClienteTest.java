@@ -122,9 +122,9 @@ public class ClienteTest {
                     "pedroperez@gmail.com",
                     CiudadEnum.valueOf(buscado.getCiudad()));
             //When - Then - Verificar la salida
-            assertThrows(ResourceInvalidException.class, () -> clienteServicio.actualizarCliente(clienteDTO));
+            assertThrows(NoSuchElementException.class, () -> clienteServicio.actualizarCliente(clienteDTO));
 
-        } catch (ResourceInvalidException e) {
+        } catch (NoSuchElementException e) {
             System.out.println("Exception = " + e.getMessage());
         }
     }

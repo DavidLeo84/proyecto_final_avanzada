@@ -14,11 +14,12 @@ import java.util.Set;
 public record ActualizarNegocioDTO(
 
         @NotBlank
-        String codigo,
+        String codigoNegocio,
         @NotBlank
         @Size(max = 200)
         String descripcion,
         Ubicacion ubicacion,
+        String local,
         @NotEmpty
         List<Horario> horarios,
         @Size(max = 10)

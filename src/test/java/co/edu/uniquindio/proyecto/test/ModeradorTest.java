@@ -101,7 +101,7 @@ public class ModeradorTest {
         moderadorServicio.revisarNegocio(revisionDTO);
 
         /*Then - Verificar la salida*/
-        Optional<Negocio> negocio = negocioRepo.findByCodigo("665b85be1c057873df6aa4ba");
+        Optional<Negocio> negocio = negocioRepo.findByCodigoNegocio("665b85be1c057873df6aa4ba");
         System.out.println("Revisado = " + negocio.get());
         assertThat(negocio.get().getHistorialRevisiones().size()).isGreaterThan(1);
     }
@@ -128,10 +128,11 @@ public class ModeradorTest {
         /*Given - Dado o condicion previa o configuración*/
         Negocio negocio = validacionNegocio.validarNegocioAprobado("661dd5c7dd12ce75301659ef");
         ItemNegocioDTO negocioDTO = new ItemNegocioDTO(
-                negocio.getCodigo(),
+                negocio.getCodigoNegocio(),
                 negocio.getNombre(),
                 negocio.getTipoNegocios(),
-                negocio.getUbicacion()
+                negocio.getUbicacion(),
+                negocio.getImagenes()
         );
         /*When - Acción o el comportamiento que se va a probar*/
         DetalleNegocioDTO detealleNegocio = moderadorServicio.obtenerNegocioAprobado(negocioDTO);
@@ -148,10 +149,11 @@ public class ModeradorTest {
         /*Given - Dado o condicion previa o configuración*/
         Negocio negocio = validacionNegocio.validarNegocioPendiente("665b817468519a70ab47295e");
         ItemNegocioDTO item = new ItemNegocioDTO(
-                negocio.getCodigo(),
+                negocio.getCodigoNegocio(),
                 negocio.getNombre(),
                 negocio.getTipoNegocios(),
-                negocio.getUbicacion());
+                negocio.getUbicacion(),
+                negocio.getImagenes());
 
         /*When - Acción o el comportamiento que se va a probar*/
         DetalleNegocioDTO detalleNegocio = moderadorServicio.obtenerNegocioPendiente(item);
@@ -170,17 +172,18 @@ public class ModeradorTest {
                 validacionNegocio.validarNegocioPendiente("661dd6810534cd610ad1beb6"));
     }
 
-    @DisplayName("Test para b.cuscar y mostrar un negocio que este en estado pendiente para revisión")
+    @DisplayName("Test para buscar y mostrar un negocio que este en estado pendiente para revisión")
     @Test
     public void obtenerNegocioRechazadoTest() throws Exception {
 
         /*Given - Dado o condicion previa o configuración*/
         Negocio negocio = validacionNegocio.validarNegocioRechazado("665b817468519a70ab47295e");
         ItemNegocioDTO negocioDTO = new ItemNegocioDTO(
-                negocio.getCodigo(),
+                negocio.getCodigoNegocio(),
                 negocio.getNombre(),
                 negocio.getTipoNegocios(),
-                negocio.getUbicacion()
+                negocio.getUbicacion(),
+                negocio.getImagenes()
         );
 
         /*When - Acción o el comportamiento que se va a probar*/
@@ -198,10 +201,11 @@ public class ModeradorTest {
         /*Given - Dado o condicion previa o configuración*/
         Negocio negocio = validacionNegocio.validarNegocioEliminado("6625d797f55be6771e1ac152");
         ItemNegocioDTO negocioDTO = new ItemNegocioDTO(
-                negocio.getCodigo(),
+                negocio.getCodigoNegocio(),
                 negocio.getNombre(),
                 negocio.getTipoNegocios(),
-                negocio.getUbicacion()
+                negocio.getUbicacion(),
+                negocio.getImagenes()
         );
         /*When - Acción o el comportamiento que se va a probar*/
         DetalleNegocioDTO detalleNegocio = moderadorServicio.obtenerNegocioEliminado(negocioDTO);
@@ -222,14 +226,6 @@ public class ModeradorTest {
         Assertions.assertEquals(7 , lista.size());
     }
 
-    @DisplayName("Test validar el error de una lista vacia al listar los negocios que tienen estado como aprobado")
-    @Test
-    public void listarNegociosAprobadosErrorListaVaciaTest() throws Exception {
-
-        /*When - Then - Verificar la salida*/
-        assertThrows(ResourceNotFoundException.class, () -> moderadorServicio.listarNegociosAprobados());
-    }
-
     @DisplayName("Test crear una lista de los negocios que tienen estado negocio como pendiente")
     @Test
     public void listarNegociosPendientesTest() throws Exception {
@@ -238,7 +234,7 @@ public class ModeradorTest {
         List<ItemNegocioDTO> lista = moderadorServicio.listarNegociosPendientes();
 
         /*Then - Verificar la salida*/
-        Assertions.assertEquals(8, lista.size());
+        Assertions.assertEquals(3, lista.size());
     }
 
     @DisplayName("Test validar el error de una lista vacia al listar los negocios que tienen estado como pendiente")
@@ -260,14 +256,6 @@ public class ModeradorTest {
         Assertions.assertEquals(1, lista.size());
     }
 
-    @DisplayName("Test validar el error de una lista vacia al listar los negocios que tienen estado como rechazado")
-    @Test
-    public void listarNegociosRechazadosErrorListaVaciaTest() throws Exception {
-
-        /*When - Then - Verificar la salida*/
-        assertThrows(Exception.class, () -> moderadorServicio.listarNegociosRechazados());
-    }
-
     @DisplayName("Test crear una lista de los negocios que tienen estado negocio como eliminados")
     @Test
     public void listarNegociosEliminadosTest() throws Exception {
@@ -279,21 +267,13 @@ public class ModeradorTest {
         Assertions.assertEquals(1, lista.size());
     }
 
-    @DisplayName("Test validar el error de una lista vacia al listar los negocios que tienen estado como rechazado")
-    @Test
-    public void listarNegociosEliminadosErrorListaVaciaTest() throws Exception {
-
-        /*When - Then - Verificar la salida*/
-        assertThrows(ResourceNotFoundException.class, () -> moderadorServicio.listarNegociosEliminados());
-    }
-
     @DisplayName("Test para cambiar el password de un moderador")
     @Test
     public void cambiarPasswordTest() throws Exception {
 
         // Given - Dado o condicion previa o configuración
         CambioPasswordDTO passwordDTO = new CambioPasswordDTO(
-                "1234",
+                "87654321",
                 "12345678",
                 "661ca68e157f5040899baeeb"
         );

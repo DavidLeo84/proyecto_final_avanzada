@@ -27,7 +27,7 @@ public class Negocio implements Serializable {
 
     @Id
     @EqualsAndHashCode.Include
-    private String codigo;
+    private String codigoNegocio;
     private String codigoCliente;
     private String nombre;
     private Ubicacion ubicacion;

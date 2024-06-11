@@ -12,7 +12,7 @@ import java.util.Set;
 public record DetalleNegocioDTO(
 
         @NotNull
-        String codigo,
+        String codigoNegocio,
         @NotBlank
         @Size(max = 30)
         String nombre,
@@ -20,6 +20,7 @@ public record DetalleNegocioDTO(
         List<String> tipoNegocios,
         @NotBlank
         Ubicacion ubicacion,
+        String local,
         @NotBlank
         @Size(max = 200)
         String descripcion,
